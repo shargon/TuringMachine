@@ -18,37 +18,22 @@ namespace TuringMachine.Core.Mutational.Changes
             AppendByte = new FromTo<byte>(byte.MinValue, byte.MaxValue);
             Count = new FromTo<int>(1);
         }
-        public virtual bool Process(ref byte[] data, ref int index, ref int length)
+        public override byte[] Process(out int remove)
         {
-            int size = RandomHelper.GetRandom(Count.From, Count.To);
-            if (size <= 0) return false;
+            remove = RandomHelper.GetRandom(Count.From, Count.To, Count.Excludes);
+            if (remove <= 0) return null;
 
-            if (size == length)
-            {
-                // Same size
-                RandomHelper.Randomize(data, index, size, AppendByte.From, AppendByte.To);
-            }
-            else
-            {
-                int s = size - length;
-                if (s > 0)
-                {
-                    // More size
-                    data = new byte[size];
+            byte[] data = new byte[remove];
+            RandomHelper.Randomize(data, 0, remove, AppendByte.From, AppendByte.To, AppendByte.Excludes);
 
-                    index = 0;
-                    length = size;
-
-                    RandomHelper.Randomize(data, 0, length, AppendByte.From, AppendByte.To);
-                }
-                else
-                {
-                    // Less size
-                    RandomHelper.Randomize(data, index, size, AppendByte.From, AppendByte.To);
-                }
-            }
-
-            return true;
+            return data;
+        }
+        public override string ToString()
+        {
+            return
+                "AppendByte: " + AppendByte == null ? "NULL" : AppendByte.ToString() + " / " +
+                "Count: " + Count == null ? "NULL" : Count.ToString() + " / " +
+                "Weight: " + Weight == null ? "NULL" : Weight.ToString();
         }
     }
 }

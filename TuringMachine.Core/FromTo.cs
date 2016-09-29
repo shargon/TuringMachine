@@ -6,8 +6,11 @@ namespace TuringMachine.Core
     {
         bool _AreSame;
         T _From, _To;
-        private int v;
 
+        /// <summary>
+        /// Excludes
+        /// </summary>
+        public T[] Excludes { get; set; }
         /// <summary>
         /// From
         /// </summary>
@@ -68,9 +71,19 @@ namespace TuringMachine.Core
         /// Return if are between from an To
         /// </summary>
         /// <param name="o">Object</param>
-        public bool AreBetween(T o)
+        public bool AreIn(T o)
         {
             return o.CompareTo(From) <= 0 && To.CompareTo(o) >= 0;
+        }
+
+        public override string ToString()
+        {
+            string ex = "";
+
+            if (Excludes != null && Excludes.Length > 0)
+                ex = string.Join(",", Excludes);
+
+            return From.ToString() + " - " + To.ToString() + (ex == "" ? "" : "![" + ex + "]");
         }
     }
 }

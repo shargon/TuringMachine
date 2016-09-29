@@ -1,5 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TuringMachine.Core;
 using TuringMachine.Core.Mutational;
+using TuringMachine.Core.Mutational.Changes;
 
 namespace TuringMachine.Tests
 {
@@ -13,14 +15,10 @@ namespace TuringMachine.Tests
             {
                 AppendByte = new Core.FromTo<byte>((byte)'A'),
                 Count = new Core.FromTo<int>(5),
-                Mode = MutationalAppend.EMode.AtEnd,
-                OffsetAllowed = null
             };
 
-            byte[] data = new byte[] { 1, 2, 3, 4, 5 };
-            int ix = 2, l = data.Length - ix;
-
-            c.Process(ref data, ref ix, ref l, 0);
+            int l;
+            byte[] ret = c.Process(out l);
 
         }
         [TestMethod]
@@ -29,13 +27,10 @@ namespace TuringMachine.Tests
             MutationalRemove c = new MutationalRemove()
             {
                 Count = new Core.FromTo<int>(5),
-                OffsetAllowed = null
             };
 
-            byte[] data = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            int ix = 7, l = data.Length - ix;
-
-            c.Process(ref data, ref ix, ref l, 0);
+            int l;
+            byte[] ret = c.Process(out l);
         }
         [TestMethod]
         public void TestMutationalSwitch()
@@ -44,23 +39,46 @@ namespace TuringMachine.Tests
             {
                 AppendByte = new Core.FromTo<byte>((byte)'A'),
                 Count = new Core.FromTo<int>(5),
-                OffsetAllowed = null
             };
 
-            byte[] data = new byte[] { 1, 2, 3, 4, 5 };
-            int ix = 2, l = 3;
+            int l;
+            byte[] ret = c.Process(out l);
 
-            c.Process(ref data, ref ix, ref l, 0);
+            ret = c.Process(out l);
 
-            data = new byte[] { 1, 2, 3, 4, 5, 6 };
-            ix = 1; l = 5;
+            ret = c.Process(out l);
+        }
+        [TestMethod]
+        public void TestOffset()
+        {
+            MutationalOffset c = new MutationalOffset()
+            {
+                FuzzPercent = 5F,
+                Value = new FromTo<ulong>(0, ulong.MaxValue),
+                Changes = new IMutationalChange[]
+                   {
+                       new MutationalSwitch()
+                        {
+                            Weight=9,
+                            AppendByte = new Core.FromTo<byte>((byte)'A'),
+                            Count = new Core.FromTo<int>(5),
+                        },
+                       new MutationalRemove()
+                        {
+                            Weight=1,
+                            Count = new Core.FromTo<int>(5),
+                        }
+                   }
+            };
 
-            c.Process(ref data, ref ix, ref l, 0);
+            for (int x = 0; x < 100; x++)
+            {
+                IMutationalChange next = c.Get();
+                if (next != null)
+                {
 
-            data = new byte[] { 1, 2, 3, 4, 5, 6 };
-            ix = 0; l = data.Length - ix;
-
-            c.Process(ref data, ref ix, ref l, 0);
+                }
+            }
         }
     }
 }

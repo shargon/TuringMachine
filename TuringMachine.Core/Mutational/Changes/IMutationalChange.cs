@@ -1,14 +1,21 @@
 ﻿namespace TuringMachine.Core.Mutational.Changes
 {
-    public interface IMutationalChange
+    public class IMutationalChange
     {
+        /// <summary>
+        /// Weight for collision
+        /// </summary>
+        public int Weight { get; set; }
         /// <summary>
         /// Internal logic
         /// </summary>
-        /// <param name="data">Data</param>
-        /// <param name="index">Index</param>
-        /// <param name="length">Length</param>
-        /// <returns>Return True if fuzzed something</returns>
-        bool Process(ref byte[] data, ref int index, ref int length);
+        /// <param name="remove">Remove bytes</param>
+        /// <returns>Return fuzz data</returns>
+        public virtual byte[] Process(out int remove) { remove = 0; return null; }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        protected IMutationalChange() { }
+        public override string ToString() { return Weight.ToString(); }
     }
 }

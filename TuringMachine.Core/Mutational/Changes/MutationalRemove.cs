@@ -1,5 +1,4 @@
-﻿using System;
-using TuringMachine.Core.Helpers;
+﻿using TuringMachine.Core.Helpers;
 
 namespace TuringMachine.Core.Mutational.Changes
 {
@@ -18,26 +17,14 @@ namespace TuringMachine.Core.Mutational.Changes
         /// Remove 'Count' bytes
         /// </summary>
         /// <param name="data">Data</param>
-        public bool Process(ref byte[] data, ref int index, ref int length)
+        public override byte[] Process(out int remove)
         {
-            int size = RandomHelper.GetRandom(Count.From, Count.To);
-            if (size <= 0) return false;
-
-            /// Prevent negative buffer
-            //size = Math.Min(length, size);
-
-            length -= size;
-            if (length <= 0)
-            {
-                data = new byte[] { };
-                index = 0;
-            }
-            else
-            {
-                index += size;
-            }
-
-            return true;
+            remove = RandomHelper.GetRandom(Count.From, Count.To, Count.Excludes);
+            return null;
+        }
+        public override string ToString()
+        {
+            return Count == null ? "NULL" : Count.ToString();
         }
     }
 }
