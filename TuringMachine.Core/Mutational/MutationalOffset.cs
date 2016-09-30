@@ -1,20 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using TuringMachine.Core.Design;
 using TuringMachine.Core.Helpers;
-using TuringMachine.Core.Mutational.Changes;
 
 namespace TuringMachine.Core.Mutational
 {
-    public class MutationalOffset : Offset
+    public class MutationalOffset
     {
         float _FuzzPercent;
         int _Count, _MaxRandom;
-        IMutationalChange[] _Changes;
-        IMutationalChange[] _Steps;
+        List<MutationalChange> _Changes;
+        MutationalChange[] _Steps;
 
+        /// <summary>
+        /// Valid offset
+        /// </summary>
+        [Category("Condition")]
+        public FromTo<ulong> ValidOffset { get; set; }
         /// <summary>
         /// Changes
         /// </summary>
-        public IMutationalChange[] Changes
+        [TypeConverter(typeof(ListArrayReadOnlyConverter))]
+        public List<MutationalChange> Changes
         {
             get { return _Changes; }
             set { _Changes = value; Recall(); }
@@ -22,6 +30,7 @@ namespace TuringMachine.Core.Mutational
         /// <summary>
         /// Fuzz Percent
         /// </summary>
+        [Category("Condition")]
         public float FuzzPercent
         {
             get { return _FuzzPercent; }
@@ -39,6 +48,8 @@ namespace TuringMachine.Core.Mutational
             FuzzPercent = 5F;
             _Count = 0;
             _MaxRandom = 0;
+            ValidOffset = new Core.FromTo<ulong>(ulong.MinValue, ulong.MaxValue);
+            Changes = new List<MutationalChange>();
         }
         /// <summary>
         /// Recall Changes
@@ -49,10 +60,10 @@ namespace TuringMachine.Core.Mutational
 
             if (_Changes != null)
             {
-                foreach (IMutationalChange c in _Changes)
+                foreach (MutationalChange c in _Changes)
                     _Count += c.Weight;
 
-                _Steps = new IMutationalChange[_Count];
+                _Steps = new MutationalChange[_Count];
 
                 int w = 0;
                 for (int x = 0, y = 0; x < _Count; x++)
@@ -71,21 +82,26 @@ namespace TuringMachine.Core.Mutational
             }
             else
             {
-                _Steps = new IMutationalChange[] { };
+                _Steps = new MutationalChange[] { };
                 _MaxRandom = 0;
                 _Count = 0;
             }
         }
         /// <summary>
-        /// Get next mutation
+        /// Get next mutation change (if happend)
         /// </summary>
-        public IMutationalChange Get()
+        public MutationalChange Get()
         {
             int r = RandomHelper.GetRandom(0, _MaxRandom, null);
             if (r < _Count)
                 return _Steps[r];
 
             return null;
+        }
+
+        public override string ToString()
+        {
+            return ValidOffset.ToString();
         }
     }
 }

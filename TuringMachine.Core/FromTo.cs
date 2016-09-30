@@ -1,7 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using TuringMachine.Core.Design;
 
 namespace TuringMachine.Core
 {
+    [JsonConverter(typeof(JsonFromToConverter))]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public class FromTo<T> where T : IComparable
     {
         bool _AreSame;
@@ -10,10 +16,13 @@ namespace TuringMachine.Core
         /// <summary>
         /// Excludes
         /// </summary>
-        public T[] Excludes { get; set; }
+        
+        [TypeConverter(typeof(ListArrayConverter))]
+        public List<T> Excludes { get; set; }
         /// <summary>
         /// From
         /// </summary>
+        [Category("Values")]
         public T From
         {
             get { return _From; }
@@ -26,6 +35,7 @@ namespace TuringMachine.Core
         /// <summary>
         /// To
         /// </summary>
+        [Category("Values")]
         public T To
         {
             get { return _To; }
@@ -39,6 +49,8 @@ namespace TuringMachine.Core
         /// <summary>
         /// Return if are the same
         /// </summary>
+        [ReadOnly(true)]
+        [Browsable(false)]
         public bool AreSame { get { return _AreSame; } }
 
         /// <summary>
@@ -47,8 +59,8 @@ namespace TuringMachine.Core
         /// <param name="values">Equal values</param>
         public FromTo(T values)
         {
-            _From = values;
-            _To = values;
+            _From = _To = values;
+            Excludes = new List<T>();
         }
 
         /// <summary>
@@ -60,12 +72,17 @@ namespace TuringMachine.Core
         {
             _From = from;
             _To = to;
+            Excludes = new List<T>();
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public FromTo() { }
+        public FromTo()
+        {
+            _To = _From = default(T);
+            Excludes = new List<T>();
+        }
 
         /// <summary>
         /// Return if are between from an To
@@ -80,10 +97,12 @@ namespace TuringMachine.Core
         {
             string ex = "";
 
-            if (Excludes != null && Excludes.Length > 0)
+            if (Excludes != null)
                 ex = string.Join(",", Excludes);
 
-            return From.ToString() + " - " + To.ToString() + (ex == "" ? "" : "![" + ex + "]");
+            return
+                (From.CompareTo(To) == 0 ? From.ToString() : From.ToString() + " - " + To.ToString())
+                + (ex == "" ? "" : "![" + ex + "]");
         }
     }
 }

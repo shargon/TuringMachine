@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TuringMachine.Core.Helpers
 {
@@ -12,7 +13,7 @@ namespace TuringMachine.Core.Helpers
         /// <param name="from">From byte</param>
         /// <param name="to">To byte</param>
         /// <param name="excludes">Excludes</param>
-        public static byte GetRandom(byte from, byte to, params byte[] excludes)
+        public static byte GetRandom(byte from, byte to, List<byte> excludes)
         {
             if (from == to) return to;
 
@@ -20,15 +21,27 @@ namespace TuringMachine.Core.Helpers
             do
             {
                 r = (byte)_Rand.Next(from, to + 1);
-                if (excludes != null)
-                {
-                    bool esta = false;
+                if (excludes != null && excludes.Contains(r)) continue;
+                break;
+            }
+            while (true);
+            return r;
+        }
+        /// <summary>
+        /// Return next byte
+        /// </summary>
+        /// <param name="from">From byte</param>
+        /// <param name="to">To byte</param>
+        /// <param name="excludes">Excludes</param>
+        public static ushort GetRandom(ushort from, ushort to, List<ushort> excludes)
+        {
+            if (from == to) return to;
 
-                    foreach (byte a in excludes)
-                        if (a == r) { esta = true; }
-
-                    if (esta) continue;
-                }
+            ushort r;
+            do
+            {
+                r = (ushort)_Rand.Next(from, (to + 1));
+                if (excludes != null && excludes.Contains(r)) continue;
                 break;
             }
             while (true);
@@ -40,7 +53,7 @@ namespace TuringMachine.Core.Helpers
         /// <param name="from">From byte</param>
         /// <param name="to">To byte</param>
         /// <param name="excludes">Excludes</param>
-        public static int GetRandom(int from, int to, params int[] excludes)
+        public static int GetRandom(int from, int to, List<int> excludes)
         {
             if (from == to) return to;
 
@@ -48,15 +61,7 @@ namespace TuringMachine.Core.Helpers
             do
             {
                 r = _Rand.Next(from, to + 1);
-                if (excludes != null)
-                {
-                    bool esta = false;
-
-                    foreach (int a in excludes)
-                        if (a == r) { esta = true; }
-
-                    if (esta) continue;
-                }
+                if (excludes != null && excludes.Contains(r)) continue;
                 break;
             }
             while (true);
@@ -71,7 +76,7 @@ namespace TuringMachine.Core.Helpers
         /// <param name="from">From byte</param>
         /// <param name="to">To byte</param>
         /// <param name="excludes">Excludes</param>
-        public static void Randomize(byte[] buffer, int index, int length, byte from, byte to, params byte[] excludes)
+        public static void Randomize(byte[] buffer, int index, int length, byte from, byte to, List<byte> excludes)
         {
             for (; length > 0; index++)
             {

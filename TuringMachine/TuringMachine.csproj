@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{52EED1EB-08FE-40C9-905D-87C166198951}</ProjectGuid>
+    <ProjectGuid>{988E7874-54D2-40DB-9F4C-814683F6FC05}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TuringMachine.Generator</RootNamespace>
-    <AssemblyName>TuringMachine.Generator</AssemblyName>
+    <RootNamespace>TuringMachine</RootNamespace>
+    <AssemblyName>TuringMachine</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -52,10 +52,24 @@
     <Compile Include="FMain.Designer.cs">
       <DependentUpon>FMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\EndPointDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EndPointDialog.Designer.cs">
+      <DependentUpon>EndPointDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Res.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Res.resx</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="FMain.resx">
       <DependentUpon>FMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EndPointDialog.resx">
+      <DependentUpon>EndPointDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -66,6 +80,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -80,8 +98,20 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add_file.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add_folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add_socket.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\TuringMachine.Core\TuringMachine.Core.csproj">
-      <Project>{255b9399-ea53-41c5-8272-389b43b48764}</Project>
+      <Project>{255B9399-EA53-41C5-8272-389B43B48764}</Project>
       <Name>TuringMachine.Core</Name>
     </ProjectReference>
   </ItemGroup>

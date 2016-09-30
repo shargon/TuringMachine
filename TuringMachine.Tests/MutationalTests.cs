@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TuringMachine.Core;
 using TuringMachine.Core.Mutational;
-using TuringMachine.Core.Mutational.Changes;
 
 namespace TuringMachine.Tests
 {
@@ -9,71 +8,48 @@ namespace TuringMachine.Tests
     public class MutationalTests
     {
         [TestMethod]
-        public void TestMutationalAppend()
+        public void TestMutationalChange()
         {
-            MutationalAppend c = new MutationalAppend()
+            MutationalChange c = new MutationalChange()
             {
                 AppendByte = new Core.FromTo<byte>((byte)'A'),
-                Count = new Core.FromTo<int>(5),
+                RemoveLength = new Core.FromTo<ushort>(1),
+                AppendLength = new FromTo<ushort>(1),
             };
 
-            int l;
-            byte[] ret = c.Process(out l);
-
+            MutationLog ret = c.Process(0);
+            ret = c.Process(0);
+            ret = c.Process(0);
         }
         [TestMethod]
-        public void TestMutationalRemove()
-        {
-            MutationalRemove c = new MutationalRemove()
-            {
-                Count = new Core.FromTo<int>(5),
-            };
-
-            int l;
-            byte[] ret = c.Process(out l);
-        }
-        [TestMethod]
-        public void TestMutationalSwitch()
-        {
-            MutationalSwitch c = new MutationalSwitch()
-            {
-                AppendByte = new Core.FromTo<byte>((byte)'A'),
-                Count = new Core.FromTo<int>(5),
-            };
-
-            int l;
-            byte[] ret = c.Process(out l);
-
-            ret = c.Process(out l);
-
-            ret = c.Process(out l);
-        }
-        [TestMethod]
-        public void TestOffset()
+        public void TestMutationalOffset()
         {
             MutationalOffset c = new MutationalOffset()
             {
                 FuzzPercent = 5F,
-                Value = new FromTo<ulong>(0, ulong.MaxValue),
-                Changes = new IMutationalChange[]
-                   {
-                       new MutationalSwitch()
+                ValidOffset = new FromTo<ulong>(0, ulong.MaxValue),
+            };
+
+            c.Changes.AddRange(new MutationalChange[]
+                       {
+                       new MutationalChange()
                         {
                             Weight=9,
                             AppendByte = new Core.FromTo<byte>((byte)'A'),
-                            Count = new Core.FromTo<int>(5),
+                            RemoveLength = new Core.FromTo<ushort>(5),
                         },
-                       new MutationalRemove()
+                       new MutationalChange()
                         {
+                           // Remmove
                             Weight=1,
-                            Count = new Core.FromTo<int>(5),
+                            RemoveLength = new Core.FromTo<ushort>(1),
+                            AppendLength=new FromTo<ushort>(0)
                         }
-                   }
-            };
+                        });
 
             for (int x = 0; x < 100; x++)
             {
-                IMutationalChange next = c.Get();
+                MutationalChange next = c.Get();
                 if (next != null)
                 {
 
