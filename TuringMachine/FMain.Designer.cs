@@ -28,10 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.gridInput = new System.Windows.Forms.DataGridView();
             this.cInputsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cInputDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,8 +48,12 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.tcpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.queryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.socketToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridConfig = new System.Windows.Forms.DataGridView();
             this.cConfigType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cConfigDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,10 +71,13 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip4 = new System.Windows.Forms.ToolStrip();
-            this.tcpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.queryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.socketToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tbPlay = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbPause = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tbStop = new System.Windows.Forms.ToolStripButton();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.gridInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -80,6 +93,8 @@
             this.splitContainer2.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.statusStrip1.SuspendLayout();
+            this.toolStrip4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // gridInput
@@ -98,7 +113,7 @@
             this.gridInput.ReadOnly = true;
             this.gridInput.RowHeadersVisible = false;
             this.gridInput.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridInput.Size = new System.Drawing.Size(489, 305);
+            this.gridInput.Size = new System.Drawing.Size(489, 296);
             this.gridInput.TabIndex = 0;
             this.gridInput.VirtualMode = true;
             // 
@@ -121,8 +136,8 @@
             // cInputCount
             // 
             this.cInputCount.DataPropertyName = "Count";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputCount.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputCount.DefaultCellStyle = dataGridViewCellStyle13;
             this.cInputCount.HeaderText = "Count";
             this.cInputCount.Name = "cInputCount";
             this.cInputCount.ReadOnly = true;
@@ -130,8 +145,8 @@
             // cInputCrashes
             // 
             this.cInputCrashes.DataPropertyName = "Crashes";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputCrashes.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputCrashes.DefaultCellStyle = dataGridViewCellStyle14;
             this.cInputCrashes.HeaderText = "Crashes";
             this.cInputCrashes.Name = "cInputCrashes";
             this.cInputCrashes.ReadOnly = true;
@@ -142,7 +157,7 @@
             this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView2.Location = new System.Drawing.Point(0, 25);
             this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1001, 132);
+            this.dataGridView2.Size = new System.Drawing.Size(1001, 128);
             this.dataGridView2.TabIndex = 1;
             // 
             // splitContainer1
@@ -160,7 +175,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.gridConfig);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip3);
-            this.splitContainer1.Size = new System.Drawing.Size(1001, 339);
+            this.splitContainer1.Size = new System.Drawing.Size(1001, 330);
             this.splitContainer1.SplitterDistance = 489;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -199,11 +214,35 @@
             this.toolStripDropDownButton1.Size = new System.Drawing.Size(74, 31);
             this.toolStripDropDownButton1.Text = "Add";
             // 
+            // tcpToolStripMenuItem
+            // 
+            this.tcpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.queryToolStripMenuItem,
+            this.socketToolStripMenuItem1});
+            this.tcpToolStripMenuItem.Image = global::TuringMachine.Res.add_socket;
+            this.tcpToolStripMenuItem.Name = "tcpToolStripMenuItem";
+            this.tcpToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.tcpToolStripMenuItem.Text = "Tcp";
+            // 
+            // queryToolStripMenuItem
+            // 
+            this.queryToolStripMenuItem.Name = "queryToolStripMenuItem";
+            this.queryToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.queryToolStripMenuItem.Text = "Query";
+            this.queryToolStripMenuItem.Click += new System.EventHandler(this.socketToolStripMenuItem_Click);
+            // 
+            // socketToolStripMenuItem1
+            // 
+            this.socketToolStripMenuItem1.Name = "socketToolStripMenuItem1";
+            this.socketToolStripMenuItem1.Size = new System.Drawing.Size(106, 22);
+            this.socketToolStripMenuItem1.Text = "Proxy";
+            this.socketToolStripMenuItem1.Click += new System.EventHandler(this.socketToolStripMenuItem1_Click);
+            // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Image = global::TuringMachine.Res.add_file;
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.fileToolStripMenuItem.Text = "File";
             this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
@@ -211,9 +250,17 @@
             // 
             this.folderToolStripMenuItem.Image = global::TuringMachine.Res.add_folder;
             this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-            this.folderToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.folderToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.folderToolStripMenuItem.Text = "Folder";
             this.folderToolStripMenuItem.Click += new System.EventHandler(this.folderToolStripMenuItem_Click);
+            // 
+            // executeToolStripMenuItem
+            // 
+            this.executeToolStripMenuItem.Image = global::TuringMachine.Res.add_execute;
+            this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
+            this.executeToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.executeToolStripMenuItem.Text = "Execute";
+            this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
             // gridConfig
             // 
@@ -231,7 +278,7 @@
             this.gridConfig.ReadOnly = true;
             this.gridConfig.RowHeadersVisible = false;
             this.gridConfig.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridConfig.Size = new System.Drawing.Size(508, 305);
+            this.gridConfig.Size = new System.Drawing.Size(508, 296);
             this.gridConfig.TabIndex = 2;
             this.gridConfig.VirtualMode = true;
             // 
@@ -254,8 +301,8 @@
             // cConfigCount
             // 
             this.cConfigCount.DataPropertyName = "Count";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigCount.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigCount.DefaultCellStyle = dataGridViewCellStyle15;
             this.cConfigCount.HeaderText = "Count";
             this.cConfigCount.Name = "cConfigCount";
             this.cConfigCount.ReadOnly = true;
@@ -263,8 +310,8 @@
             // cConfigCrashes
             // 
             this.cConfigCrashes.DataPropertyName = "Crashes";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigCrashes.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigCrashes.DefaultCellStyle = dataGridViewCellStyle16;
             this.cConfigCrashes.HeaderText = "Crashes";
             this.cConfigCrashes.Name = "cConfigCrashes";
             this.cConfigCrashes.ReadOnly = true;
@@ -321,7 +368,7 @@
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 50);
+            this.splitContainer2.Location = new System.Drawing.Point(0, 63);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -333,8 +380,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.dataGridView2);
             this.splitContainer2.Panel2.Controls.Add(this.toolStrip2);
-            this.splitContainer2.Size = new System.Drawing.Size(1001, 500);
-            this.splitContainer2.SplitterDistance = 339;
+            this.splitContainer2.Size = new System.Drawing.Size(1001, 487);
+            this.splitContainer2.SplitterDistance = 330;
             this.splitContainer2.TabIndex = 3;
             // 
             // toolStrip2
@@ -369,63 +416,136 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(54, 17);
-            this.toolStripStatusLabel1.Text = "Listen at:";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(85, 17);
+            this.toolStripStatusLabel1.Text = "Read inputs at:";
             // 
             // toolStripStatusLabel2
             // 
+            this.toolStripStatusLabel2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(67, 17);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(75, 17);
             this.toolStripStatusLabel2.Text = "0.0.0.0:7777";
             this.toolStripStatusLabel2.Click += new System.EventHandler(this.toolStripStatusLabel2_Click);
             // 
             // toolStrip4
             // 
             this.toolStrip4.AutoSize = false;
+            this.toolStrip4.BackColor = System.Drawing.Color.White;
             this.toolStrip4.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip4.ImageScalingSize = new System.Drawing.Size(32, 32);
+            this.toolStrip4.ImageScalingSize = new System.Drawing.Size(48, 48);
+            this.toolStrip4.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tbPlay,
+            this.toolStripSeparator3,
+            this.tbPause,
+            this.toolStripSeparator2,
+            this.tbStop});
             this.toolStrip4.Location = new System.Drawing.Point(0, 0);
             this.toolStrip4.Name = "toolStrip4";
-            this.toolStrip4.Size = new System.Drawing.Size(1001, 50);
+            this.toolStrip4.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.toolStrip4.Size = new System.Drawing.Size(1001, 63);
             this.toolStrip4.TabIndex = 5;
             this.toolStrip4.Text = "toolStrip4";
             // 
-            // tcpToolStripMenuItem
+            // tbPlay
             // 
-            this.tcpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.queryToolStripMenuItem,
-            this.socketToolStripMenuItem1});
-            this.tcpToolStripMenuItem.Image = global::TuringMachine.Res.add_socket;
-            this.tcpToolStripMenuItem.Name = "tcpToolStripMenuItem";
-            this.tcpToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
-            this.tcpToolStripMenuItem.Text = "Tcp";
+            this.tbPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbPlay.Image = global::TuringMachine.Res.play;
+            this.tbPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbPlay.Name = "tbPlay";
+            this.tbPlay.Size = new System.Drawing.Size(52, 60);
+            this.tbPlay.Text = "Play";
+            this.tbPlay.Click += new System.EventHandler(this.tbPlay_Click);
             // 
-            // queryToolStripMenuItem
+            // toolStripSeparator3
             // 
-            this.queryToolStripMenuItem.Name = "queryToolStripMenuItem";
-            this.queryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.queryToolStripMenuItem.Text = "Query";
-            this.queryToolStripMenuItem.Click += new System.EventHandler(this.socketToolStripMenuItem_Click);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 63);
             // 
-            // socketToolStripMenuItem1
+            // tbPause
             // 
-            this.socketToolStripMenuItem1.Name = "socketToolStripMenuItem1";
-            this.socketToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.socketToolStripMenuItem1.Text = "Proxy";
-            this.socketToolStripMenuItem1.Click += new System.EventHandler(this.socketToolStripMenuItem1_Click);
+            this.tbPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbPause.Enabled = false;
+            this.tbPause.Image = global::TuringMachine.Res.pause;
+            this.tbPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbPause.Name = "tbPause";
+            this.tbPause.Size = new System.Drawing.Size(52, 60);
+            this.tbPause.Text = "Pause";
+            this.tbPause.Click += new System.EventHandler(this.tbPause_Click);
             // 
-            // executeToolStripMenuItem
+            // toolStripSeparator2
             // 
-            this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
-            this.executeToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
-            this.executeToolStripMenuItem.Text = "Execute";
-            this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 63);
+            // 
+            // tbStop
+            // 
+            this.tbStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbStop.Enabled = false;
+            this.tbStop.Image = global::TuringMachine.Res.stop;
+            this.tbStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbStop.Name = "tbStop";
+            this.tbStop.Size = new System.Drawing.Size(52, 60);
+            this.tbStop.Text = "Stop";
+            this.tbStop.Click += new System.EventHandler(this.tbStop_Click);
+            // 
+            // chart1
+            // 
+            this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea4.AlignmentOrientation = ((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations)((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Vertical | System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Horizontal)));
+            chartArea4.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
+            chartArea4.AxisX.IsMarginVisible = false;
+            chartArea4.AxisY.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
+            chartArea4.AxisY.IsMarginVisible = false;
+            chartArea4.BorderWidth = 0;
+            chartArea4.Name = "ChartArea1";
+            chartArea4.Position.Auto = false;
+            chartArea4.Position.Height = 100F;
+            chartArea4.Position.Width = 91F;
+            this.chart1.ChartAreas.Add(chartArea4);
+            legend4.BackColor = System.Drawing.Color.Transparent;
+            legend4.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            legend4.Name = "Legend1";
+            legend4.Position.Auto = false;
+            legend4.Position.Height = 86.66666F;
+            legend4.Position.Width = 8.794434F;
+            legend4.Position.X = 91.20557F;
+            legend4.Position.Y = 3F;
+            this.chart1.Legends.Add(legend4);
+            this.chart1.Location = new System.Drawing.Point(173, 0);
+            this.chart1.Name = "chart1";
+            series10.ChartArea = "ChartArea1";
+            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedArea;
+            series10.Color = System.Drawing.Color.Red;
+            series10.Legend = "Legend1";
+            series10.Name = "Crash";
+            series11.ChartArea = "ChartArea1";
+            series11.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedArea;
+            series11.Legend = "Legend1";
+            series11.Name = "Test";
+            series12.ChartArea = "ChartArea1";
+            series12.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series12.Color = System.Drawing.Color.Yellow;
+            series12.Legend = "Legend1";
+            series12.Name = "Fails";
+            this.chart1.Series.Add(series10);
+            this.chart1.Series.Add(series11);
+            this.chart1.Series.Add(series12);
+            this.chart1.Size = new System.Drawing.Size(827, 63);
+            this.chart1.TabIndex = 6;
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // FMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1001, 572);
+            this.Controls.Add(this.chart1);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip4);
@@ -452,6 +572,9 @@
             this.toolStrip2.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.toolStrip4.ResumeLayout(false);
+            this.toolStrip4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -492,6 +615,13 @@
         private System.Windows.Forms.ToolStripMenuItem queryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem socketToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem executeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton tbPlay;
+        private System.Windows.Forms.ToolStripButton tbPause;
+        private System.Windows.Forms.ToolStripButton tbStop;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

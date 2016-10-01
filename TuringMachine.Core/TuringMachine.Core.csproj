@@ -50,6 +50,7 @@
     <Compile Include="Design\JsonFromToConverter.cs" />
     <Compile Include="Design\ListArrayReadOnlyConverter.cs" />
     <Compile Include="Design\ListArrayConverter.cs" />
+    <Compile Include="Enums\ETestResult.cs" />
     <Compile Include="FixedValue.cs" />
     <Compile Include="FromToValue.cs" />
     <Compile Include="FuzzerServer.cs" />

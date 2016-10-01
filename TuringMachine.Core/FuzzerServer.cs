@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using TuringMachine.Core.Enums;
 using TuringMachine.Core.Inputs;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Mutational;
@@ -15,9 +16,13 @@ namespace TuringMachine.Core
     /// </summary>
     public class FuzzerServer
     {
+        public delegate void delOnTestEnd(object sender, ETestResult result);
+
         public event EventHandler OnInputsChange;
         public event EventHandler OnConfigurationsChange;
         public event EventHandler OnListenChange;
+
+        public event delOnTestEnd OnTestEnd;
 
         IPEndPoint _EndPoint = new IPEndPoint(IPAddress.Any, 7777);
         /// <summary>
@@ -93,7 +98,7 @@ namespace TuringMachine.Core
         {
             if (string.IsNullOrEmpty(path)) return;
 
-            ExecutionFuzzingInput input = new ExecutionFuzzingInput(path,args);
+            ExecutionFuzzingInput input = new ExecutionFuzzingInput(path, args);
             Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
             OnInputsChange?.Invoke(this, EventArgs.Empty);
         }
@@ -120,6 +125,35 @@ namespace TuringMachine.Core
                         break;
                     }
             }
+        }
+        /// <summary>
+        /// Raise end of test
+        /// </summary>
+        /// <param name="result">Result</param>
+        void RaiseOnTestEnd(ETestResult result)
+        {
+            OnTestEnd?.Invoke(this, result);
+        }
+        /// <summary>
+        /// Stop logic
+        /// </summary>
+        public bool Stop()
+        {
+            return true;
+        }
+        /// <summary>
+        /// Play logic
+        /// </summary>
+        public bool Play()
+        {
+            return true;
+        }
+        /// <summary>
+        /// Pause logic
+        /// </summary>
+        public bool Pause()
+        {
+            return true;
         }
     }
 }

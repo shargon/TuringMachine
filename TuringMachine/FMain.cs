@@ -2,13 +2,18 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using TuringMachine.Core;
+using TuringMachine.Core.Enums;
 using TuringMachine.Forms;
 
 namespace TuringMachine
 {
     public partial class FMain : Form
     {
+        int _Test = 0;
+        int _Crash = 0;
+        int _Fails = 0;
         FuzzerServer _Fuzzer;
 
         public FMain()
@@ -19,9 +24,18 @@ namespace TuringMachine
             _Fuzzer.OnInputsChange += _Fuzzer_OnInputsChange;
             _Fuzzer.OnConfigurationsChange += _Fuzzer_OnConfigurationsChange;
             _Fuzzer.OnListenChange += _Fuzzer_OnListenChange;
+            _Fuzzer.OnTestEnd += _Fuzzer_OnTestEnd;
 
             ConfigureGrid(gridConfig);
             ConfigureGrid(gridInput);
+
+            // Default values
+            for (int x = 0; x < 100; x++)
+            {
+                AddToSerie(chart1.Series["Test"], 0);
+                AddToSerie(chart1.Series["Crash"], 0);
+                AddToSerie(chart1.Series["Fails"], 0);
+            }
 
             _Fuzzer_OnListenChange(null, null);
         }
@@ -85,8 +99,11 @@ namespace TuringMachine
         }
         void executeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            _Fuzzer.AddExecuteInput("", "");
+            using (ExecuteDialog dialog = new ExecuteDialog())
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                    _Fuzzer.AddExecuteInput(dialog.FileName, dialog.Arguments);
+            }
         }
         void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
@@ -121,6 +138,56 @@ namespace TuringMachine
                     {
                         toolStripStatusLabel2.ForeColor = Color.Red;
                     }
+            }
+        }
+        void _Fuzzer_OnTestEnd(object sender, ETestResult result)
+        {
+            _Test++;
+            switch (result)
+            {
+                case ETestResult.Crash: _Crash++; break;
+                case ETestResult.Fail: _Fails++; break;
+            }
+        }
+        void timer1_Tick(object sender, EventArgs e)
+        {
+            AddToSerie(chart1.Series["Test"], _Test);
+            AddToSerie(chart1.Series["Crash"], _Crash);
+            AddToSerie(chart1.Series["Fails"], _Fails);
+
+            _Test = _Crash = _Fails = 0;
+        }
+        void AddToSerie(Series series, int r)
+        {
+            if (series.Points.Count > 100)
+                series.Points.RemoveAt(0);
+
+            series.Points.Add(r);
+        }
+        void tbPlay_Click(object sender, EventArgs e)
+        {
+            if (_Fuzzer.Play())
+            {
+                tbPlay.Enabled = false;
+                tbPause.Enabled = true;
+                tbStop.Enabled = true;
+            }
+        }
+        void tbPause_Click(object sender, EventArgs e)
+        {
+            if (_Fuzzer.Pause())
+            {
+                tbPause.Enabled = false;
+                tbPlay.Enabled = true;
+            }
+        }
+        void tbStop_Click(object sender, EventArgs e)
+        {
+            if (_Fuzzer.Stop())
+            {
+                tbPlay.Enabled = true;
+                tbPause.Enabled = false;
+                tbStop.Enabled = false;
             }
         }
     }
