@@ -12,9 +12,9 @@ namespace TuringMachine.Tests
         {
             MutationalChange c = new MutationalChange()
             {
-                AppendByte = new Core.FromTo<byte>((byte)'A'),
-                RemoveLength = new Core.FromTo<ushort>(1),
-                AppendLength = new FromTo<ushort>(1),
+                AppendByte = new Core.FromToValue<byte>((byte)'A'),
+                RemoveLength = new Core.FromToValue<ushort>(1),
+                AppendLength = new FromToValue<ushort>(1),
             };
 
             MutationLog ret = c.Process(0);
@@ -27,7 +27,7 @@ namespace TuringMachine.Tests
             MutationalOffset c = new MutationalOffset()
             {
                 FuzzPercent = 5F,
-                ValidOffset = new FromTo<ulong>(0, ulong.MaxValue),
+                ValidOffset = new FromToValue<ulong>(0, ulong.MaxValue),
             };
 
             c.Changes.AddRange(new MutationalChange[]
@@ -35,15 +35,15 @@ namespace TuringMachine.Tests
                        new MutationalChange()
                         {
                             Weight=9,
-                            AppendByte = new Core.FromTo<byte>((byte)'A'),
-                            RemoveLength = new Core.FromTo<ushort>(5),
+                            AppendByte = new Core.FromToValue<byte>((byte)'A'),
+                            RemoveLength = new Core.FromToValue<ushort>(5),
                         },
                        new MutationalChange()
                         {
                            // Remmove
                             Weight=1,
-                            RemoveLength = new Core.FromTo<ushort>(1),
-                            AppendLength=new FromTo<ushort>(0)
+                            RemoveLength = new Core.FromToValue<ushort>(1),
+                            AppendLength=new FromToValue<ushort>(0)
                         }
                         });
 

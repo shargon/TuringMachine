@@ -36,6 +36,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,17 +46,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Design\IGetValueEditor.cs" />
     <Compile Include="Design\JsonFromToConverter.cs" />
     <Compile Include="Design\ListArrayReadOnlyConverter.cs" />
     <Compile Include="Design\ListArrayConverter.cs" />
-    <Compile Include="FromTo.cs" />
-    <Compile Include="Fuzzer.cs" />
+    <Compile Include="FixedValue.cs" />
+    <Compile Include="FromToValue.cs" />
+    <Compile Include="FuzzerServer.cs" />
     <Compile Include="FuzzerStat.cs" />
+    <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />
+    <Compile Include="Inputs\ExecutionFuzzingInput.cs" />
     <Compile Include="Inputs\FileFuzzingInput.cs" />
-    <Compile Include="Inputs\TcpFuzzingInput.cs" />
+    <Compile Include="Inputs\TcpProxyFuzzingInput.cs" />
+    <Compile Include="Inputs\TcpQueryFuzzingInput.cs" />
     <Compile Include="Interfaces\IFuzzingInput.cs" />
     <Compile Include="Interfaces\IFuzzingConfig.cs" />
+    <Compile Include="Interfaces\IGetValue.cs" />
     <Compile Include="Interfaces\IType.cs" />
     <Compile Include="Mutational\MutationalStream.cs" />
     <Compile Include="Mutational\MutationalChange.cs" />

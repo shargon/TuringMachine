@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using TuringMachine.Core.Helpers;
+using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core.Mutational
 {
@@ -10,50 +11,60 @@ namespace TuringMachine.Core.Mutational
         /// </summary>
         public int Weight { get; set; }
         /// <summary>
-        /// Name
+        /// Description
         /// </summary>
         public string Description { get; set; }
         /// <summary>
         /// Byte to append: 0x41='A'
         /// </summary>
         [Category("Append")]
-        public FromTo<byte> AppendByte { get; set; }
+        public IGetValue<byte> AppendByte { get; set; }
 
         /// <summary>
         /// Remove x bytes: 1
         /// </summary>
         [Category("Remove")]
-        public FromTo<ushort> RemoveLength { get; set; }
+        public IGetValue<ushort> RemoveLength { get; set; }
         /// <summary>
         /// Append x bytes: 5000
         /// </summary>
         [Category("Append")]
-        public FromTo<ushort> AppendLength { get; set; }
-
+        public IGetValue<ushort> AppendLength { get; set; }
+        
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MutationalChange()
         {
-            AppendByte = new FromTo<byte>(byte.MinValue, byte.MaxValue);// { Excludes = new byte[] { 1, 2 } };
-            RemoveLength = new FromTo<ushort>(1);
-            AppendLength = new FromTo<ushort>(1);
+            AppendByte = new FromToValue<byte>(byte.MinValue, byte.MaxValue);
+            RemoveLength = new FromToValue<ushort>(1);
+            AppendLength = new FromToValue<ushort>(1);
             Weight = 1;
             Description = "Unnamed";
         }
+        /// <summary>
+        /// Do the fuzz process
+        /// </summary>
+        /// <param name="realOffset">Real offset</param>
         public MutationLog Process(long realOffset)
         {
             // Removes
-            ushort remove = RandomHelper.GetRandom(RemoveLength.From, RemoveLength.To, RemoveLength.Excludes);
+            ushort remove = RemoveLength.Get();
 
             // Appends
-            ushort size = RandomHelper.GetRandom(AppendLength.From, AppendLength.To, AppendLength.Excludes);
+            ushort size = AppendLength.Get();
 
             if (size == 0)
                 return remove > 0 ? new MutationLog(realOffset, remove) : null;
 
             byte[] data = new byte[size];
-            RandomHelper.Randomize(data, 0, size, AppendByte.From, AppendByte.To, AppendByte.Excludes);
+            RandomHelper.Randomize(data, 0, size, AppendByte);
 
             return new MutationLog(realOffset, data, remove);
         }
+        /// <summary>
+        /// String representation
+        /// </summary>
         public override string ToString()
         {
             return Weight.ToString() + " - " + Description;

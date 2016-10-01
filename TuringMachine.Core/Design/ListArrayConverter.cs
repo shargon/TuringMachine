@@ -13,12 +13,19 @@ namespace TuringMachine.Core.Design
 
         public ListArrayConverter() { }
         public ListArrayConverter(bool readOnly, bool onlyCount) { _ReadOnly = readOnly; _OnlyCount = onlyCount; }
-
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destType)
         {
             if (destType == typeof(string))
             {
-                if (_OnlyCount) return "Count: " + ((IList)value).Count.ToString();
+                if (_OnlyCount)
+                {
+                    switch (((IList)value).Count)
+                    {
+                        case 0: return "Empty";
+                        case 1: return ((IList)value)[0].ToString();
+                        default: return "Count: " + ((IList)value).Count.ToString();
+                    }
+                }
                 return string.Join(",", ((IList)value).Cast<object>().Select(c => c.ToString()).ToArray());
             }
 

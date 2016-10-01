@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using TuringMachine.Core.Design;
 using TuringMachine.Core.Helpers;
+using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core.Mutational
 {
@@ -14,10 +15,14 @@ namespace TuringMachine.Core.Mutational
         MutationalChange[] _Steps;
 
         /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
         /// Valid offset
         /// </summary>
         [Category("Condition")]
-        public FromTo<ulong> ValidOffset { get; set; }
+        public IGetValue<ulong> ValidOffset { get; set; }
         /// <summary>
         /// Changes
         /// </summary>
@@ -40,6 +45,7 @@ namespace TuringMachine.Core.Mutational
                 Recall();
             }
         }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -48,8 +54,9 @@ namespace TuringMachine.Core.Mutational
             FuzzPercent = 5F;
             _Count = 0;
             _MaxRandom = 0;
-            ValidOffset = new Core.FromTo<ulong>(ulong.MinValue, ulong.MaxValue);
+            ValidOffset = new FromToValue<ulong>(ulong.MinValue, ulong.MaxValue);
             Changes = new List<MutationalChange>();
+            Description = "Unnamed";
         }
         /// <summary>
         /// Recall Changes
@@ -92,16 +99,18 @@ namespace TuringMachine.Core.Mutational
         /// </summary>
         public MutationalChange Get()
         {
-            int r = RandomHelper.GetRandom(0, _MaxRandom, null);
+            int r = RandomHelper.GetRandom(0, _MaxRandom);
             if (r < _Count)
                 return _Steps[r];
 
             return null;
         }
-
+        /// <summary>
+        /// String representation
+        /// </summary>
         public override string ToString()
         {
-            return ValidOffset.ToString();
+            return Description;
         }
     }
 }

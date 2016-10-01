@@ -9,7 +9,11 @@ using TuringMachine.Core.Mutational;
 
 namespace TuringMachine.Core
 {
-    public class Fuzzer
+    /// <summary>
+    /// [Client] <<----  Read Fuzz Information      <<----  [Server]  <<---- [Inputs]
+    ///          ----->> Write Information for Fuz  ---------------------->>
+    /// </summary>
+    public class FuzzerServer
     {
         public event EventHandler OnInputsChange;
         public event EventHandler OnConfigurationsChange;
@@ -36,13 +40,18 @@ namespace TuringMachine.Core
                 OnListenChange?.Invoke(this, EventArgs.Empty);
             }
         }
-
-        public Fuzzer()
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FuzzerServer()
         {
             Inputs = new List<FuzzerStat<IFuzzingInput>>();
             Configurations = new List<FuzzerStat<IFuzzingConfig>>();
         }
-
+        /// <summary>
+        /// Add File input
+        /// </summary>
+        /// <param name="file">File</param>
         public void AddFileInput(string file)
         {
             if (!File.Exists(file)) return;
@@ -51,14 +60,47 @@ namespace TuringMachine.Core
             Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
             OnInputsChange?.Invoke(this, EventArgs.Empty);
         }
-        public void AddTcpInput(IPEndPoint endPoint)
+        /// <summary>
+        /// Add tcp query input
+        /// </summary>
+        /// <param name="endPoint">EndPoint</param>
+        public void AddTcpQueryInput(IPEndPoint endPoint)
         {
             if (endPoint == null) return;
 
-            TcpFuzzingInput input = new TcpFuzzingInput(endPoint);
+            TcpQueryFuzzingInput input = new TcpQueryFuzzingInput(endPoint);
             Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
             OnInputsChange?.Invoke(this, EventArgs.Empty);
         }
+        /// <summary>
+        /// Add tcp proxy input
+        /// </summary>
+        /// <param name="endPoint">EndPoint</param>
+        public void AddTcpProxyInput(IPEndPoint endPoint)
+        {
+            if (endPoint == null) return;
+
+            TcpProxyFuzzingInput input = new TcpProxyFuzzingInput(endPoint);
+            Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
+            OnInputsChange?.Invoke(this, EventArgs.Empty);
+        }
+        /// <summary>
+        /// Add execution input
+        /// </summary>
+        /// <param name="path">Path</param>
+        /// <param name="args">Args</param>
+        public void AddExecuteInput(string path, string args)
+        {
+            if (string.IsNullOrEmpty(path)) return;
+
+            ExecutionFuzzingInput input = new ExecutionFuzzingInput(path,args);
+            Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
+            OnInputsChange?.Invoke(this, EventArgs.Empty);
+        }
+        /// <summary>
+        /// Add config
+        /// </summary>
+        /// <param name="file">File</param>
         public void AddConfig(string file)
         {
             if (string.IsNullOrEmpty(file)) return;
@@ -78,11 +120,6 @@ namespace TuringMachine.Core
                         break;
                     }
             }
-        }
-
-        public void AddTcpInput(object endPoint)
-        {
-            throw new NotImplementedException();
         }
     }
 }

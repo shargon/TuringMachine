@@ -119,10 +119,12 @@
             this.ClientSize = new System.Drawing.Size(812, 452);
             this.Controls.Add(this.propertyGrid1);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FMain";
             this.ShowIcon = false;
             this.Text = "Turing Machine - Generator";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FMain_KeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

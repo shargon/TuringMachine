@@ -17,18 +17,9 @@ namespace TuringMachine.Generator
             InitializeComponent();
             NewFile();
         }
-        void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-        void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            NewFile();
-        }
-        void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Save(_LastFile);
-        }
+        void exitToolStripMenuItem_Click(object sender, EventArgs e) { Close(); }
+        void newToolStripMenuItem_Click(object sender, EventArgs e) { NewFile(); }
+        void saveToolStripMenuItem_Click(object sender, EventArgs e) { Save(_LastFile); }
         void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog dialog = new SaveFileDialog()
@@ -70,6 +61,7 @@ namespace TuringMachine.Generator
             if (_Cur != null)
             {
                 propertyGrid1.SelectedObject = _Cur;
+                propertyGrid1.ExpandAllGridItems();
                 _LastFile = file;
 
                 saveToolStripMenuItem.Enabled = true;
@@ -84,6 +76,7 @@ namespace TuringMachine.Generator
             c.Mutations.Add(new MutationalOffset());
             _Cur = c;
             propertyGrid1.SelectedObject = _Cur;
+            propertyGrid1.ExpandAllGridItems();
         }
         void Save(string file)
         {
@@ -91,6 +84,20 @@ namespace TuringMachine.Generator
             File.WriteAllText(file, json, Encoding.UTF8);
             _LastFile = file;
             saveToolStripMenuItem.Enabled = true;
+        }
+        void FMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Escape:
+                    {
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+
+                        Close();
+                        break;
+                    }
+            }
         }
     }
 }

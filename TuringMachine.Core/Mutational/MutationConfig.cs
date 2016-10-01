@@ -21,14 +21,15 @@ namespace TuringMachine.Core.Mutational
         /// Description
         /// </summary>
         public string Description { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>
         public MutationConfig()
         {
             Mutations = new List<MutationalOffset>();
+            Description = "Unnamed";
         }
-
         /// <summary>
         /// Get next mutation
         /// </summary>
@@ -40,7 +41,7 @@ namespace TuringMachine.Core.Mutational
             // Fuzzer
             foreach (MutationalOffset cond in Mutations)
             {
-                if (!cond.ValidOffset.AreIn((ulong)offset))
+                if (!cond.ValidOffset.ItsValid((ulong)offset))
                     continue;
 
                 // Try change
@@ -51,16 +52,24 @@ namespace TuringMachine.Core.Mutational
 
             return null;
         }
-
+        /// <summary>
+        /// Deserialize from Json
+        /// </summary>
+        /// <param name="json">Json</param>
         public static MutationConfig FromJson(string json)
         {
             return SerializationHelper.DeserializeFromJson<MutationConfig>(json);
         }
+        /// <summary>
+        /// Convert to Json
+        /// </summary>
         public string ToJson()
         {
-            return SerializationHelper.SerializeToJson(this, false, true);
+            return SerializationHelper.SerializeToJson(this, true);
         }
-
+        /// <summary>
+        /// String representation
+        /// </summary>
         public override string ToString()
         {
             return Description;

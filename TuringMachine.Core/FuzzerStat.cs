@@ -13,8 +13,6 @@ namespace TuringMachine.Core
         /// Type
         /// </summary>
         public string Type { get { return _Source.Type; } }
-
-
         /// <summary>
         /// Count
         /// </summary>

@@ -2,15 +2,15 @@
 
 namespace TuringMachine.Core.Interfaces
 {
-    public interface IFuzzingInput: IType
+    public interface IFuzzingInput : IType
     {
         /// <summary>
         /// Get Stream
         /// </summary>
         Stream GetStream();
         /// <summary>
-        /// Type
+        /// Is selectable
         /// </summary>
-        string Type { get; }
+        bool IsSelectable { get; }
     }
 }

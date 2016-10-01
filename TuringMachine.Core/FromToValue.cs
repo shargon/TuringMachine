@@ -3,20 +3,33 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using TuringMachine.Core.Design;
+using TuringMachine.Core.Helpers;
+using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core
 {
     [JsonConverter(typeof(JsonFromToConverter))]
     [TypeConverter(typeof(ExpandableObjectConverter))]
-    public class FromTo<T> where T : IComparable
+    public class FromToValue<T> : IGetValue<T> where T : struct, IComparable
     {
         bool _AreSame;
         T _From, _To;
 
+        Type _Type;
+
+        static Type TypeByte = typeof(byte);
+        static Type TypeUInt16 = typeof(ushort);
+        static Type TypeInt32 = typeof(int);
+
+        /// <summary>
+        /// Class name
+        /// </summary>
+        [ReadOnly(true)]
+        [Browsable(false)]
+        public string Name { get { return "From-To"; } }
         /// <summary>
         /// Excludes
         /// </summary>
-        
         [TypeConverter(typeof(ListArrayConverter))]
         public List<T> Excludes { get; set; }
         /// <summary>
@@ -45,7 +58,6 @@ namespace TuringMachine.Core
                 _AreSame = From.CompareTo(To) == 0;
             }
         }
-
         /// <summary>
         /// Return if are the same
         /// </summary>
@@ -57,42 +69,78 @@ namespace TuringMachine.Core
         /// Constructor
         /// </summary>
         /// <param name="values">Equal values</param>
-        public FromTo(T values)
-        {
-            _From = _To = values;
-            Excludes = new List<T>();
-        }
-
+        public FromToValue(T values) : this(values, values) { }
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="from">From value</param>
         /// <param name="to">To value</param>
-        public FromTo(T from, T to)
+        public FromToValue(T from, T to) : this()
         {
             _From = from;
             _To = to;
-            Excludes = new List<T>();
         }
-
         /// <summary>
         /// Constructor
         /// </summary>
-        public FromTo()
+        public FromToValue()
         {
             _To = _From = default(T);
             Excludes = new List<T>();
+            _Type = typeof(T);
         }
-
         /// <summary>
         /// Return if are between from an To
         /// </summary>
         /// <param name="o">Object</param>
-        public bool AreIn(T o)
+        public bool ItsValid(T o)
         {
-            return o.CompareTo(From) <= 0 && To.CompareTo(o) >= 0;
+            if (o.CompareTo(From) <= 0 && To.CompareTo(o) >= 0)
+            {
+                if (Excludes.Contains(o)) return false;
+                return true;
+            }
+            return false;
         }
+        /// <summary>
+        /// Get next item
+        /// </summary>
+        public T Get()
+        {
+            if (_AreSame) return From;
 
+            T ret = default(T);
+
+            if (_Type == TypeByte)
+            {
+                // Get random byte
+                do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToByte(From), Convert.ToByte(To)), _Type); }
+                while (!Excludes.Contains(ret));
+            }
+            else
+            {
+                if (_Type == TypeUInt16)
+                {
+                    // Get ushort byte
+                    do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToUInt16(From), Convert.ToUInt16(To)), _Type); }
+                    while (!Excludes.Contains(ret));
+                }
+                else
+                {
+                    if (_Type == TypeInt32)
+                    {
+                        // Get int byte
+                        do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToInt32(From), Convert.ToInt32(To)), _Type); }
+                        while (!Excludes.Contains(ret));
+                    }
+                }
+            }
+
+            return ret;
+        }
+        /// <summary>
+        /// String representation
+        /// </summary>
         public override string ToString()
         {
             string ex = "";

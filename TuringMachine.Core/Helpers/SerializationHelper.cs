@@ -1,10 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters;
 using System.Text;
 
 namespace TuringMachine.Core.Helpers
@@ -42,70 +38,27 @@ namespace TuringMachine.Core.Helpers
         {
             NullValueHandling = NullValueHandling.Ignore,
         };
-        static JsonSerializerSettings _SettingsWithTypes = new JsonSerializerSettings()
-        {
-            NullValueHandling = NullValueHandling.Ignore,
-
-            TypeNameAssemblyFormat = FormatterAssemblyStyle.Full,
-            TypeNameHandling = TypeNameHandling.Auto,
-            Binder = new TypeNameSerializationBinder()
-        };
-
-        public class TypeNameSerializationBinder : SerializationBinder
-        {
-            public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
-            {
-                assemblyName = serializedType.Assembly.GetName().Name;
-                typeName = serializedType.FullName;
-            }
-
-            public override Type BindToType(string assemblyName, string typeName)
-            {
-                Assembly asm = AppDomain.CurrentDomain.GetAssemblies().
-                        SingleOrDefault(assembly => assembly.GetName().Name == assemblyName);
-
-                try
-                {
-                    return asm.GetType(typeName, true);
-                }
-                catch (Exception e)
-                {
-                    // Comprobar si se ha cambiado de espacio de nombres
-
-                    int ix = typeName.LastIndexOf('.');
-                    if (ix != -1)
-                    {
-                        typeName = typeName.Substring(ix + 1);
-                        foreach (Type t in asm.GetTypes())
-                            if (t.Name == typeName) return t;
-                    }
-
-                    throw (e);
-                }
-            }
-        }
 
         /// <summary>
         /// Serializa un objeto a un json
         /// </summary>
         /// <param name="data">Datos</param>
-        /// <param name="withTypes">Exportar los tipos</param>
-        public static string SerializeToJson(object data, bool withTypes = false, bool indented = false)
+        /// <param name="indented">Indented</param>
+        public static string SerializeToJson(object data, bool indented = false)
         {
             if (data == null) return null;
 
-            return JsonConvert.SerializeObject(data, indented ? Formatting.Indented : Formatting.None, withTypes ? _SettingsWithTypes : _Settings);
+            return JsonConvert.SerializeObject(data, indented ? Formatting.Indented : Formatting.None, _Settings);
         }
         /// <summary>
         /// Deserializa un json
         /// </summary>
         /// <typeparam name="T">Tipo</typeparam>
         /// <param name="json">Json</param>
-        /// <param name="withTypes">Exporta los tipos</param>
-        public static T DeserializeFromJson<T>(string json, bool withTypes = false)
+        public static T DeserializeFromJson<T>(string json)
         {
             if (json == null) return default(T);
-            return JsonConvert.DeserializeObject<T>(json, withTypes ? _SettingsWithTypes : _Settings);
+            return JsonConvert.DeserializeObject<T>(json, _Settings);
         }
         /// <summary>
         /// Serializa un objeto al tipo especificado
@@ -119,12 +72,15 @@ namespace TuringMachine.Core.Helpers
             switch (format)
             {
                 case EFormat.Json: return SerializationHelper.SerializeToJson(o);
-                case EFormat.JsonIndented: return SerializationHelper.SerializeToJson(o, false, true);
+                case EFormat.JsonIndented: return SerializationHelper.SerializeToJson(o, true);
                 case EFormat.ToString: return o.ToString();
                 default: return "";
             }
         }
-
+        /// <summary>
+        /// Get MimeType of format
+        /// </summary>
+        /// <param name="format">Format</param>
         public static string GetMimeType(EFormat format)
         {
             switch (format)
@@ -168,6 +124,10 @@ namespace TuringMachine.Core.Helpers
             if (type.IsValueType) return Activator.CreateInstance(type);
             return null;
         }
+        /// <summary>
+        /// Get Encoding
+        /// </summary>
+        /// <param name="encoding">Encoding</param>
         public static Encoding GetEncoding(EEncoding encoding)
         {
             switch (encoding)

@@ -43,7 +43,6 @@ namespace TuringMachine.Core.Mutational
             Append = append;
             Remove = remove;
         }
-
         /// <summary>
         /// String representation
         /// </summary>

@@ -1,18 +1,20 @@
 ﻿using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core.Inputs
 {
-    public class FileFuzzingInput : IFuzzingInput
+    public class TcpQueryFuzzingInput : IFuzzingInput
     {
         /// <summary>
-        /// Name
+        /// EndPoint
         /// </summary>
-        public string FileName { get; private set; }
+        public IPEndPoint EndPoint { get; private set; }
         /// <summary>
         /// Type
         /// </summary>
-        public string Type { get { return "File"; } }
+        public string Type { get { return "Tcp Query"; } }
         /// <summary>
         /// IsSelectable
         /// </summary>
@@ -20,24 +22,26 @@ namespace TuringMachine.Core.Inputs
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="filename">File</param>
-        public FileFuzzingInput(string filename)
+        /// <param name="endPoint">EndPoint</param>
+        public TcpQueryFuzzingInput(IPEndPoint endPoint)
         {
-            FileName = filename;
+            EndPoint = endPoint;
         }
         /// <summary>
-        /// Get file stream
+        /// Get Tcp stream
         /// </summary>
+        /// <returns></returns>
         public Stream GetStream()
         {
-            return File.OpenRead(FileName);
+            TcpClient tcp = new TcpClient(EndPoint);
+            return tcp.GetStream();
         }
         /// <summary>
         /// String representation
         /// </summary>
         public override string ToString()
         {
-            return FileName;
+            return EndPoint.ToString();
         }
     }
 }

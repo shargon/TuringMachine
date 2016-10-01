@@ -9,13 +9,13 @@ namespace TuringMachine
 {
     public partial class FMain : Form
     {
-        Fuzzer _Fuzzer;
+        FuzzerServer _Fuzzer;
 
         public FMain()
         {
             InitializeComponent();
 
-            _Fuzzer = new Fuzzer();
+            _Fuzzer = new FuzzerServer();
             _Fuzzer.OnInputsChange += _Fuzzer_OnInputsChange;
             _Fuzzer.OnConfigurationsChange += _Fuzzer_OnConfigurationsChange;
             _Fuzzer.OnListenChange += _Fuzzer_OnListenChange;
@@ -72,8 +72,21 @@ namespace TuringMachine
             using (EndPointDialog dialog = new EndPointDialog())
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
-                    _Fuzzer.AddTcpInput(dialog.EndPoint);
+                    _Fuzzer.AddTcpQueryInput(dialog.EndPoint);
             }
+        }
+        void socketToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            using (EndPointDialog dialog = new EndPointDialog())
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                    _Fuzzer.AddTcpProxyInput(dialog.EndPoint);
+            }
+        }
+        void executeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            _Fuzzer.AddExecuteInput("", "");
         }
         void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
