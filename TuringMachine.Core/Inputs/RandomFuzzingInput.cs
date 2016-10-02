@@ -61,7 +61,7 @@ namespace TuringMachine.Core.Inputs
         /// <summary>
         /// Length
         /// </summary>
-        public long Length { get; private set; }
+        public FromToValue<long> Length { get; private set; }
         /// <summary>
         /// Type
         /// </summary>
@@ -70,7 +70,7 @@ namespace TuringMachine.Core.Inputs
         /// Constructor
         /// </summary>
         /// <param name="filename">File</param>
-        public RandomFuzzingInput(long length)
+        public RandomFuzzingInput(FromToValue<long> length)
         {
             Length = length;
         }
@@ -79,7 +79,7 @@ namespace TuringMachine.Core.Inputs
         /// </summary>
         public Stream GetStream()
         {
-            return new RandomStream(Length);
+            return new RandomStream(Length.Get());
         }
         /// <summary>
         /// String representation

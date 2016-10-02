@@ -29,27 +29,27 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gridInput = new System.Windows.Forms.DataGridView();
+            this.cInputsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gridLog = new System.Windows.Forms.DataGridView();
-            this.cLogDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cLogOrigin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cLogType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cLogDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cLogGoto = new System.Windows.Forms.DataGridViewButtonColumn();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -58,7 +58,13 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.randomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridConfig = new System.Windows.Forms.DataGridView();
+            this.cConfigType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
@@ -78,17 +84,12 @@
             this.tbStop = new System.Windows.Forms.ToolStripButton();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.randomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cInputsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cInputDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cInputCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cInputFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cInputCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.cLogDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogOrigin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogGoto = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLog)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -128,6 +129,53 @@
             this.gridInput.Size = new System.Drawing.Size(489, 325);
             this.gridInput.TabIndex = 0;
             this.gridInput.VirtualMode = true;
+            this.gridInput.SelectionChanged += new System.EventHandler(this.gridInput_SelectionChanged);
+            // 
+            // cInputsType
+            // 
+            this.cInputsType.DataPropertyName = "Type";
+            this.cInputsType.HeaderText = "Type";
+            this.cInputsType.Name = "cInputsType";
+            this.cInputsType.ReadOnly = true;
+            this.cInputsType.Width = 90;
+            // 
+            // cInputDescription
+            // 
+            this.cInputDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cInputDescription.DataPropertyName = "Description";
+            this.cInputDescription.HeaderText = "Description";
+            this.cInputDescription.Name = "cInputDescription";
+            this.cInputDescription.ReadOnly = true;
+            // 
+            // cInputCount
+            // 
+            this.cInputCount.DataPropertyName = "Tests";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputCount.DefaultCellStyle = dataGridViewCellStyle1;
+            this.cInputCount.HeaderText = "Tests";
+            this.cInputCount.Name = "cInputCount";
+            this.cInputCount.ReadOnly = true;
+            this.cInputCount.Width = 80;
+            // 
+            // cInputFails
+            // 
+            this.cInputFails.DataPropertyName = "Fails";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputFails.DefaultCellStyle = dataGridViewCellStyle2;
+            this.cInputFails.HeaderText = "Fails";
+            this.cInputFails.Name = "cInputFails";
+            this.cInputFails.ReadOnly = true;
+            this.cInputFails.Width = 55;
+            // 
+            // cInputCrashes
+            // 
+            this.cInputCrashes.DataPropertyName = "Crashes";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputCrashes.DefaultCellStyle = dataGridViewCellStyle3;
+            this.cInputCrashes.HeaderText = "Crashes";
+            this.cInputCrashes.Name = "cInputCrashes";
+            this.cInputCrashes.ReadOnly = true;
+            this.cInputCrashes.Width = 55;
             // 
             // gridLog
             // 
@@ -137,7 +185,6 @@
             this.gridLog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.cLogDate,
             this.cLogOrigin,
-            this.cLogType,
             this.cLogDescription,
             this.cLogGoto});
             this.gridLog.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -150,49 +197,6 @@
             this.gridLog.TabIndex = 1;
             this.gridLog.VirtualMode = true;
             this.gridLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridLog_CellContentClick);
-            // 
-            // cLogDate
-            // 
-            this.cLogDate.DataPropertyName = "Date";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.cLogDate.DefaultCellStyle = dataGridViewCellStyle4;
-            this.cLogDate.HeaderText = "Date";
-            this.cLogDate.Name = "cLogDate";
-            this.cLogDate.ReadOnly = true;
-            // 
-            // cLogOrigin
-            // 
-            this.cLogOrigin.DataPropertyName = "Origin";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.cLogOrigin.DefaultCellStyle = dataGridViewCellStyle5;
-            this.cLogOrigin.HeaderText = "Origin";
-            this.cLogOrigin.Name = "cLogOrigin";
-            this.cLogOrigin.ReadOnly = true;
-            // 
-            // cLogType
-            // 
-            this.cLogType.DataPropertyName = "Type";
-            this.cLogType.HeaderText = "Type";
-            this.cLogType.Name = "cLogType";
-            this.cLogType.ReadOnly = true;
-            // 
-            // cLogDescription
-            // 
-            this.cLogDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cLogDescription.DataPropertyName = "Description";
-            this.cLogDescription.HeaderText = "Description";
-            this.cLogDescription.Name = "cLogDescription";
-            this.cLogDescription.ReadOnly = true;
-            // 
-            // cLogGoto
-            // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.NullValue = ">";
-            this.cLogGoto.DefaultCellStyle = dataGridViewCellStyle6;
-            this.cLogGoto.HeaderText = "Open path";
-            this.cLogGoto.Name = "cLogGoto";
-            this.cLogGoto.ReadOnly = true;
-            this.cLogGoto.Width = 70;
             // 
             // splitContainer1
             // 
@@ -220,6 +224,7 @@
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
+            this.toolStripButton1,
             this.toolStripDropDownButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -238,16 +243,16 @@
             // 
             this.toolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tcpToolStripMenuItem,
             this.fileToolStripMenuItem,
             this.folderToolStripMenuItem,
+            this.tcpToolStripMenuItem,
             this.executeToolStripMenuItem,
             this.randomToolStripMenuItem});
             this.toolStripDropDownButton1.Image = global::TuringMachine.Res.add;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(74, 31);
-            this.toolStripDropDownButton1.Text = "Add";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(45, 31);
+            this.toolStripDropDownButton1.ToolTipText = "Add";
             // 
             // tcpToolStripMenuItem
             // 
@@ -281,6 +286,14 @@
             this.executeToolStripMenuItem.Text = "Execute";
             this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
+            // randomToolStripMenuItem
+            // 
+            this.randomToolStripMenuItem.Image = global::TuringMachine.Res.add_random;
+            this.randomToolStripMenuItem.Name = "randomToolStripMenuItem";
+            this.randomToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.randomToolStripMenuItem.Text = "Random";
+            this.randomToolStripMenuItem.Click += new System.EventHandler(this.randomToolStripMenuItem_Click);
+            // 
             // gridConfig
             // 
             this.gridConfig.AllowUserToAddRows = false;
@@ -301,6 +314,53 @@
             this.gridConfig.Size = new System.Drawing.Size(508, 325);
             this.gridConfig.TabIndex = 2;
             this.gridConfig.VirtualMode = true;
+            this.gridConfig.SelectionChanged += new System.EventHandler(this.gridConfig_SelectionChanged);
+            // 
+            // cConfigType
+            // 
+            this.cConfigType.DataPropertyName = "Type";
+            this.cConfigType.HeaderText = "Type";
+            this.cConfigType.Name = "cConfigType";
+            this.cConfigType.ReadOnly = true;
+            this.cConfigType.Width = 90;
+            // 
+            // cConfigDescription
+            // 
+            this.cConfigDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cConfigDescription.DataPropertyName = "Description";
+            this.cConfigDescription.HeaderText = "Description";
+            this.cConfigDescription.Name = "cConfigDescription";
+            this.cConfigDescription.ReadOnly = true;
+            // 
+            // cConfigCount
+            // 
+            this.cConfigCount.DataPropertyName = "Tests";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigCount.DefaultCellStyle = dataGridViewCellStyle7;
+            this.cConfigCount.HeaderText = "Tests";
+            this.cConfigCount.Name = "cConfigCount";
+            this.cConfigCount.ReadOnly = true;
+            this.cConfigCount.Width = 80;
+            // 
+            // cConfigFails
+            // 
+            this.cConfigFails.DataPropertyName = "Fails";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigFails.DefaultCellStyle = dataGridViewCellStyle8;
+            this.cConfigFails.HeaderText = "Fails";
+            this.cConfigFails.Name = "cConfigFails";
+            this.cConfigFails.ReadOnly = true;
+            this.cConfigFails.Width = 55;
+            // 
+            // cConfigCrashes
+            // 
+            this.cConfigCrashes.DataPropertyName = "Crashes";
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigCrashes.DefaultCellStyle = dataGridViewCellStyle9;
+            this.cConfigCrashes.HeaderText = "Crashes";
+            this.cConfigCrashes.Name = "cConfigCrashes";
+            this.cConfigCrashes.ReadOnly = true;
+            this.cConfigCrashes.Width = 55;
             // 
             // toolStrip3
             // 
@@ -309,6 +369,7 @@
             this.toolStrip3.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel3,
+            this.toolStripButton2,
             this.toolStripDropDownButton2});
             this.toolStrip3.Location = new System.Drawing.Point(0, 0);
             this.toolStrip3.Name = "toolStrip3";
@@ -332,8 +393,8 @@
             this.toolStripDropDownButton2.Image = global::TuringMachine.Res.add;
             this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
-            this.toolStripDropDownButton2.Size = new System.Drawing.Size(74, 31);
-            this.toolStripDropDownButton2.Text = "Add";
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(45, 31);
+            this.toolStripDropDownButton2.ToolTipText = "Add";
             // 
             // toolStripMenuItem2
             // 
@@ -526,105 +587,67 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // randomToolStripMenuItem
+            // toolStripButton1
             // 
-            this.randomToolStripMenuItem.Image = global::TuringMachine.Res.add_random;
-            this.randomToolStripMenuItem.Name = "randomToolStripMenuItem";
-            this.randomToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
-            this.randomToolStripMenuItem.Text = "Random";
-            this.randomToolStripMenuItem.Click += new System.EventHandler(this.randomToolStripMenuItem_Click);
+            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Enabled = false;
+            this.toolStripButton1.Image = global::TuringMachine.Res.trash;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(36, 31);
+            this.toolStripButton1.Text = "toolStripButton1";
+            this.toolStripButton1.ToolTipText = "Remove selected";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // cInputsType
+            // toolStripButton2
             // 
-            this.cInputsType.DataPropertyName = "Type";
-            this.cInputsType.HeaderText = "Type";
-            this.cInputsType.Name = "cInputsType";
-            this.cInputsType.ReadOnly = true;
-            this.cInputsType.Width = 90;
+            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Enabled = false;
+            this.toolStripButton2.Image = global::TuringMachine.Res.trash;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(36, 31);
+            this.toolStripButton2.Text = "toolStripButton1";
+            this.toolStripButton2.ToolTipText = "Remove selected";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
-            // cInputDescription
+            // cLogDate
             // 
-            this.cInputDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cInputDescription.DataPropertyName = "Description";
-            this.cInputDescription.HeaderText = "Description";
-            this.cInputDescription.Name = "cInputDescription";
-            this.cInputDescription.ReadOnly = true;
+            this.cLogDate.DataPropertyName = "Date";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cLogDate.DefaultCellStyle = dataGridViewCellStyle4;
+            this.cLogDate.HeaderText = "Date";
+            this.cLogDate.Name = "cLogDate";
+            this.cLogDate.ReadOnly = true;
             // 
-            // cInputCount
+            // cLogOrigin
             // 
-            this.cInputCount.DataPropertyName = "Tests";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputCount.DefaultCellStyle = dataGridViewCellStyle1;
-            this.cInputCount.HeaderText = "Tests";
-            this.cInputCount.Name = "cInputCount";
-            this.cInputCount.ReadOnly = true;
-            this.cInputCount.Width = 80;
+            this.cLogOrigin.DataPropertyName = "Origin";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cLogOrigin.DefaultCellStyle = dataGridViewCellStyle5;
+            this.cLogOrigin.HeaderText = "Origin";
+            this.cLogOrigin.Name = "cLogOrigin";
+            this.cLogOrigin.ReadOnly = true;
             // 
-            // cInputFails
+            // cLogDescription
             // 
-            this.cInputFails.DataPropertyName = "Fails";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputFails.DefaultCellStyle = dataGridViewCellStyle2;
-            this.cInputFails.HeaderText = "Fails";
-            this.cInputFails.Name = "cInputFails";
-            this.cInputFails.ReadOnly = true;
-            this.cInputFails.Width = 55;
+            this.cLogDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cLogDescription.DataPropertyName = "Description";
+            this.cLogDescription.HeaderText = "Description";
+            this.cLogDescription.Name = "cLogDescription";
+            this.cLogDescription.ReadOnly = true;
             // 
-            // cInputCrashes
+            // cLogGoto
             // 
-            this.cInputCrashes.DataPropertyName = "Crashes";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputCrashes.DefaultCellStyle = dataGridViewCellStyle3;
-            this.cInputCrashes.HeaderText = "Crashes";
-            this.cInputCrashes.Name = "cInputCrashes";
-            this.cInputCrashes.ReadOnly = true;
-            this.cInputCrashes.Width = 55;
-            // 
-            // cConfigType
-            // 
-            this.cConfigType.DataPropertyName = "Type";
-            this.cConfigType.HeaderText = "Type";
-            this.cConfigType.Name = "cConfigType";
-            this.cConfigType.ReadOnly = true;
-            this.cConfigType.Width = 90;
-            // 
-            // cConfigDescription
-            // 
-            this.cConfigDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cConfigDescription.DataPropertyName = "Description";
-            this.cConfigDescription.HeaderText = "Description";
-            this.cConfigDescription.Name = "cConfigDescription";
-            this.cConfigDescription.ReadOnly = true;
-            // 
-            // cConfigCount
-            // 
-            this.cConfigCount.DataPropertyName = "Tests";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigCount.DefaultCellStyle = dataGridViewCellStyle7;
-            this.cConfigCount.HeaderText = "Tests";
-            this.cConfigCount.Name = "cConfigCount";
-            this.cConfigCount.ReadOnly = true;
-            this.cConfigCount.Width = 80;
-            // 
-            // cConfigFails
-            // 
-            this.cConfigFails.DataPropertyName = "Fails";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigFails.DefaultCellStyle = dataGridViewCellStyle8;
-            this.cConfigFails.HeaderText = "Fails";
-            this.cConfigFails.Name = "cConfigFails";
-            this.cConfigFails.ReadOnly = true;
-            this.cConfigFails.Width = 55;
-            // 
-            // cConfigCrashes
-            // 
-            this.cConfigCrashes.DataPropertyName = "Crashes";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigCrashes.DefaultCellStyle = dataGridViewCellStyle9;
-            this.cConfigCrashes.HeaderText = "Crashes";
-            this.cConfigCrashes.Name = "cConfigCrashes";
-            this.cConfigCrashes.ReadOnly = true;
-            this.cConfigCrashes.Width = 55;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.NullValue = ">";
+            this.cLogGoto.DefaultCellStyle = dataGridViewCellStyle6;
+            this.cLogGoto.HeaderText = "Open path";
+            this.cLogGoto.Name = "cLogGoto";
+            this.cLogGoto.ReadOnly = true;
+            this.cLogGoto.Width = 70;
             // 
             // FMain
             // 
@@ -698,11 +721,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cLogDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cLogOrigin;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cLogType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cLogDescription;
-        private System.Windows.Forms.DataGridViewButtonColumn cLogGoto;
         private System.Windows.Forms.ToolStripMenuItem randomToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn cInputsType;
         private System.Windows.Forms.DataGridViewTextBoxColumn cInputDescription;
@@ -714,6 +732,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cConfigCount;
         private System.Windows.Forms.DataGridViewTextBoxColumn cConfigFails;
         private System.Windows.Forms.DataGridViewTextBoxColumn cConfigCrashes;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cLogDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cLogOrigin;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cLogDescription;
+        private System.Windows.Forms.DataGridViewButtonColumn cLogGoto;
     }
 }
 

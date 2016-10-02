@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using TuringMachine.Core;
@@ -27,8 +30,8 @@ namespace TuringMachine
 
             // Create fuzzer
             _Fuzzer = new FuzzerServer();
-            _Fuzzer.OnInputsChange += _Fuzzer_OnInputsChange;
-            _Fuzzer.OnConfigurationsChange += _Fuzzer_OnConfigurationsChange;
+            _Fuzzer.Inputs.CollectionChanged += _Fuzzer_OnInputsChange;
+            _Fuzzer.Configurations.CollectionChanged += _Fuzzer_OnConfigurationsChange;
             _Fuzzer.OnListenChange += _Fuzzer_OnListenChange;
             _Fuzzer.OnTestEnd += _Fuzzer_OnTestEnd;
             _Fuzzer.OnCrashLog += _Fuzzer_OnCrashLog;
@@ -61,8 +64,13 @@ namespace TuringMachine
                 Invoke(new FuzzerServer.delOnCrashLog(_Fuzzer_OnCrashLog), sender, log);
                 return;
             }
+
+            _Test++;
+            if (log.Type == ETestResult.Fail) _Fails++;
+            else _Crash++;
+
             gridLog.DataSource = _Fuzzer.Logs;
-            toolStripLabel2.Text = "Crashes" + (_Fuzzer.Logs.Length <= 0 ? "" : " (" + _Fuzzer.Logs.Length.ToString() + ")");
+            toolStripLabel2.Text = "Crashes" + (_Fuzzer.Logs.Count <= 0 ? "" : " (" + _Fuzzer.Logs.Count.ToString() + ")");
         }
         void _Fuzzer_OnConfigurationsChange(object sender, EventArgs e)
         {
@@ -133,17 +141,35 @@ namespace TuringMachine
         }
         void randomToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            long from, to;
+
             using (LongDialog dialog = new LongDialog()
             {
+                Text = "From",
                 Title = "Stream length:",
                 MinValue = 0,
                 MaxValue = long.MaxValue,
                 Input = 1024 * 1024
             })
             {
-                if (dialog.ShowDialog() == DialogResult.OK)
-                    _Fuzzer.AddInput(new RandomFuzzingInput(dialog.Input));
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+                from = dialog.Input;
             }
+
+            using (LongDialog dialog = new LongDialog()
+            {
+                Text = "To",
+                Title = "Stream length:",
+                MinValue = from,
+                MaxValue = long.MaxValue,
+                Input = 1024 * 1024 * 10
+            })
+            {
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+                to = dialog.Input;
+            }
+
+            _Fuzzer.AddInput(new RandomFuzzingInput(new FromToValue<long>(from, to)));
         }
         #endregion
         #region Add Configs
@@ -211,17 +237,21 @@ namespace TuringMachine
         }
         void tbPlay_Click(object sender, EventArgs e)
         {
-            if (_Fuzzer.Play())
+            if (_Fuzzer.Start())
             {
                 tbPlay.Enabled = false;
                 tbPause.Enabled = true;
                 tbStop.Enabled = true;
+                toolStripStatusLabel2.Enabled = false;
 
                 if (!AllowHotEdit)
                 {
                     toolStripDropDownButton1.Enabled = false;
                     toolStripDropDownButton2.Enabled = false;
                 }
+
+                gridInput_SelectionChanged(null, null);
+                gridConfig_SelectionChanged(null, null);
             }
         }
         void tbPause_Click(object sender, EventArgs e)
@@ -233,7 +263,37 @@ namespace TuringMachine
 
                 toolStripDropDownButton1.Enabled = true;
                 toolStripDropDownButton2.Enabled = true;
+
+                gridInput_SelectionChanged(null, null);
+                gridConfig_SelectionChanged(null, null);
             }
+        }
+        void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            RemoveSelected(gridInput, _Fuzzer.Inputs);
+        }
+        void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            RemoveSelected(gridConfig, _Fuzzer.Configurations);
+        }
+        void RemoveSelected(DataGridView grid, IList collection)
+        {
+            if (!AllowHotEdit && _Fuzzer.State != EFuzzerState.Stopped) return;
+
+            List<object> l = new List<object>();
+            foreach (DataGridViewRow r in grid.SelectedRows)
+                l.Add(r.DataBoundItem);
+
+            foreach (object o in l)
+                collection.Remove(o);
+        }
+        void gridInput_SelectionChanged(object sender, EventArgs e)
+        {
+            toolStripButton1.Enabled = gridInput.SelectedRows.Count > 0 && (AllowHotEdit || _Fuzzer.State == EFuzzerState.Stopped);
+        }
+        void gridConfig_SelectionChanged(object sender, EventArgs e)
+        {
+            toolStripButton2.Enabled = gridConfig.SelectedRows.Count > 0 && (AllowHotEdit || _Fuzzer.State == EFuzzerState.Stopped);
         }
         void tbStop_Click(object sender, EventArgs e)
         {
@@ -242,9 +302,13 @@ namespace TuringMachine
                 tbPlay.Enabled = true;
                 tbPause.Enabled = false;
                 tbStop.Enabled = false;
+                toolStripStatusLabel2.Enabled = true;
 
                 toolStripDropDownButton1.Enabled = true;
                 toolStripDropDownButton2.Enabled = true;
+
+                gridInput_SelectionChanged(null, null);
+                gridConfig_SelectionChanged(null, null);
             }
         }
         void gridLog_CellContentClick(object sender, DataGridViewCellEventArgs e)

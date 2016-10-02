@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
 using System.Text;
 using TuringMachine.Core.Enums;
-using TuringMachine.Core.Inputs;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Mutational;
 
@@ -19,27 +18,25 @@ namespace TuringMachine.Core
         public delegate void delOnTestEnd(object sender, ETestResult result);
         public delegate void delOnCrashLog(object sender, FuzzerLog log);
 
-        public event EventHandler OnInputsChange;
-        public event EventHandler OnConfigurationsChange;
         public event EventHandler OnListenChange;
 
         public event delOnTestEnd OnTestEnd;
         public event delOnCrashLog OnCrashLog;
 
-        List<FuzzerLog> _Logs;
+        EFuzzerState _State;
         IPEndPoint _EndPoint = new IPEndPoint(IPAddress.Any, 7777);
         /// <summary>
         /// Inputs
         /// </summary>
-        public List<FuzzerStat<IFuzzingInput>> Inputs { get; private set; }
+        public ObservableCollection<FuzzerStat<IFuzzingInput>> Inputs { get; private set; }
         /// <summary>
         /// Configurations
         /// </summary>
-        public List<FuzzerStat<IFuzzingConfig>> Configurations { get; private set; }
+        public ObservableCollection<FuzzerStat<IFuzzingConfig>> Configurations { get; private set; }
         /// <summary>
         /// Logs
         /// </summary>
-        public FuzzerLog[] Logs { get { return _Logs.ToArray(); } }
+        public ObservableCollection<FuzzerLog> Logs { get; private set; }
         /// <summary>
         /// Listen address
         /// </summary>
@@ -53,13 +50,18 @@ namespace TuringMachine.Core
             }
         }
         /// <summary>
+        /// State
+        /// </summary>
+        public EFuzzerState State { get { return _State; } }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public FuzzerServer()
         {
-            Inputs = new List<FuzzerStat<IFuzzingInput>>();
-            Configurations = new List<FuzzerStat<IFuzzingConfig>>();
-            _Logs = new List<FuzzerLog>();
+            Inputs = new ObservableCollection<FuzzerStat<IFuzzingInput>>();
+            Configurations = new ObservableCollection<FuzzerStat<IFuzzingConfig>>();
+            Logs = new ObservableCollection<FuzzerLog>();
         }
         /// <summary>
         /// Add input
@@ -70,7 +72,6 @@ namespace TuringMachine.Core
             if (Inputs == null) return;
 
             Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
-            OnInputsChange?.Invoke(this, EventArgs.Empty);
         }
         /// <summary>
         /// Add config
@@ -90,7 +91,6 @@ namespace TuringMachine.Core
                         if (c != null)
                         {
                             Configurations.Add(new FuzzerStat<IFuzzingConfig>(c));
-                            OnConfigurationsChange?.Invoke(this, EventArgs.Empty);
                         }
                         break;
                     }
@@ -103,7 +103,8 @@ namespace TuringMachine.Core
         public void RaiseOnCrashLog(FuzzerLog log)
         {
             if (log == null) return;
-            _Logs.Add(log);
+
+            Logs.Add(log);
             OnCrashLog?.Invoke(this, log);
         }
         /// <summary>
@@ -119,13 +120,15 @@ namespace TuringMachine.Core
         /// </summary>
         public bool Stop()
         {
+            _State = EFuzzerState.Stopped;
             return true;
         }
         /// <summary>
-        /// Play logic
+        /// Start logic
         /// </summary>
-        public bool Play()
+        public bool Start()
         {
+            _State = EFuzzerState.Started;
             return true;
         }
         /// <summary>
@@ -133,6 +136,7 @@ namespace TuringMachine.Core
         /// </summary>
         public bool Pause()
         {
+            _State = EFuzzerState.Paused;
             return true;
         }
     }

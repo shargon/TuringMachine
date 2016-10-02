@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using TuringMachine.Core.Enums;
 
 namespace TuringMachine.Core
 {
@@ -16,7 +17,7 @@ namespace TuringMachine.Core
         /// <summary>
         /// Type
         /// </summary>
-        public string Type { get; set; }
+        public ETestResult Type { get; set; }
         /// <summary>
         /// Description
         /// </summary>
