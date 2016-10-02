@@ -29,36 +29,36 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gridInput = new System.Windows.Forms.DataGridView();
-            this.cInputsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cInputDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cInputCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cInputCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.gridLog = new System.Windows.Forms.DataGridView();
+            this.cLogDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogOrigin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogGoto = new System.Windows.Forms.DataGridViewButtonColumn();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.tcpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.queryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.socketToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridConfig = new System.Windows.Forms.DataGridView();
-            this.cConfigType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
@@ -78,8 +78,19 @@
             this.tbStop = new System.Windows.Forms.ToolStripButton();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.randomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cInputsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridLog)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -106,6 +117,7 @@
             this.cInputsType,
             this.cInputDescription,
             this.cInputCount,
+            this.cInputFails,
             this.cInputCrashes});
             this.gridInput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridInput.Location = new System.Drawing.Point(0, 34);
@@ -113,52 +125,74 @@
             this.gridInput.ReadOnly = true;
             this.gridInput.RowHeadersVisible = false;
             this.gridInput.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridInput.Size = new System.Drawing.Size(489, 296);
+            this.gridInput.Size = new System.Drawing.Size(489, 325);
             this.gridInput.TabIndex = 0;
             this.gridInput.VirtualMode = true;
             // 
-            // cInputsType
+            // gridLog
             // 
-            this.cInputsType.DataPropertyName = "Type";
-            this.cInputsType.HeaderText = "Type";
-            this.cInputsType.Name = "cInputsType";
-            this.cInputsType.ReadOnly = true;
-            this.cInputsType.Width = 90;
+            this.gridLog.AllowUserToAddRows = false;
+            this.gridLog.AllowUserToResizeRows = false;
+            this.gridLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridLog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.cLogDate,
+            this.cLogOrigin,
+            this.cLogType,
+            this.cLogDescription,
+            this.cLogGoto});
+            this.gridLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridLog.Location = new System.Drawing.Point(0, 25);
+            this.gridLog.Name = "gridLog";
+            this.gridLog.ReadOnly = true;
+            this.gridLog.RowHeadersVisible = false;
+            this.gridLog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.gridLog.Size = new System.Drawing.Size(1001, 99);
+            this.gridLog.TabIndex = 1;
+            this.gridLog.VirtualMode = true;
+            this.gridLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridLog_CellContentClick);
             // 
-            // cInputDescription
+            // cLogDate
             // 
-            this.cInputDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cInputDescription.DataPropertyName = "Description";
-            this.cInputDescription.HeaderText = "Description";
-            this.cInputDescription.Name = "cInputDescription";
-            this.cInputDescription.ReadOnly = true;
+            this.cLogDate.DataPropertyName = "Date";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cLogDate.DefaultCellStyle = dataGridViewCellStyle4;
+            this.cLogDate.HeaderText = "Date";
+            this.cLogDate.Name = "cLogDate";
+            this.cLogDate.ReadOnly = true;
             // 
-            // cInputCount
+            // cLogOrigin
             // 
-            this.cInputCount.DataPropertyName = "Count";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputCount.DefaultCellStyle = dataGridViewCellStyle13;
-            this.cInputCount.HeaderText = "Count";
-            this.cInputCount.Name = "cInputCount";
-            this.cInputCount.ReadOnly = true;
+            this.cLogOrigin.DataPropertyName = "Origin";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cLogOrigin.DefaultCellStyle = dataGridViewCellStyle5;
+            this.cLogOrigin.HeaderText = "Origin";
+            this.cLogOrigin.Name = "cLogOrigin";
+            this.cLogOrigin.ReadOnly = true;
             // 
-            // cInputCrashes
+            // cLogType
             // 
-            this.cInputCrashes.DataPropertyName = "Crashes";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputCrashes.DefaultCellStyle = dataGridViewCellStyle14;
-            this.cInputCrashes.HeaderText = "Crashes";
-            this.cInputCrashes.Name = "cInputCrashes";
-            this.cInputCrashes.ReadOnly = true;
+            this.cLogType.DataPropertyName = "Type";
+            this.cLogType.HeaderText = "Type";
+            this.cLogType.Name = "cLogType";
+            this.cLogType.ReadOnly = true;
             // 
-            // dataGridView2
+            // cLogDescription
             // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView2.Location = new System.Drawing.Point(0, 25);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(1001, 128);
-            this.dataGridView2.TabIndex = 1;
+            this.cLogDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cLogDescription.DataPropertyName = "Description";
+            this.cLogDescription.HeaderText = "Description";
+            this.cLogDescription.Name = "cLogDescription";
+            this.cLogDescription.ReadOnly = true;
+            // 
+            // cLogGoto
+            // 
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.NullValue = ">";
+            this.cLogGoto.DefaultCellStyle = dataGridViewCellStyle6;
+            this.cLogGoto.HeaderText = "Open path";
+            this.cLogGoto.Name = "cLogGoto";
+            this.cLogGoto.ReadOnly = true;
+            this.cLogGoto.Width = 70;
             // 
             // splitContainer1
             // 
@@ -175,7 +209,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.gridConfig);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip3);
-            this.splitContainer1.Size = new System.Drawing.Size(1001, 330);
+            this.splitContainer1.Size = new System.Drawing.Size(1001, 359);
             this.splitContainer1.SplitterDistance = 489;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -207,7 +241,8 @@
             this.tcpToolStripMenuItem,
             this.fileToolStripMenuItem,
             this.folderToolStripMenuItem,
-            this.executeToolStripMenuItem});
+            this.executeToolStripMenuItem,
+            this.randomToolStripMenuItem});
             this.toolStripDropDownButton1.Image = global::TuringMachine.Res.add;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -216,33 +251,17 @@
             // 
             // tcpToolStripMenuItem
             // 
-            this.tcpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.queryToolStripMenuItem,
-            this.socketToolStripMenuItem1});
             this.tcpToolStripMenuItem.Image = global::TuringMachine.Res.add_socket;
             this.tcpToolStripMenuItem.Name = "tcpToolStripMenuItem";
-            this.tcpToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
-            this.tcpToolStripMenuItem.Text = "Tcp";
-            // 
-            // queryToolStripMenuItem
-            // 
-            this.queryToolStripMenuItem.Name = "queryToolStripMenuItem";
-            this.queryToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
-            this.queryToolStripMenuItem.Text = "Query";
-            this.queryToolStripMenuItem.Click += new System.EventHandler(this.socketToolStripMenuItem_Click);
-            // 
-            // socketToolStripMenuItem1
-            // 
-            this.socketToolStripMenuItem1.Name = "socketToolStripMenuItem1";
-            this.socketToolStripMenuItem1.Size = new System.Drawing.Size(106, 22);
-            this.socketToolStripMenuItem1.Text = "Proxy";
-            this.socketToolStripMenuItem1.Click += new System.EventHandler(this.socketToolStripMenuItem1_Click);
+            this.tcpToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.tcpToolStripMenuItem.Text = "Tcp Query";
+            this.tcpToolStripMenuItem.Click += new System.EventHandler(this.socketToolStripMenuItem_Click);
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Image = global::TuringMachine.Res.add_file;
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
             this.fileToolStripMenuItem.Text = "File";
             this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
@@ -250,7 +269,7 @@
             // 
             this.folderToolStripMenuItem.Image = global::TuringMachine.Res.add_folder;
             this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-            this.folderToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.folderToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
             this.folderToolStripMenuItem.Text = "Folder";
             this.folderToolStripMenuItem.Click += new System.EventHandler(this.folderToolStripMenuItem_Click);
             // 
@@ -258,7 +277,7 @@
             // 
             this.executeToolStripMenuItem.Image = global::TuringMachine.Res.add_execute;
             this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
-            this.executeToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.executeToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
             this.executeToolStripMenuItem.Text = "Execute";
             this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
@@ -271,6 +290,7 @@
             this.cConfigType,
             this.cConfigDescription,
             this.cConfigCount,
+            this.cConfigFails,
             this.cConfigCrashes});
             this.gridConfig.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gridConfig.Location = new System.Drawing.Point(0, 34);
@@ -278,43 +298,9 @@
             this.gridConfig.ReadOnly = true;
             this.gridConfig.RowHeadersVisible = false;
             this.gridConfig.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridConfig.Size = new System.Drawing.Size(508, 296);
+            this.gridConfig.Size = new System.Drawing.Size(508, 325);
             this.gridConfig.TabIndex = 2;
             this.gridConfig.VirtualMode = true;
-            // 
-            // cConfigType
-            // 
-            this.cConfigType.DataPropertyName = "Type";
-            this.cConfigType.HeaderText = "Type";
-            this.cConfigType.Name = "cConfigType";
-            this.cConfigType.ReadOnly = true;
-            this.cConfigType.Width = 90;
-            // 
-            // cConfigDescription
-            // 
-            this.cConfigDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cConfigDescription.DataPropertyName = "Description";
-            this.cConfigDescription.HeaderText = "Description";
-            this.cConfigDescription.Name = "cConfigDescription";
-            this.cConfigDescription.ReadOnly = true;
-            // 
-            // cConfigCount
-            // 
-            this.cConfigCount.DataPropertyName = "Count";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigCount.DefaultCellStyle = dataGridViewCellStyle15;
-            this.cConfigCount.HeaderText = "Count";
-            this.cConfigCount.Name = "cConfigCount";
-            this.cConfigCount.ReadOnly = true;
-            // 
-            // cConfigCrashes
-            // 
-            this.cConfigCrashes.DataPropertyName = "Crashes";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigCrashes.DefaultCellStyle = dataGridViewCellStyle16;
-            this.cConfigCrashes.HeaderText = "Crashes";
-            this.cConfigCrashes.Name = "cConfigCrashes";
-            this.cConfigCrashes.ReadOnly = true;
             // 
             // toolStrip3
             // 
@@ -353,7 +339,7 @@
             // 
             this.toolStripMenuItem2.Image = global::TuringMachine.Res.add_file;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(107, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(168, 38);
             this.toolStripMenuItem2.Text = "File";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
@@ -361,7 +347,7 @@
             // 
             this.toolStripMenuItem3.Image = global::TuringMachine.Res.add_folder;
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(107, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(168, 38);
             this.toolStripMenuItem3.Text = "Folder";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
@@ -378,10 +364,10 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.dataGridView2);
+            this.splitContainer2.Panel2.Controls.Add(this.gridLog);
             this.splitContainer2.Panel2.Controls.Add(this.toolStrip2);
             this.splitContainer2.Size = new System.Drawing.Size(1001, 487);
-            this.splitContainer2.SplitterDistance = 330;
+            this.splitContainer2.SplitterDistance = 359;
             this.splitContainer2.TabIndex = 3;
             // 
             // toolStrip2
@@ -492,45 +478,45 @@
             // 
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.AlignmentOrientation = ((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations)((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Vertical | System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Horizontal)));
-            chartArea4.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
-            chartArea4.AxisX.IsMarginVisible = false;
-            chartArea4.AxisY.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
-            chartArea4.AxisY.IsMarginVisible = false;
-            chartArea4.BorderWidth = 0;
-            chartArea4.Name = "ChartArea1";
-            chartArea4.Position.Auto = false;
-            chartArea4.Position.Height = 100F;
-            chartArea4.Position.Width = 91F;
-            this.chart1.ChartAreas.Add(chartArea4);
-            legend4.BackColor = System.Drawing.Color.Transparent;
-            legend4.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
-            legend4.Name = "Legend1";
-            legend4.Position.Auto = false;
-            legend4.Position.Height = 86.66666F;
-            legend4.Position.Width = 8.794434F;
-            legend4.Position.X = 91.20557F;
-            legend4.Position.Y = 3F;
-            this.chart1.Legends.Add(legend4);
+            chartArea1.AlignmentOrientation = ((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations)((System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Vertical | System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Horizontal)));
+            chartArea1.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
+            chartArea1.AxisX.IsMarginVisible = false;
+            chartArea1.AxisY.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
+            chartArea1.AxisY.IsMarginVisible = false;
+            chartArea1.BorderWidth = 0;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.Position.Auto = false;
+            chartArea1.Position.Height = 100F;
+            chartArea1.Position.Width = 91F;
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.BackColor = System.Drawing.Color.Transparent;
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            legend1.Name = "Legend1";
+            legend1.Position.Auto = false;
+            legend1.Position.Height = 86.66666F;
+            legend1.Position.Width = 8.794434F;
+            legend1.Position.X = 91.20557F;
+            legend1.Position.Y = 3F;
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(173, 0);
             this.chart1.Name = "chart1";
-            series10.ChartArea = "ChartArea1";
-            series10.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedArea;
-            series10.Color = System.Drawing.Color.Red;
-            series10.Legend = "Legend1";
-            series10.Name = "Crash";
-            series11.ChartArea = "ChartArea1";
-            series11.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedArea;
-            series11.Legend = "Legend1";
-            series11.Name = "Test";
-            series12.ChartArea = "ChartArea1";
-            series12.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series12.Color = System.Drawing.Color.Yellow;
-            series12.Legend = "Legend1";
-            series12.Name = "Fails";
-            this.chart1.Series.Add(series10);
-            this.chart1.Series.Add(series11);
-            this.chart1.Series.Add(series12);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedArea;
+            series1.Color = System.Drawing.Color.Red;
+            series1.Legend = "Legend1";
+            series1.Name = "Crash";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedArea;
+            series2.Legend = "Legend1";
+            series2.Name = "Test";
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Color = System.Drawing.Color.Yellow;
+            series3.Legend = "Legend1";
+            series3.Name = "Fails";
+            this.chart1.Series.Add(series1);
+            this.chart1.Series.Add(series2);
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(827, 63);
             this.chart1.TabIndex = 6;
             // 
@@ -539,6 +525,106 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // randomToolStripMenuItem
+            // 
+            this.randomToolStripMenuItem.Image = global::TuringMachine.Res.add_random;
+            this.randomToolStripMenuItem.Name = "randomToolStripMenuItem";
+            this.randomToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.randomToolStripMenuItem.Text = "Random";
+            this.randomToolStripMenuItem.Click += new System.EventHandler(this.randomToolStripMenuItem_Click);
+            // 
+            // cInputsType
+            // 
+            this.cInputsType.DataPropertyName = "Type";
+            this.cInputsType.HeaderText = "Type";
+            this.cInputsType.Name = "cInputsType";
+            this.cInputsType.ReadOnly = true;
+            this.cInputsType.Width = 90;
+            // 
+            // cInputDescription
+            // 
+            this.cInputDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cInputDescription.DataPropertyName = "Description";
+            this.cInputDescription.HeaderText = "Description";
+            this.cInputDescription.Name = "cInputDescription";
+            this.cInputDescription.ReadOnly = true;
+            // 
+            // cInputCount
+            // 
+            this.cInputCount.DataPropertyName = "Tests";
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputCount.DefaultCellStyle = dataGridViewCellStyle1;
+            this.cInputCount.HeaderText = "Tests";
+            this.cInputCount.Name = "cInputCount";
+            this.cInputCount.ReadOnly = true;
+            this.cInputCount.Width = 80;
+            // 
+            // cInputFails
+            // 
+            this.cInputFails.DataPropertyName = "Fails";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputFails.DefaultCellStyle = dataGridViewCellStyle2;
+            this.cInputFails.HeaderText = "Fails";
+            this.cInputFails.Name = "cInputFails";
+            this.cInputFails.ReadOnly = true;
+            this.cInputFails.Width = 55;
+            // 
+            // cInputCrashes
+            // 
+            this.cInputCrashes.DataPropertyName = "Crashes";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputCrashes.DefaultCellStyle = dataGridViewCellStyle3;
+            this.cInputCrashes.HeaderText = "Crashes";
+            this.cInputCrashes.Name = "cInputCrashes";
+            this.cInputCrashes.ReadOnly = true;
+            this.cInputCrashes.Width = 55;
+            // 
+            // cConfigType
+            // 
+            this.cConfigType.DataPropertyName = "Type";
+            this.cConfigType.HeaderText = "Type";
+            this.cConfigType.Name = "cConfigType";
+            this.cConfigType.ReadOnly = true;
+            this.cConfigType.Width = 90;
+            // 
+            // cConfigDescription
+            // 
+            this.cConfigDescription.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cConfigDescription.DataPropertyName = "Description";
+            this.cConfigDescription.HeaderText = "Description";
+            this.cConfigDescription.Name = "cConfigDescription";
+            this.cConfigDescription.ReadOnly = true;
+            // 
+            // cConfigCount
+            // 
+            this.cConfigCount.DataPropertyName = "Tests";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigCount.DefaultCellStyle = dataGridViewCellStyle7;
+            this.cConfigCount.HeaderText = "Tests";
+            this.cConfigCount.Name = "cConfigCount";
+            this.cConfigCount.ReadOnly = true;
+            this.cConfigCount.Width = 80;
+            // 
+            // cConfigFails
+            // 
+            this.cConfigFails.DataPropertyName = "Fails";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigFails.DefaultCellStyle = dataGridViewCellStyle8;
+            this.cConfigFails.HeaderText = "Fails";
+            this.cConfigFails.Name = "cConfigFails";
+            this.cConfigFails.ReadOnly = true;
+            this.cConfigFails.Width = 55;
+            // 
+            // cConfigCrashes
+            // 
+            this.cConfigCrashes.DataPropertyName = "Crashes";
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigCrashes.DefaultCellStyle = dataGridViewCellStyle9;
+            this.cConfigCrashes.HeaderText = "Crashes";
+            this.cConfigCrashes.Name = "cConfigCrashes";
+            this.cConfigCrashes.ReadOnly = true;
+            this.cConfigCrashes.Width = 55;
             // 
             // FMain
             // 
@@ -553,7 +639,7 @@
             this.ShowIcon = false;
             this.Text = "Turing Machine";
             ((System.ComponentModel.ISupportInitialize)(this.gridInput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridLog)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -583,7 +669,7 @@
         #endregion
 
         private System.Windows.Forms.DataGridView gridInput;
-        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridView gridLog;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
@@ -601,19 +687,9 @@
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cInputsType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cInputDescription;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cInputCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cInputCrashes;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigDescription;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigCrashes;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripMenuItem tcpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem queryToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem socketToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem executeToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton tbPlay;
         private System.Windows.Forms.ToolStripButton tbPause;
@@ -622,6 +698,22 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cLogDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cLogOrigin;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cLogType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cLogDescription;
+        private System.Windows.Forms.DataGridViewButtonColumn cLogGoto;
+        private System.Windows.Forms.ToolStripMenuItem randomToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cInputsType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cInputDescription;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cInputCount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cInputFails;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cInputCrashes;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigDescription;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigCount;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigFails;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cConfigCrashes;
     }
 }
 

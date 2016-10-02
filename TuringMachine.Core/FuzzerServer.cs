@@ -17,13 +17,16 @@ namespace TuringMachine.Core
     public class FuzzerServer
     {
         public delegate void delOnTestEnd(object sender, ETestResult result);
+        public delegate void delOnCrashLog(object sender, FuzzerLog log);
 
         public event EventHandler OnInputsChange;
         public event EventHandler OnConfigurationsChange;
         public event EventHandler OnListenChange;
 
         public event delOnTestEnd OnTestEnd;
+        public event delOnCrashLog OnCrashLog;
 
+        List<FuzzerLog> _Logs;
         IPEndPoint _EndPoint = new IPEndPoint(IPAddress.Any, 7777);
         /// <summary>
         /// Inputs
@@ -33,6 +36,10 @@ namespace TuringMachine.Core
         /// Configurations
         /// </summary>
         public List<FuzzerStat<IFuzzingConfig>> Configurations { get; private set; }
+        /// <summary>
+        /// Logs
+        /// </summary>
+        public FuzzerLog[] Logs { get { return _Logs.ToArray(); } }
         /// <summary>
         /// Listen address
         /// </summary>
@@ -52,53 +59,16 @@ namespace TuringMachine.Core
         {
             Inputs = new List<FuzzerStat<IFuzzingInput>>();
             Configurations = new List<FuzzerStat<IFuzzingConfig>>();
+            _Logs = new List<FuzzerLog>();
         }
         /// <summary>
-        /// Add File input
+        /// Add input
         /// </summary>
-        /// <param name="file">File</param>
-        public void AddFileInput(string file)
+        /// <param name="input">Input</param>
+        public void AddInput(IFuzzingInput input)
         {
-            if (!File.Exists(file)) return;
+            if (Inputs == null) return;
 
-            FileFuzzingInput input = new FileFuzzingInput(file);
-            Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
-            OnInputsChange?.Invoke(this, EventArgs.Empty);
-        }
-        /// <summary>
-        /// Add tcp query input
-        /// </summary>
-        /// <param name="endPoint">EndPoint</param>
-        public void AddTcpQueryInput(IPEndPoint endPoint)
-        {
-            if (endPoint == null) return;
-
-            TcpQueryFuzzingInput input = new TcpQueryFuzzingInput(endPoint);
-            Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
-            OnInputsChange?.Invoke(this, EventArgs.Empty);
-        }
-        /// <summary>
-        /// Add tcp proxy input
-        /// </summary>
-        /// <param name="endPoint">EndPoint</param>
-        public void AddTcpProxyInput(IPEndPoint endPoint)
-        {
-            if (endPoint == null) return;
-
-            TcpProxyFuzzingInput input = new TcpProxyFuzzingInput(endPoint);
-            Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
-            OnInputsChange?.Invoke(this, EventArgs.Empty);
-        }
-        /// <summary>
-        /// Add execution input
-        /// </summary>
-        /// <param name="path">Path</param>
-        /// <param name="args">Args</param>
-        public void AddExecuteInput(string path, string args)
-        {
-            if (string.IsNullOrEmpty(path)) return;
-
-            ExecutionFuzzingInput input = new ExecutionFuzzingInput(path, args);
             Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
             OnInputsChange?.Invoke(this, EventArgs.Empty);
         }
@@ -125,6 +95,16 @@ namespace TuringMachine.Core
                         break;
                     }
             }
+        }
+        /// <summary>
+        /// Raise on crash log
+        /// </summary>
+        /// <param name="log">Log</param>
+        public void RaiseOnCrashLog(FuzzerLog log)
+        {
+            if (log == null) return;
+            _Logs.Add(log);
+            OnCrashLog?.Invoke(this, log);
         }
         /// <summary>
         /// Raise end of test

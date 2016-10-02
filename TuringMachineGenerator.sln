@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuringMachine.Tests", "Turi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuringMachine", "TuringMachine\TuringMachine.csproj", "{988E7874-54D2-40DB-9F4C-814683F6FC05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuringMachine.Client", "TuringMachine.Client\TuringMachine.Client.csproj", "{593EDA10-605B-4078-8671-F8C2D7673346}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{988E7874-54D2-40DB-9F4C-814683F6FC05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{988E7874-54D2-40DB-9F4C-814683F6FC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{988E7874-54D2-40DB-9F4C-814683F6FC05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{593EDA10-605B-4078-8671-F8C2D7673346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{593EDA10-605B-4078-8671-F8C2D7673346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{593EDA10-605B-4078-8671-F8C2D7673346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{593EDA10-605B-4078-8671-F8C2D7673346}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

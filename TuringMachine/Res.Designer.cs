@@ -103,6 +103,16 @@ namespace TuringMachine {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap add_random {
+            get {
+                object obj = ResourceManager.GetObject("add_random", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap add_socket {
             get {
                 object obj = ResourceManager.GetObject("add_socket", resourceCulture);

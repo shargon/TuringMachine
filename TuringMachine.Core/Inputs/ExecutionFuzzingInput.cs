@@ -19,10 +19,6 @@ namespace TuringMachine.Core.Inputs
         /// </summary>
         public string Type { get { return "Execution"; } }
         /// <summary>
-        /// IsSelectable
-        /// </summary>
-        public bool IsSelectable { get { return true; } }
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="filename">File</param>

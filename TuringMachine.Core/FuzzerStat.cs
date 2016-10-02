@@ -16,11 +16,15 @@ namespace TuringMachine.Core
         /// <summary>
         /// Count
         /// </summary>
-        public int Count { get; set; }
+        public int Tests { get; set; }
         /// <summary>
         /// Crashes
         /// </summary>
         public int Crashes { get; set; }
+        /// <summary>
+        /// Fails
+        /// </summary>
+        public int Fails { get; set; }
 
         /// <summary>
         /// Constructor

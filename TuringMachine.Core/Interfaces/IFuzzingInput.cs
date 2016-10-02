@@ -8,9 +8,5 @@ namespace TuringMachine.Core.Interfaces
         /// Get Stream
         /// </summary>
         Stream GetStream();
-        /// <summary>
-        /// Is selectable
-        /// </summary>
-        bool IsSelectable { get; }
     }
 }

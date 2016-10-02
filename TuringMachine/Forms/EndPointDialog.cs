@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Windows.Forms;
 
@@ -9,35 +10,61 @@ namespace TuringMachine.Forms
         /// <summary>
         /// EndPoint
         /// </summary>
-        public IPEndPoint EndPoint { get; internal set; }
+        public IPEndPoint EndPoint { get; private set; }
+        /// <summary>
+        /// Request file
+        /// </summary>
+        public string RequestFile { get; private set; }
+        /// <summary>
+        /// Show RequestFile
+        /// </summary>
+        public bool ShowRequestFile { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public EndPointDialog()
         {
             InitializeComponent();
 
-            numericUpDown1.Minimum = ushort.MinValue;
-            numericUpDown1.Maximum = ushort.MaxValue;
+            tPort.Minimum = ushort.MinValue;
+            tPort.Maximum = ushort.MaxValue;
         }
         void EndPointDialog_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (DialogResult != DialogResult.OK) return;
 
+            if (tRequest.Visible)
+            {
+                if (!string.IsNullOrEmpty(tRequest.Text))
+                {
+                    if (!File.Exists(tRequest.Text))
+                    {
+                        errorProvider1.SetError(button3, "File not found");
+                        e.Cancel = true;
+                        return;
+                    }
+
+                    RequestFile = tRequest.Text;
+                }
+            }
+
             IPAddress ip;
-            if (!IPAddress.TryParse(textBox1.Text, out ip))
+            if (!IPAddress.TryParse(tAddress.Text, out ip))
             {
-                errorProvider1.SetError(textBox1, "Invalid ip address");
+                errorProvider1.SetError(tAddress, "Invalid ip address");
                 e.Cancel = true;
                 return;
             }
 
-            if (numericUpDown1.Value > ushort.MaxValue || numericUpDown1.Value < ushort.MinValue)
+            if (tPort.Value > ushort.MaxValue || tPort.Value < ushort.MinValue)
             {
-                errorProvider1.SetError(textBox1, "Invalid port");
+                errorProvider1.SetError(tPort, "Invalid port");
                 e.Cancel = true;
                 return;
             }
 
-            EndPoint = new IPEndPoint(ip, Convert.ToInt32(numericUpDown1.Value));
+            EndPoint = new IPEndPoint(ip, Convert.ToInt32(tPort.Value));
         }
         void textBox1_TextChanged(object sender, System.EventArgs e)
         {
@@ -57,27 +84,59 @@ namespace TuringMachine.Forms
                     }
                 case Keys.Enter:
                     {
-                        if (numericUpDown1.Focused)
+                        if (tRequest.Focused)
                         {
                             e.SuppressKeyPress = true;
                             e.Handled = true;
-                            numericUpDown1.Validate();
-
-                            DialogResult = DialogResult.OK;
+                            tAddress.Focus();
                         }
                         else
                         {
-                            if (textBox1.Focused)
+                            if (tPort.Focused)
                             {
                                 e.SuppressKeyPress = true;
                                 e.Handled = true;
+                                tPort.Validate();
 
-                                numericUpDown1.Focus();
-                                try { numericUpDown1.Select(0, numericUpDown1.Value.ToString().Length); } catch { }
+                                DialogResult = DialogResult.OK;
+                            }
+                            else
+                            {
+                                if (tAddress.Focused)
+                                {
+                                    e.SuppressKeyPress = true;
+                                    e.Handled = true;
+
+                                    tPort.Focus();
+                                    tPort.Select(0, tPort.Text.Length);
+                                }
                             }
                         }
                         break;
                     }
+            }
+        }
+        void EndPointDialog_Load(object sender, EventArgs e)
+        {
+            if (!ShowRequestFile)
+            {
+                label3.Visible = false;
+                tRequest.Visible = false;
+                Height -= tRequest.Height;
+                button3.Visible = false;
+            }
+        }
+        void button3_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog()
+            {
+                Filter = "All files|*.*",
+                DefaultExt = "*.*"
+            })
+            {
+                if (dialog.ShowDialog() != DialogResult.OK) return;
+
+                tRequest.Text = dialog.FileName;
             }
         }
     }

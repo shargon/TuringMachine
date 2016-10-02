@@ -50,10 +50,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TcpForwarderTests.cs" />
+    <Compile Include="InputTests.cs" />
     <Compile Include="MutationalTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TuringMachine.Client\TuringMachine.Client.csproj">
+      <Project>{593EDA10-605B-4078-8671-F8C2D7673346}</Project>
+      <Name>TuringMachine.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TuringMachine.Core\TuringMachine.Core.csproj">
       <Project>{255b9399-ea53-41c5-8272-389b43b48764}</Project>
       <Name>TuringMachine.Core</Name>
