@@ -6,6 +6,10 @@ namespace TuringMachine.Core
     {
         T _Source;
         /// <summary>
+        /// Source
+        /// </summary>
+        public T Source { get { return _Source; } }
+        /// <summary>
         /// Description
         /// </summary>
         public string Description { get { return ToString(); } }

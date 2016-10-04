@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace TuringMachine.Client
+namespace TuringMachine.Client.Sockets.Forwarder
 {
     class TcpForwarderState
     {

@@ -18,12 +18,7 @@ namespace TuringMachine.Core
             {
                 int lee = stream.Read(data, index, count);
                 if (lee <= 0)
-                {
-                    // error
-                    if (lee < 0) break;
-                    // next try
-                    continue;
-                }
+                    break;
 
                 index += lee;
                 count -= lee;
@@ -45,12 +40,7 @@ namespace TuringMachine.Core
             {
                 int lee = stream.Read(data, index, count);
                 if (lee <= 0)
-                {
-                    // error
-                    if (lee < 0) break;
-                    // next try
-                    continue;
-                }
+                    break;
 
                 index += lee;
                 count -= lee;

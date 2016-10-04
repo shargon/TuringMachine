@@ -55,7 +55,7 @@
     <Compile Include="FixedValue.cs" />
     <Compile Include="FromToValue.cs" />
     <Compile Include="FuzzerLog.cs" />
-    <Compile Include="FuzzerServer.cs" />
+    <Compile Include="TuringServer.cs" />
     <Compile Include="FuzzerStat.cs" />
     <Compile Include="Helpers\ReflectionHelper.cs" />
     <Compile Include="Helpers\SerializationHelper.cs" />

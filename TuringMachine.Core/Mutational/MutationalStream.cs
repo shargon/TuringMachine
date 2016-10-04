@@ -21,23 +21,23 @@ namespace TuringMachine.Core.Mutational
         /// </summary>
         public MutationLog[] Log { get { return _Log.ToArray(); } }
         /// <summary>
-        /// Mutation Sample Id
+        /// Sample Id
         /// </summary>
-        public string MutationSampleId { get; private set; }
+        public string SampleId { get; private set; }
 
         /// <summary>
         /// Fuzzer constructor
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="config">Mutations</param>
-        /// <param name="mutationSampleId">Mutation sample id</param>
-        public MutationalStream(Stream stream, MutationConfig config, string mutationSampleId)
+        /// <param name="sampleId">Mutation sample id</param>
+        public MutationalStream(Stream stream, MutationConfig config, string sampleId)
         {
             _Source = stream;
             Config = config;
             _RealOffset = 0;
             _Buffer = new List<byte>();
-            MutationSampleId = mutationSampleId;
+            SampleId = sampleId;
             _Log = new List<MutationLog>();
         }
         /// <summary>
@@ -51,7 +51,7 @@ namespace TuringMachine.Core.Mutational
             Config = null;
             _RealOffset = 0;
             _Buffer = new List<byte>();
-            MutationSampleId = null;
+            SampleId = null;
             _Log = new List<MutationLog>();
             _Replicate = replicate;
         }
@@ -82,7 +82,11 @@ namespace TuringMachine.Core.Mutational
             // Perform mutations (byte peer byte)
             while (count > 0)
             {
-                MutationLog log = GetNext(_RealOffset);
+                MutationLog log = null;
+
+                // If no buffer are available
+                if (_Buffer.Count == 0)
+                    log = GetNext(_RealOffset);
 
                 // If change!
                 if (log != null)
@@ -98,8 +102,14 @@ namespace TuringMachine.Core.Mutational
                     if (log.Remove > 0)
                     {
                         byte[] r = new byte[log.Remove];
-                        StreamHelper.ReadFull(_Source, r, 0, log.Remove);
-                        _RealOffset += log.Remove;
+                        int ret= StreamHelper.ReadFull(_Source, r, 0, log.Remove);
+                        if (ret <= 0)
+                        {
+                            count = 0;
+                            break;
+                        }
+
+                        _RealOffset += ret;
                     }
                 }
 
@@ -110,6 +120,11 @@ namespace TuringMachine.Core.Mutational
                 {
                     // Peek one byte if not from buffer
                     d = StreamHelper.ReadFull(_Source, buffer, ref offset, 1);
+                    if (d <= 0)
+                    {
+                        count = 0;
+                        break;
+                    }
                     _RealOffset += d;
                 }
 

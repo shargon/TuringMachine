@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using TuringMachine.Core.Design;
 using TuringMachine.Core.Helpers;
 using TuringMachine.Core.Interfaces;
@@ -73,6 +75,15 @@ namespace TuringMachine.Core.Mutational
         public override string ToString()
         {
             return Description;
+        }
+        /// <summary>
+        /// Create a Fuzzer Stream
+        /// </summary>
+        /// <param name="original">Original stream</param>
+        /// <param name="sampleId">Sample Id</param>
+        public Stream CreateStream(Stream original, string sampleId)
+        {
+            return new MutationalStream(original, this, sampleId);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace TuringMachine.Client
+namespace TuringMachine.Client.Sockets.Forwarder
 {
     public class TcpForwarder : IDisposable
     {

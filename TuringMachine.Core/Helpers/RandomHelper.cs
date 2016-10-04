@@ -43,6 +43,21 @@ namespace TuringMachine.Core.Helpers
             return _Rand.Next(from, to + 1);
         }
         /// <summary>
+        /// Return next long
+        /// </summary>
+        /// <param name="from">From byte</param>
+        /// <param name="to">To byte</param>
+        public static long GetRandom(long from, long to)
+        {
+            if (from == to) return to;
+
+            byte[] buf = new byte[8];
+            _Rand.NextBytes(buf);
+            long longRand = BitConverter.ToInt64(buf, 0);
+
+            return (Math.Abs(longRand % (to - from)) + from);
+        }
+        /// <summary>
         /// Randomize array
         /// </summary>
         /// <param name="buffer">Buffer</param>

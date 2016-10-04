@@ -10,6 +10,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TuringMachine.Core;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Inputs;
+using TuringMachine.Core.Interfaces;
 using TuringMachine.Forms;
 
 namespace TuringMachine
@@ -17,7 +18,7 @@ namespace TuringMachine
     public partial class FMain : Form
     {
         int _Test = 0, _Crash = 0, _Fails = 0;
-        FuzzerServer _Fuzzer;
+        TuringServer _Fuzzer;
 
         /// <summary>
         /// Allow edit when is playing
@@ -29,7 +30,7 @@ namespace TuringMachine
             InitializeComponent();
 
             // Create fuzzer
-            _Fuzzer = new FuzzerServer();
+            _Fuzzer = new TuringServer();
             _Fuzzer.Inputs.CollectionChanged += _Fuzzer_OnInputsChange;
             _Fuzzer.Configurations.CollectionChanged += _Fuzzer_OnConfigurationsChange;
             _Fuzzer.OnListenChange += _Fuzzer_OnListenChange;
@@ -61,7 +62,7 @@ namespace TuringMachine
         {
             if (InvokeRequired)
             {
-                Invoke(new FuzzerServer.delOnCrashLog(_Fuzzer_OnCrashLog), sender, log);
+                Invoke(new TuringServer.delOnCrashLog(_Fuzzer_OnCrashLog), sender, log);
                 return;
             }
 
@@ -294,6 +295,79 @@ namespace TuringMachine
         void gridConfig_SelectionChanged(object sender, EventArgs e)
         {
             toolStripButton2.Enabled = gridConfig.SelectedRows.Count > 0 && (AllowHotEdit || _Fuzzer.State == EFuzzerState.Stopped);
+        }
+        void originalInputToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripItem it = (ToolStripItem)sender;
+            SaveSelectedInputWith(it.Tag == null ? null : ((FuzzerStat<IFuzzingConfig>)it.Tag).Source);
+        }
+        void SaveSelectedInputWith(IFuzzingConfig config)
+        {
+            if (gridInput.SelectedRows.Count != 1) return;
+
+            FuzzerStat<IFuzzingInput> inp = (FuzzerStat<IFuzzingInput>)gridInput.SelectedRows[0].DataBoundItem;
+            if (inp == null) return;
+
+            using (SaveFileDialog s = new SaveFileDialog()
+            {
+                Filter = "Dat file|*.dat",
+                DefaultExt = "*.dat",
+            })
+            {
+                if (s.ShowDialog() != DialogResult.OK) return;
+
+                try
+                {
+                    if (File.Exists(s.FileName))
+                        File.Delete(s.FileName);
+
+                    using (FileStream fs = File.OpenWrite(s.FileName))
+                    using (Stream stream = inp.Source.GetStream())
+                    {
+                        if (config != null)
+                        {
+                            using (Stream fzs = config.CreateStream(stream, "Test"))
+                                fzs.CopyTo(fs);
+                        }
+                        else
+                        {
+                            stream.CopyTo(fs);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString(), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+        void saveInputWithToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            // Clear
+            for (int x = saveInputWithToolStripMenuItem.DropDownItems.Count - 2; x >= 0; x--)
+                saveInputWithToolStripMenuItem.DropDownItems.RemoveAt(x);
+
+            // Add items
+            foreach (FuzzerStat<IFuzzingConfig> c in _Fuzzer.Configurations)
+            {
+                ToolStripItem it = new ToolStripMenuItem(c.Source.ToString());
+                saveInputWithToolStripMenuItem.DropDownItems.Insert(0, it);
+                it.Tag = c;
+                it.Click += originalInputToolStripMenuItem_Click;
+            }
+
+            // Separator
+            if (saveInputWithToolStripMenuItem.DropDownItems.Count != 1)
+                saveInputWithToolStripMenuItem.DropDownItems.Insert(saveInputWithToolStripMenuItem.DropDownItems.Count - 1, new ToolStripSeparator());
+        }
+        void gridInput_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+
+            int currentMouseOverRow = gridInput.HitTest(e.X, e.Y).RowIndex;
+            if (currentMouseOverRow < 0) return;
+
+            contextMenuStrip1.Show(gridInput, new Point(e.X, e.Y));
         }
         void tbStop_Click(object sender, EventArgs e)
         {

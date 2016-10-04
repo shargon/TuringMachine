@@ -13,7 +13,7 @@ namespace TuringMachine.Core
     /// [Client] <<----  Read Fuzz Information      <<----  [Server]  <<---- [Inputs]
     ///          ----->> Write Information for Fuz  ---------------------->>
     /// </summary>
-    public class FuzzerServer
+    public class TuringServer
     {
         public delegate void delOnTestEnd(object sender, ETestResult result);
         public delegate void delOnCrashLog(object sender, FuzzerLog log);
@@ -57,7 +57,7 @@ namespace TuringMachine.Core
         /// <summary>
         /// Constructor
         /// </summary>
-        public FuzzerServer()
+        public TuringServer()
         {
             Inputs = new ObservableCollection<FuzzerStat<IFuzzingInput>>();
             Configurations = new ObservableCollection<FuzzerStat<IFuzzingConfig>>();

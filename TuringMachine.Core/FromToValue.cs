@@ -20,6 +20,7 @@ namespace TuringMachine.Core
         static Type TypeByte = typeof(byte);
         static Type TypeUInt16 = typeof(ushort);
         static Type TypeInt32 = typeof(int);
+        static Type TypeInt64 = typeof(long);
 
         /// <summary>
         /// Class name
@@ -95,7 +96,7 @@ namespace TuringMachine.Core
         /// <param name="o">Object</param>
         public bool ItsValid(T o)
         {
-            if (o.CompareTo(From) <= 0 && To.CompareTo(o) >= 0)
+            if (From.CompareTo(o) <= 0 && To.CompareTo(o) >= 0)
             {
                 if (Excludes.Contains(o)) return false;
                 return true;
@@ -115,7 +116,7 @@ namespace TuringMachine.Core
             {
                 // Get random byte
                 do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToByte(From), Convert.ToByte(To)), _Type); }
-                while (!Excludes.Contains(ret));
+                while (Excludes.Contains(ret));
             }
             else
             {
@@ -123,7 +124,7 @@ namespace TuringMachine.Core
                 {
                     // Get ushort byte
                     do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToUInt16(From), Convert.ToUInt16(To)), _Type); }
-                    while (!Excludes.Contains(ret));
+                    while (Excludes.Contains(ret));
                 }
                 else
                 {
@@ -131,7 +132,16 @@ namespace TuringMachine.Core
                     {
                         // Get int byte
                         do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToInt32(From), Convert.ToInt32(To)), _Type); }
-                        while (!Excludes.Contains(ret));
+                        while (Excludes.Contains(ret));
+                    }
+                    else
+                    {
+                        if (_Type == TypeInt64)
+                        {
+                            // Get int byte
+                            do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToInt64(From), Convert.ToInt64(To)), _Type); }
+                            while (Excludes.Contains(ret));
+                        }
                     }
                 }
             }

@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TuringSocketTests.cs" />
     <Compile Include="TcpForwarderTests.cs" />
     <Compile Include="InputTests.cs" />
     <Compile Include="MutationalTests.cs" />
