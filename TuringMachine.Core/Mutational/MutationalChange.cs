@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using TuringMachine.Core.Helpers;
+using TuringMachine.Helpers;
 using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core.Mutational

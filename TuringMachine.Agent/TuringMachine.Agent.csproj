@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{593EDA10-605B-4078-8671-F8C2D7673346}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{40FB298C-8936-473D-BBEF-9DB38C9ECC12}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TuringMachine.Client</RootNamespace>
-    <AssemblyName>TuringMachine.Client</AssemblyName>
+    <RootNamespace>TuringMachine.Agent</RootNamespace>
+    <AssemblyName>TuringMachine.Agent</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,8 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -41,22 +43,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Detectors\ICrashDetector.cs" />
-    <Compile Include="Detectors\Windows\WERDetector.cs" />
-    <Compile Include="EFuzzingReturn.cs" />
-    <Compile Include="ITuringMachineAgent.cs" />
-    <Compile Include="Sockets\Messages\TuringConfigMessage.cs" />
-    <Compile Include="Sockets\Enums\ETuringMessageState.cs" />
-    <Compile Include="Sockets\Enums\ETuringMessageType.cs" />
-    <Compile Include="Sockets\TuringSocket.cs" />
-    <Compile Include="Sockets\TuringMessage.cs" />
-    <Compile Include="Sockets\Forwarder\TcpForwarder.cs" />
+    <Compile Include="AgentConfig.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sockets\TuringMessageState.cs" />
-    <Compile Include="Sockets\Forwarder\TcpForwarderState.cs" />
-    <Compile Include="TuringStream.cs" />
+    <Compile Include="TuringTask.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TuringMachine.BasicAgents\TuringMachine.BasicAgents.csproj">
+      <Project>{8445f6aa-f5a2-4a3d-8bba-da42ea4e0200}</Project>
+      <Name>TuringMachine.BasicAgents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TuringMachine.Client\TuringMachine.Client.csproj">
+      <Project>{593eda10-605b-4078-8671-f8c2d7673346}</Project>
+      <Name>TuringMachine.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TuringMachine.Helpers\TuringMachine.Helpers.csproj">
       <Project>{9775daa2-77c6-490b-8603-db3ee9e2ead2}</Project>
       <Name>TuringMachine.Helpers</Name>

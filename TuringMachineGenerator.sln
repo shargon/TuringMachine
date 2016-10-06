@@ -13,6 +13,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuringMachine", "TuringMach
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuringMachine.Client", "TuringMachine.Client\TuringMachine.Client.csproj", "{593EDA10-605B-4078-8671-F8C2D7673346}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuringMachine.Agent", "TuringMachine.Agent\TuringMachine.Agent.csproj", "{40FB298C-8936-473D-BBEF-9DB38C9ECC12}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Agents", "Agents", "{9930A259-C434-4FFD-8C8B-4786A702B346}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuringMachine.BasicAgents", "TuringMachine.BasicAgents\TuringMachine.BasicAgents.csproj", "{8445F6AA-F5A2-4A3D-8BBA-DA42EA4E0200}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuringMachine.Helpers", "TuringMachine.Helpers\TuringMachine.Helpers.csproj", "{9775DAA2-77C6-490B-8603-DB3EE9E2EAD2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{40C0EE5D-B645-417F-B459-5DD943D60A02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,8 +49,26 @@ Global
 		{593EDA10-605B-4078-8671-F8C2D7673346}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{593EDA10-605B-4078-8671-F8C2D7673346}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{593EDA10-605B-4078-8671-F8C2D7673346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40FB298C-8936-473D-BBEF-9DB38C9ECC12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40FB298C-8936-473D-BBEF-9DB38C9ECC12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40FB298C-8936-473D-BBEF-9DB38C9ECC12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40FB298C-8936-473D-BBEF-9DB38C9ECC12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8445F6AA-F5A2-4A3D-8BBA-DA42EA4E0200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8445F6AA-F5A2-4A3D-8BBA-DA42EA4E0200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8445F6AA-F5A2-4A3D-8BBA-DA42EA4E0200}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8445F6AA-F5A2-4A3D-8BBA-DA42EA4E0200}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9775DAA2-77C6-490B-8603-DB3EE9E2EAD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9775DAA2-77C6-490B-8603-DB3EE9E2EAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9775DAA2-77C6-490B-8603-DB3EE9E2EAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9775DAA2-77C6-490B-8603-DB3EE9E2EAD2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{255B9399-EA53-41C5-8272-389B43B48764} = {40C0EE5D-B645-417F-B459-5DD943D60A02}
+		{593EDA10-605B-4078-8671-F8C2D7673346} = {40C0EE5D-B645-417F-B459-5DD943D60A02}
+		{8445F6AA-F5A2-4A3D-8BBA-DA42EA4E0200} = {9930A259-C434-4FFD-8C8B-4786A702B346}
+		{9775DAA2-77C6-490B-8603-DB3EE9E2EAD2} = {40C0EE5D-B645-417F-B459-5DD943D60A02}
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TuringMachine.Client.Helpers
+namespace TuringMachine.Helpers
 {
     public class BitHelper
     {

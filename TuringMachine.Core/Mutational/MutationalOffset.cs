@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using TuringMachine.Core.Design;
-using TuringMachine.Core.Helpers;
+using TuringMachine.Helpers;
 using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core.Mutational

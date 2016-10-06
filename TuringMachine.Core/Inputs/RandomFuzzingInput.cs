@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using TuringMachine.Core.Helpers;
 using TuringMachine.Core.Interfaces;
+using TuringMachine.Helpers;
 
 namespace TuringMachine.Core.Inputs
 {

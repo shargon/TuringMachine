@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using TuringMachine.Core.Design;
-using TuringMachine.Core.Helpers;
 using TuringMachine.Core.Interfaces;
+using TuringMachine.Helpers;
 
 namespace TuringMachine.Core.Mutational
 {

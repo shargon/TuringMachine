@@ -1,7 +1,7 @@
 ﻿using System;
-using TuringMachine.Core.Interfaces;
+using TuringMachine.Helpers.Interfaces;
 
-namespace TuringMachine.Core.Helpers
+namespace TuringMachine.Helpers
 {
     public class RandomHelper
     {
@@ -66,7 +66,7 @@ namespace TuringMachine.Core.Helpers
         /// <param name="from">From byte</param>
         /// <param name="to">To byte</param>
         /// <param name="excludes">Excludes</param>
-        public static void Randomize<T>(T[] buffer, int index, int length, IGetValue<T> get)
+        public static void Randomize<T>(T[] buffer, int index, int length, IRandomValue<T> get)
         {
             for (; length > 0; index++)
             {

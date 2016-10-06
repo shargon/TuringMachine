@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using TuringMachine.Client.Sockets;
 using TuringMachine.Client.Sockets.Messages;
 
@@ -17,22 +16,14 @@ namespace TuringMachine.Client
         /// Constructor
         /// </summary>
         /// <param name="socket">Socket</param>
-        TuringStream(TuringSocket socket)
+        public TuringStream(TuringSocket socket)
         {
             _Socket = socket;
-        }
-        /// <summary>
-        /// Get regular Input
-        /// </summary>
-        public static TuringStream Create(IPEndPoint remote)
-        {
-            TuringSocket t = TuringSocket.ConnectTo(remote);
-            t.MessagesToList = true;
 
-            TuringStream ret = new TuringStream(t);
-            t.SendMessage(new TuringConfigMessage() { InputType = TuringConfigMessage.EInputType.Random });
+            socket.MessagesToList = true;
 
-            return ret;
+            TuringStream ret = new TuringStream(socket);
+            socket.SendMessage(new TuringConfigMessage() { InputType = TuringConfigMessage.EInputType.Random });
         }
         public override bool CanRead { get { throw new NotImplementedException(); } }
         public override bool CanSeek { get { throw new NotImplementedException(); } }

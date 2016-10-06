@@ -2,8 +2,11 @@
 using System;
 using System.ComponentModel;
 using System.Text;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using TuringMachine.Helpers.Converters;
 
-namespace TuringMachine.Core.Helpers
+namespace TuringMachine.Helpers
 {
     public class SerializationHelper
     {
@@ -34,10 +37,17 @@ namespace TuringMachine.Core.Helpers
             ToString = 2
         }
 
-        static JsonSerializerSettings _Settings = new JsonSerializerSettings()
+        static JsonSerializerSettings _Settings;
+
+        static SerializationHelper()
         {
-            NullValueHandling = NullValueHandling.Ignore,
-        };
+            _Settings = new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+            };
+            _Settings.Converters.Add(new IPAddressConverter());
+            _Settings.Converters.Add(new IPEndPointConverter());
+        }
 
         /// <summary>
         /// Serializa un objeto a un json
@@ -61,6 +71,16 @@ namespace TuringMachine.Core.Helpers
             return JsonConvert.DeserializeObject<T>(json, _Settings);
         }
         /// <summary>
+        /// Deserializa un json
+        /// </summary>
+        /// <typeparam name="T">Tipo</typeparam>
+        /// <param name="json">Json</param>
+        public static object DeserializeFromJson(string json, Type type)
+        {
+            if (json == null || type == null) return null;
+            return JsonConvert.DeserializeObject(json, type, _Settings);
+        }
+        /// <summary>
         /// Serializa un objeto al tipo especificado
         /// </summary>
         /// <param name="o">Objeto</param>
@@ -78,51 +98,13 @@ namespace TuringMachine.Core.Helpers
             }
         }
         /// <summary>
-        /// Get MimeType of format
+        /// Enumerate all values
         /// </summary>
-        /// <param name="format">Format</param>
-        public static string GetMimeType(EFormat format)
+        /// <param name="json">Json</param>
+        public static IEnumerable<KeyValuePair<string, object>> EnumerateFromJson(string json)
         {
-            switch (format)
-            {
-                case EFormat.Json: return "application/json";
-                case EFormat.ToString: return "text/html";
-            }
-            return "text / html";
-        }
-        /// <summary>
-        /// Convierte una cadena a un objeto
-        /// </summary>
-        /// <typeparam name="T">Tipo</typeparam>
-        /// <param name="value">Cadena</param>
-        public static object StringToObject<T>(string value)
-        {
-            return StringToObject(value, typeof(T));
-        }
-        /// <summary>
-        /// Convierte una cadena a un objeto
-        /// </summary>
-        /// <param name="value">Cadena</param>
-        /// <param name="type">Tipo</param>
-        public static object StringToObject(string value, Type type)
-        {
-            if (type == typeof(string)) return value;
-
-            if (type.IsEnum)
-            {
-                if (type.IsEnumDefined(value))
-                    return Enum.Parse(type, value);
-
-                throw (new Exception("'" + value + "' not found in " + type.ToString() + " enum"));
-            }
-
-            TypeConverter typeConverter = TypeDescriptor.GetConverter(type);
-            object propValue = typeConverter.ConvertFromString(value);
-            if (propValue != null)
-                return propValue;
-
-            if (type.IsValueType) return Activator.CreateInstance(type);
-            return null;
+            foreach (KeyValuePair<string, JToken> pi in JObject.Parse(json))
+                yield return new KeyValuePair<string, object>(pi.Key, pi.Value);
         }
         /// <summary>
         /// Get Encoding

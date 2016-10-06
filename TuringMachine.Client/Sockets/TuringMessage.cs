@@ -1,7 +1,7 @@
 ﻿using System;
-using TuringMachine.Client.Helpers;
 using TuringMachine.Client.Sockets.Enums;
 using TuringMachine.Client.Sockets.Messages;
+using TuringMachine.Helpers;
 
 namespace TuringMachine.Client.Sockets
 {

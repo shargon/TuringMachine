@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace TuringMachine.Core.Helpers
+namespace TuringMachine.Helpers
 {
     public class ReflectionHelper
     {
