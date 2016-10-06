@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Threading;
 
 namespace TuringMachine.Client.Detectors.Windows
 {
@@ -17,7 +18,7 @@ namespace TuringMachine.Client.Detectors.Windows
     ///             "DumpFolder"="c:\\CrashDumps"
     ///             
     /// </summary>
-    public class WERDetector : ICrashDetector
+    public class WERDetector : ICrashDetector, IDisposable
     {
         string _FileName;
         static string _CrashPath;
@@ -55,7 +56,13 @@ namespace TuringMachine.Client.Detectors.Windows
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="process">Process</param>
+        /// <param name="fileName">File</param>
+        /// <param name="arguments">Arguments</param>
+        public WERDetector(string fileName, string arguments) : this(Process.Start(fileName, arguments)) { }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="process">Process (dont release the class!)</param>
         public WERDetector(Process process)
         {
             if (process != null)
@@ -116,6 +123,17 @@ namespace TuringMachine.Client.Detectors.Windows
                     return new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.None);
                 }
                 catch { }
+            }
+        }
+        /// <summary>
+        /// Free resources
+        /// </summary>
+        public void Dispose()
+        {
+            if (_Process != null)
+            {
+                _Process.Dispose();
+                _Process = null;
             }
         }
     }

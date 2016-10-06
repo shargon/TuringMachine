@@ -12,6 +12,8 @@ namespace TuringMachine.Agent
     class Program
     {
         static AgentConfig Config;
+        static bool Cancel = false;
+
         static int Main(string[] args)
         {
 #if DEBUG
@@ -20,8 +22,8 @@ namespace TuringMachine.Agent
 #endif
             Config = new AgentConfig()
             {
-                Cancel = false,
                 NumTasks = 1,
+                RetrySeconds = 3,
 #if DEBUG
                 AgentLibrary = Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
                 AgentClassName = "StartProcessAndSendTcpData",
@@ -74,7 +76,7 @@ namespace TuringMachine.Agent
 
             TuringTask[] task = new TuringTask[Config.NumTasks];
 
-            while (!Config.Cancel)
+            while (!Cancel)
             {
                 for (int x = 0; x < Config.NumTasks; x++)
                 {
@@ -151,7 +153,7 @@ namespace TuringMachine.Agent
         }
         static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-            Config.Cancel = true;
+            Cancel = true;
         }
     }
 }

@@ -58,7 +58,7 @@ namespace TuringMachine.Agent
             Agent = (ITuringMachineAgent)SerializationHelper.DeserializeFromJson(arguments, agent);
             Task = new Task<EFuzzingReturn>(() =>
             {
-                ICrashDetector crash = Agent.Run(socket, taskNumber);
+                ICrashDetector crash = Agent.Run(socket);
                 if (crash == null) return EFuzzingReturn.Fail;
 
                 byte[] crashData;
@@ -69,9 +69,13 @@ namespace TuringMachine.Agent
                     ResultData = crashData;
                     ResultExtension = crashExtension;
 
+                    // Free and return
+                    if (crash is IDisposable) ((IDisposable)crash).Dispose();
                     return EFuzzingReturn.Crash;
                 }
 
+                // Free and return
+                if (crash is IDisposable) ((IDisposable)crash).Dispose();
                 return EFuzzingReturn.Test;
             });
         }

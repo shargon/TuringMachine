@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using TuringMachine.Client;
@@ -23,31 +22,28 @@ namespace TuringMachine.BasicAgents
         /// Connect to
         /// </summary>
         public IPEndPoint ConnectTo { get; set; }
-        
-        public override ICrashDetector Run(TuringSocket socket, int taskNumber)
+
+        public override ICrashDetector Run(TuringSocket socket)
         {
             // Create process
-            using (Process start = Process.Start(FileName, Arguments))
+            WERDetector process = new WERDetector(FileName, Arguments);
+
+            // Create client
+            using (TcpClient ret = new TcpClient())
             {
+                ret.Connect(ConnectTo);
+
                 // Fuzzer stream
                 using (TuringStream stream = new TuringStream(socket))
-                {
-                    // Create client
-                    using (TcpClient ret = new TcpClient())
+                    try
                     {
-                        ret.Connect(ConnectTo);
-
-                        try
-                        {
-                            // Try send all we can
-                            using (Stream sr = ret.GetStream()) stream.CopyTo(sr);
-                        }
-                        catch { }
+                        // Try send all we can
+                        using (Stream sr = ret.GetStream()) stream.CopyTo(sr);
                     }
+                    catch { }
 
-                    // Wer Check
-                    return new WERDetector(start.Id);
-                }
+                // WER Checker
+                return process;
             }
         }
     }

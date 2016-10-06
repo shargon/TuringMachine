@@ -37,10 +37,6 @@ namespace TuringMachine.Agent
             }
         }
         /// <summary>
-        /// Cancel
-        /// </summary>
-        public bool Cancel { get; set; }
-        /// <summary>
         /// Library dll
         /// </summary>
         public string AgentLibrary { get; set; }

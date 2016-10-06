@@ -15,8 +15,7 @@ namespace TuringMachine.Client
         /// Get Task of agent
         /// </summary>
         /// <param name="socket">Socket</param>
-        /// <param name="taskNumber">TaskNumber</param>
-        public virtual ICrashDetector Run(TuringSocket socket, int taskNumber)
+        public virtual ICrashDetector Run(TuringSocket socket)
         {
             throw (new NotImplementedException());
         }
