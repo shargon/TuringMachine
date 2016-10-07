@@ -5,7 +5,12 @@ namespace TuringMachine.Client.Detectors
     public class ICrashDetector
     {
         protected ICrashDetector() { }
-        
+
+        /// <summary>
+        /// Receive alive signal
+        /// </summary>
+        /// <param name="isAlive">Its alive</param>
+        public virtual void SetIsAlive(bool isAlive) { }
         /// <summary>
         /// Return crashed data
         /// </summary>

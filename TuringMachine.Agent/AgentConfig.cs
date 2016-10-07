@@ -3,6 +3,7 @@ using System.Net;
 using System.Reflection;
 using TuringMachine.Client;
 using TuringMachine.Helpers;
+using TuringMachine.Helpers.Converters;
 
 namespace TuringMachine.Agent
 {
@@ -20,10 +21,7 @@ namespace TuringMachine.Agent
         public int NumTasks
         {
             get { return _NumTasks; }
-            set
-            {
-                _NumTasks = Math.Max(1, value);
-            }
+            set { _NumTasks = Math.Min(10, Math.Max(1, value)); }
         }
         /// <summary>
         /// RetrySeconds
@@ -31,10 +29,7 @@ namespace TuringMachine.Agent
         public int RetrySeconds
         {
             get { return _RetrySeconds; }
-            set
-            {
-                _RetrySeconds = Math.Max(1, value);
-            }
+            set { _RetrySeconds = Math.Min(60, Math.Max(1, value)); }
         }
         /// <summary>
         /// Library dll
@@ -56,7 +51,27 @@ namespace TuringMachine.Agent
         {
             if (args == null || args.Length == 0) return;
 
-            throw new NotImplementedException();
+            AgentLibrary = GetWord("AgentLibrary", args);
+            AgentClassName = GetWord("AgentClassName", args);
+            AgentArguments = GetWord("AgentArguments", args);
+
+            string v = GetWord("RetrySeconds", args);
+            if (!string.IsNullOrEmpty(v)) RetrySeconds = Convert.ToInt32(v);
+
+            v = GetWord("NumTasks", args);
+            if (!string.IsNullOrEmpty(v)) NumTasks = Convert.ToInt32(v);
+
+            v = GetWord("TuringServer", args);
+            if (!string.IsNullOrEmpty(v)) TuringServer = v.ToIpEndPoint();
+        }
+        string GetWord(string word, string[] args)
+        {
+            foreach (string s in args)
+            {
+                if (s.StartsWith(word + "=", StringComparison.OrdinalIgnoreCase))
+                    return s.Substring(word.Length + 1);
+            }
+            return null;
         }
         /// <summary>
         /// Create agent

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using TuringMachine.Client;
@@ -23,11 +24,17 @@ namespace TuringMachine.BasicAgents
         /// </summary>
         public IPEndPoint ConnectTo { get; set; }
 
-        public override ICrashDetector Run(TuringSocket socket)
+        public override ICrashDetector CreateDetector(TuringSocket socket)
         {
             // Create process
-            WERDetector process = new WERDetector(FileName, Arguments);
-
+            return new WERDetector(new ProcessStartInfo(FileName, Arguments)
+            {
+                //CreateNoWindow = true,
+                //WindowStyle = ProcessWindowStyle.Hidden
+            });
+        }
+        public override void OnRun(TuringSocket socket)
+        {
             // Create client
             using (TcpClient ret = new TcpClient())
             {
@@ -41,9 +48,24 @@ namespace TuringMachine.BasicAgents
                         using (Stream sr = ret.GetStream()) stream.CopyTo(sr);
                     }
                     catch { }
+            }
+        }
+        /// <summary>
+        /// Check if can reconnect (¿its alive?)
+        /// </summary>
+        /// <param name="socket">Socket</param>
+        public override bool GetItsAlive(TuringSocket socket)
+        {
+            try
+            {
+                using (TcpClient ret = new TcpClient())
+                    ret.Connect(ConnectTo);
 
-                // WER Checker
-                return process;
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

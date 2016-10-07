@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using TuringMachine.Client.Sockets;
 using TuringMachine.Helpers;
 
 namespace TuringMachine.Agent
@@ -19,20 +17,28 @@ namespace TuringMachine.Agent
 #if DEBUG
             // Forze copy for test
             object dummy = new BasicAgents.StartProcessAndSendTcpData();
-#endif
-            Config = new AgentConfig()
+            args = new string[]
             {
-                NumTasks = 1,
-                RetrySeconds = 3,
-#if DEBUG
-                AgentLibrary = Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
-                AgentClassName = "StartProcessAndSendTcpData",
-                AgentArguments = "{\"FileName\":\"vulnserver.exe\",\"Arguments\":\"--port 9{Task000}\",\"ConnectTo\":\"127.0.0.1,9{Task000}\"}",
-#endif
+                "NumTasks=1",
+                "RetrySeconds=3",
+                "TuringServer=127.0.0.1,7777",
 
-                TuringServer = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 7777),
+                "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
+                "AgentClassName=StartProcessAndSendTcpData",
+                "AgentArguments={\"FileName\":\"D:/bof/vulnserver.exe\",\"Arguments\":\"9{Task000}\",\"ConnectTo\":\"127.0.0.1,9{Task000}\"}",
             };
-            Config.LoadFromArguments(args);
+#endif
+            Config = new AgentConfig();
+            try
+            {
+                Config.LoadFromArguments(args);
+                if (Config.TuringServer == null) throw (new Exception("TuringServer cant be null"));
+            }
+            catch (Exception e)
+            {
+                WriteError(-1, e);
+                return 0;
+            }
 
             Type agent = Config.GetAgent();
 
@@ -87,7 +93,7 @@ namespace TuringMachine.Agent
                     {
                         if (t != null)
                         {
-                            if (t.Task.Exception != null)
+                            if (t.Task != null && t.Task.Exception != null)
                                 WriteError(x, t.Task.Exception);
 
                             // Send result
@@ -96,16 +102,20 @@ namespace TuringMachine.Agent
 
                         try
                         {
-                            task[x] = t = new TuringTask(TuringSocket.ConnectTo(Config.TuringServer), agent, Config.AgentArguments, x);
+                            task[x] = t = new TuringTask(agent, Config.AgentArguments, x);
+                            t.ConnectTo(Config.TuringServer);
                         }
                         catch (Exception e)
                         {
+                            if (t != null)
+                                t.SetException(e);
+
                             WriteError(x, e);
                             continue;
                         }
 
                         // Check
-                        if (t == null)
+                        if (t == null || t.Task == null)
                         {
                             WriteError(x, new Exception("Agent return empty task"));
                             return 1;
@@ -121,6 +131,11 @@ namespace TuringMachine.Agent
 
             return 1;
         }
+        static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        {
+            Cancel = true;
+        }
+        #region Log
         static void WriteSeparator(bool bold = false)
         {
             Console.WriteLine("".PadLeft(Console.WindowWidth - 1, bold ? '═' : '─'));
@@ -137,12 +152,16 @@ namespace TuringMachine.Agent
             catch { }
 
             WriteSeparator(true);
-            Console.WriteLine("Error at task " + taskNum.ToString() + " retry in " + Config.RetrySeconds + " seconds");
+
+            if (taskNum >= 0) Console.WriteLine("Error at task " + taskNum.ToString() + " retry in " + Config.RetrySeconds + " seconds");
+            else Console.WriteLine("Error");
+
             WriteSeparator();
 
             Console.WriteLine(e.ToString());
             WriteSeparator(true);
-            Thread.Sleep(Config.RetrySeconds * 1000);
+
+            if (taskNum >= 0) Thread.Sleep(Config.RetrySeconds * 1000);
 
             // White
             try
@@ -151,9 +170,6 @@ namespace TuringMachine.Agent
             }
             catch { }
         }
-        static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
-        {
-            Cancel = true;
-        }
+        #endregion
     }
 }

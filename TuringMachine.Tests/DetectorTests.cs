@@ -10,7 +10,7 @@ namespace TuringMachine.Tests
         [TestMethod]
         public void TestWerDetector()
         {
-            WERDetector w = new WERDetector(Process.Start(@"D:\CrashDumps\test.exe"));
+            WERDetector w = new WERDetector(new ProcessStartInfo(@"D:\CrashDumps\test.exe"));
 
             string ext;
             byte[] data;

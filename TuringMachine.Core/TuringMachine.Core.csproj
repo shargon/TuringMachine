@@ -74,6 +74,10 @@
     <Compile Include="StreamHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TuringMachine.Client\TuringMachine.Client.csproj">
+      <Project>{593EDA10-605B-4078-8671-F8C2D7673346}</Project>
+      <Name>TuringMachine.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TuringMachine.Helpers\TuringMachine.Helpers.csproj">
       <Project>{9775daa2-77c6-490b-8603-db3ee9e2ead2}</Project>
       <Name>TuringMachine.Helpers</Name>

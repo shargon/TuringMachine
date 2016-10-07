@@ -1,9 +1,9 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Threading;
 
 namespace TuringMachine.Client.Detectors.Windows
 {
@@ -20,9 +20,14 @@ namespace TuringMachine.Client.Detectors.Windows
     /// </summary>
     public class WERDetector : ICrashDetector, IDisposable
     {
-        string _FileName;
+        string[] _FileNames;
         static string _CrashPath;
-        Process _Process;
+        Process[] _Process;
+
+        /// <summary>
+        /// Wait process End
+        /// </summary>
+        bool KillProcess { get; set; }
 
         /// <summary>
         /// Load CrashPath
@@ -49,29 +54,39 @@ namespace TuringMachine.Client.Detectors.Windows
             _CrashPath = Environment.ExpandEnvironmentVariables(_CrashPath);
         }
         /// <summary>
-        /// Constructor
+        /// Receive is alive signal
         /// </summary>
-        /// <param name="pid">Process id</param>
-        public WERDetector(int pid) : this(Process.GetProcessById(pid)) { }
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="fileName">File</param>
-        /// <param name="arguments">Arguments</param>
-        public WERDetector(string fileName, string arguments) : this(Process.Start(fileName, arguments)) { }
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="process">Process (dont release the class!)</param>
-        public WERDetector(Process process)
+        /// <param name="isAlive">Alive</param>
+        public void IsAliveSignal(bool isAlive)
         {
-            if (process != null)
+            if (!isAlive)
+                KillProcess = false;
+        }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="startInfo">Process startInfo</param>
+        public WERDetector(params ProcessStartInfo[] startInfo)
+        {
+            if (startInfo != null)
             {
-                string file = Path.GetFileName(process.MainModule.FileName);
-                _FileName = Path.Combine(_CrashPath, file + "." + process.Id.ToString() + ".dmp");
+                List<string> ls = new List<string>();
+                List<Process> lp = new List<Process>();
+
+                foreach (ProcessStartInfo pi in startInfo)
+                {
+                    string file = Path.GetFileName(pi.FileName);
+
+                    Process p = Process.Start(pi);
+                    lp.Add(p);
+                    ls.Add(Path.Combine(_CrashPath, file + "." + p.Id.ToString() + ".dmp"));
+                }
+
+                _FileNames = ls.ToArray();
+                _Process = lp.ToArray();
             }
 
-            _Process = process;
+            KillProcess = true;
         }
         /// <summary>
         /// Return if are WER file
@@ -85,27 +100,41 @@ namespace TuringMachine.Client.Detectors.Windows
 
             if (_Process == null) return false;
 
-            _Process.WaitForExit();
-            //Thread.Sleep(1000);
+            if (KillProcess)
+            {
+                // Kill
+                foreach (Process p in _Process)
+                    try { p.Kill(); } catch { }
+            }
 
-            Stream file = WaitOpenRead(_FileName);
-            if (file == null) return false;
+            // Wait
+            foreach (Process p in _Process)
+                try { p.WaitForExit(); } catch { }
 
             // Compress to zip
-            using (file)
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                using (ZipArchive archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                foreach (string file in _FileNames)
                 {
-                    using (Stream entryStream = archive.CreateEntry(Path.GetFileName(_FileName)).Open())
-                        file.CopyTo(entryStream);
+                    Stream fread = WaitOpenRead(file);
+                    if (fread == null) continue;
+
+                    using (fread)
+                    using (ZipArchive archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                    {
+                        using (Stream entryStream = archive.CreateEntry(Path.GetFileName(file)).Open())
+                            fread.CopyTo(entryStream);
+                    }
                 }
 
+                // Recover zip
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                crashExtension = "zip";
                 crashData = memoryStream.ToArray();
-                return true;
+                if (crashData != null && crashData.Length > 0) crashExtension = "zip";
+                else crashData = null;
+
+                return !string.IsNullOrEmpty(crashExtension);
             }
         }
         /// <summary>
@@ -132,7 +161,9 @@ namespace TuringMachine.Client.Detectors.Windows
         {
             if (_Process != null)
             {
-                _Process.Dispose();
+                foreach (Process p in _Process)
+                    try { p.Dispose(); } catch { }
+
                 _Process = null;
             }
         }

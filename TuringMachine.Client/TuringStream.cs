@@ -20,10 +20,10 @@ namespace TuringMachine.Client
         {
             _Socket = socket;
 
-            socket.MessagesToList = true;
-
-            TuringStream ret = new TuringStream(socket);
+            socket.EnqueueMessages = true;
             socket.SendMessage(new TuringConfigMessage() { InputType = TuringConfigMessage.EInputType.Random });
+
+            TuringMessage ret = socket.ReadMessage();
         }
         public override bool CanRead { get { throw new NotImplementedException(); } }
         public override bool CanSeek { get { throw new NotImplementedException(); } }

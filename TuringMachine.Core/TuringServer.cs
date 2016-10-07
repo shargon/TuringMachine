@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
 using System.Text;
+using TuringMachine.Client.Sockets;
+using TuringMachine.Client.Sockets.Enums;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Mutational;
@@ -23,7 +25,9 @@ namespace TuringMachine.Core
         public event delOnTestEnd OnTestEnd;
         public event delOnCrashLog OnCrashLog;
 
+        bool _Paused;
         EFuzzerState _State;
+        TuringSocket _Socket;
         IPEndPoint _EndPoint = new IPEndPoint(IPAddress.Any, 7777);
         /// <summary>
         /// Inputs
@@ -121,6 +125,12 @@ namespace TuringMachine.Core
         public bool Stop()
         {
             _State = EFuzzerState.Stopped;
+            _Paused = false;
+            if (_Socket != null)
+            {
+                _Socket.Dispose();
+                _Socket = null;
+            }
             return true;
         }
         /// <summary>
@@ -128,7 +138,10 @@ namespace TuringMachine.Core
         /// </summary>
         public bool Start()
         {
+            Stop();
             _State = EFuzzerState.Started;
+            _Socket = TuringSocket.Bind(Listen);
+            _Socket.OnMessage += _Socket_OnMessage;
             return true;
         }
         /// <summary>
@@ -137,7 +150,28 @@ namespace TuringMachine.Core
         public bool Pause()
         {
             _State = EFuzzerState.Paused;
+            _Paused = !_Paused;
             return true;
+        }
+        /// <summary>
+        /// Message logic
+        /// </summary>
+        /// <param name="sender">Socket</param>
+        /// <param name="message">Message</param>
+        void _Socket_OnMessage(TuringSocket sender, TuringMessage message)
+        {
+            if (_Paused)
+            {
+                // Send Paused signal
+                return;
+            }
+            switch (message.Type)
+            {
+                case ETuringMessageType.ConfigMessage:
+                    {
+                        break;
+                    }
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using TuringMachine.Client;
@@ -36,17 +37,20 @@ namespace TuringMachine.Agent
         /// ResultExtension
         /// </summary>
         string ResultExtension { get; set; }
+        /// <summary>
+        /// Return
+        /// </summary>
+        EFuzzingReturn Result { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="socket">Socket</param>
         /// <param name="agent">Agent</param>
         /// <param name="arguments">Arguments</param>
         /// <param name="taskNumber">TaskNumber</param>
-        public TuringTask(TuringSocket socket, Type agent, string arguments, int taskNumber)
+        public TuringTask(Type agent, string arguments, int taskNumber)
         {
-            Socket = socket;
+            Result = EFuzzingReturn.Test;
 
             if (string.IsNullOrEmpty(arguments))
                 arguments = "{}";
@@ -56,10 +60,26 @@ namespace TuringMachine.Agent
             arguments = arguments.Replace("{Task000}", taskNumber.ToString().PadLeft(3, '0'));
 
             Agent = (ITuringMachineAgent)SerializationHelper.DeserializeFromJson(arguments, agent);
+        }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="remoteEndPoint">EndPoint</param>
+        public void ConnectTo(IPEndPoint remoteEndPoint)
+        {
+            Socket = TuringSocket.ConnectTo(remoteEndPoint);
+
             Task = new Task<EFuzzingReturn>(() =>
             {
-                ICrashDetector crash = Agent.Run(socket);
+                // Create detector
+                ICrashDetector crash = Agent.CreateDetector(Socket);
                 if (crash == null) return EFuzzingReturn.Fail;
+
+                // Run action
+                try { Agent.OnRun(Socket); } catch { }
+
+                // Detect are alive
+                try { crash.SetIsAlive(Agent.GetItsAlive(Socket)); } catch { }
 
                 byte[] crashData;
                 string crashExtension;
@@ -80,30 +100,41 @@ namespace TuringMachine.Agent
             });
         }
         /// <summary>
+        /// Set exception
+        /// </summary>
+        /// <param name="e">Exception</param>
+        public void SetException(Exception e)
+        {
+            if (Result != EFuzzingReturn.Crash && e != null)
+            {
+                // Error result
+                if (ResultData == null || ResultData.Length == 0)
+                {
+                    ResultData = Encoding.UTF8.GetBytes(e.ToString());
+                    ResultExtension = "txt";
+                }
+
+                Result = EFuzzingReturn.Fail;
+            }
+        }
+        /// <summary>
         /// Free resources
         /// </summary>
         public void Dispose()
         {
             // Send end
-            EFuzzingReturn ret = EFuzzingReturn.Fail;
-
             if (Task != null)
             {
                 if (Task.Exception != null)
                 {
                     // Error result
-                    ret = EFuzzingReturn.Fail;
-
-                    if (ResultData == null || ResultData.Length == 0)
-                    {
-                        ResultData = Encoding.UTF8.GetBytes(Task.Exception.ToString());
-                        ResultExtension = "txt";
-                    }
+                    SetException(Task.Exception);
                 }
                 else
                 {
-                    // Result of task
-                    ret = Task.Result;
+                    // Check if crash
+                    if (Task.Result == EFuzzingReturn.Crash)
+                        Result = EFuzzingReturn.Crash;
                 }
 
                 Task.Dispose();
@@ -113,7 +144,9 @@ namespace TuringMachine.Agent
             if (Socket != null)
             {
                 // Send end
-
+                //ResultData
+                //ResultExtension
+                //Result
 
                 Socket.Dispose();
                 Socket = null;

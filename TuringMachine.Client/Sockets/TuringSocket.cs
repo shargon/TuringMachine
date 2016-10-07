@@ -1,34 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using TuringMachine.Client.Sockets.Enums;
 
 namespace TuringMachine.Client.Sockets
 {
     public class TuringSocket : IDisposable
     {
-        List<TuringMessage> _Messages;
-
         const int BufferLength = 8192;
 
         public delegate void delOnMessage(TuringSocket sender, TuringMessage message);
         public event delOnMessage OnMessage;
 
+        ConcurrentQueue<TuringMessage> _Readed = new ConcurrentQueue<TuringMessage>();
+        AutoResetEvent _Signal = new AutoResetEvent(false);
+
         Socket _Socket;
+        /// <summary>
+        /// True for Enqueue messages
+        /// </summary>
+        public bool EnqueueMessages { get; set; }
 
         /// <summary>
         /// ListenEndPoint
         /// </summary>
         IPEndPoint EndPoint { get; set; }
-        /// <summary>
-        /// Append Messages to List
-        /// </summary>
-        public bool MessagesToList { get; set; }
-        /// <summary>
-        /// Messages
-        /// </summary>
-        public List<TuringMessage> Messages { get { return _Messages; } }
 
         /// <summary>
         /// Constructor
@@ -39,7 +37,6 @@ namespace TuringMachine.Client.Sockets
         {
             _Socket = socket;
             EndPoint = endPoint;
-            _Messages = new List<TuringMessage>();
         }
         /// <summary>
         /// Bind socket
@@ -68,7 +65,7 @@ namespace TuringMachine.Client.Sockets
             TuringSocket ret = new TuringSocket(socket, remote);
 
             // WaitMessage
-            ReadMessageAsync(new TuringMessageState(ret));
+            // ReadMessageAsync(new TuringMessageState(ret));
 
             return ret;
         }
@@ -80,10 +77,10 @@ namespace TuringMachine.Client.Sockets
         {
             if (message == null) return;
 
-            byte[] data = message.GetData();
-
             lock (_Socket)
             {
+                byte[] data = message.GetData();
+
                 // Send header
                 _Socket.Send(message.GetHeader(data == null ? 0 : data.Length), 0, TuringMessage.HeaderLength, SocketFlags.None);
                 // Send data
@@ -102,11 +99,17 @@ namespace TuringMachine.Client.Sockets
             catch { }
         }
         /// <summary>
-        /// Read Message sync
+        /// Read Message Sync
         /// </summary>
         public TuringMessage ReadMessage()
         {
-            return null;
+            _Signal.WaitOne();
+            lock (_Readed)
+            {
+                TuringMessage item;
+                while (!_Readed.TryDequeue(out item)) { Thread.Sleep(1); }
+                return item;
+            }
         }
         void OnAccept(IAsyncResult result)
         {
@@ -139,7 +142,12 @@ namespace TuringMachine.Client.Sockets
         }
         void RaiseOnMessage(TuringSocket sender, TuringMessage message)
         {
-            if (MessagesToList) _Messages.Add(message);
+            // Enqueue
+            if (EnqueueMessages)
+            {
+                lock (_Readed) { _Readed.Enqueue(message); }
+                _Signal.Set();
+            }
             OnMessage?.Invoke(sender, message);
         }
         void OnDataReceive(IAsyncResult result)
@@ -181,10 +189,28 @@ namespace TuringMachine.Client.Sockets
         {
             if (_Socket == null) return;
 
-            try { _Socket.Close(); } catch { }
-            try { _Socket.Dispose(); } catch { }
-
-            _Socket = null;
+            if (_Readed != null)
+            {
+                try
+                {
+                    TuringMessage i;
+                    while (_Readed.Count > 0)
+                        _Readed.TryDequeue(out i);
+                }
+                catch { }
+                _Readed = null;
+            }
+            if (_Socket != null)
+            {
+                try { _Socket.Close(); } catch { }
+                try { _Socket.Dispose(); } catch { }
+                _Socket = null;
+            }
+            if (_Signal != null)
+            {
+                try { _Signal.Dispose(); } catch { }
+                _Signal = null;
+            }
         }
     }
 }
