@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using TuringMachine.Helpers.Interfaces;
 
 namespace TuringMachine.Helpers
@@ -73,6 +75,18 @@ namespace TuringMachine.Helpers
                 buffer[index] = get.Get();
                 length--;
             }
+        }
+        /// <summary>
+        /// Get random elements
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="inputs">Collection</param>
+        public static T GetRandom<T>(IList<T> inputs)
+        {
+            int count = inputs.Count;
+            if (count <= 0) return default(T);
+
+            return inputs[_Rand.Next(count)];
         }
     }
 }

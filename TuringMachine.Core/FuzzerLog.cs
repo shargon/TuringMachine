@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using TuringMachine.Core.Enums;
+using TuringMachine.Client;
 
 namespace TuringMachine.Core
 {
@@ -17,14 +17,26 @@ namespace TuringMachine.Core
         /// <summary>
         /// Type
         /// </summary>
-        public ETestResult Type { get; set; }
+        public EFuzzingReturn Type { get; set; }
         /// <summary>
-        /// Description
+        /// Input
         /// </summary>
-        public string Description { get; set; }
+        public string Input { get; set; }
+        /// <summary>
+        /// Config
+        /// </summary>
+        public string Config { get; set; }
         /// <summary>
         /// Path
         /// </summary>
         public string Path { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FuzzerLog()
+        {
+            Date = DateTime.Now;
+        }
     }
 }

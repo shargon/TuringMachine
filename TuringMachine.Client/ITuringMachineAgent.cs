@@ -6,6 +6,8 @@ namespace TuringMachine.Client
 {
     public class ITuringMachineAgent
     {
+        public delegate bool delItsAlive(TuringSocket socket);
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -15,7 +17,7 @@ namespace TuringMachine.Client
         /// Create detector (First action)
         /// </summary>
         /// <param name="socket">Socket</param>
-        public virtual ICrashDetector CreateDetector(TuringSocket socket)
+        public virtual ICrashDetector GetCrashDetector(TuringSocket socket)
         {
             return null;
         }

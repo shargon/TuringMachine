@@ -3,11 +3,17 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
+using TuringMachine.Client;
 using TuringMachine.Client.Sockets;
 using TuringMachine.Client.Sockets.Enums;
+using TuringMachine.Client.Sockets.Messages;
+using TuringMachine.Client.Sockets.Messages.Requests;
+using TuringMachine.Client.Sockets.Messages.Responses;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Mutational;
+using TuringMachine.Helpers;
 
 namespace TuringMachine.Core
 {
@@ -17,7 +23,7 @@ namespace TuringMachine.Core
     /// </summary>
     public class TuringServer
     {
-        public delegate void delOnTestEnd(object sender, ETestResult result);
+        public delegate void delOnTestEnd(object sender, EFuzzingReturn result, FuzzerStat<IFuzzingInput> sinput, FuzzerStat<IFuzzingConfig> sconfig);
         public delegate void delOnCrashLog(object sender, FuzzerLog log);
 
         public event EventHandler OnListenChange;
@@ -115,9 +121,12 @@ namespace TuringMachine.Core
         /// Raise end of test
         /// </summary>
         /// <param name="result">Result</param>
-        void RaiseOnTestEnd(ETestResult result)
+        void RaiseOnTestEnd(EFuzzingReturn result, FuzzerStat<IFuzzingInput> sinput, FuzzerStat<IFuzzingConfig> sconfig)
         {
-            OnTestEnd?.Invoke(this, result);
+            if (sinput != null) sinput.Increment(result);
+            if (sconfig != null) sconfig.Increment(result);
+
+            OnTestEnd?.Invoke(this, result, sinput, sconfig);
         }
         /// <summary>
         /// Stop logic
@@ -163,15 +172,180 @@ namespace TuringMachine.Core
             if (_Paused)
             {
                 // Send Paused signal
-                return;
+                //sender.SendMessage(new WaitMessage(TimeSpan.FromSeconds(1)));
+
+                // Wait disable pause
+                while (_Paused) { Thread.Sleep(500); }
             }
-            switch (message.Type)
+
+            TuringMessage response = new ExceptionMessage("Bad request");
+            try
             {
-                case ETuringMessageType.ConfigMessage:
-                    {
-                        break;
-                    }
+                switch (message.Type)
+                {
+                    case ETuringMessageType.EndTask:
+                        {
+                            EndTaskMessage msg = (EndTaskMessage)message;
+
+                            FuzzerStat<IFuzzingInput> sinput = (FuzzerStat<IFuzzingInput>)sender["INPUT"];
+                            FuzzerStat<IFuzzingConfig> sconfig = (FuzzerStat<IFuzzingConfig>)sender["CONFIG"];
+
+                            if (msg.Result != EFuzzingReturn.Test)
+                            {
+                                // Log Crash!
+                                RaiseOnCrashLog(new FuzzerLog()
+                                {
+                                    Input = sinput == null ? "" : sinput.ToString(),
+                                    Config = sconfig == null ? "" : sconfig.ToString(),
+                                    Type = msg.Result,
+                                    Origin = sender.EndPoint,
+                                    Path = msg.SaveResult(),
+                                });
+                            }
+
+                            // Send message of the end
+                            RaiseOnTestEnd(msg.Result, sinput, sconfig);
+                            response = new BoolMessageResponse(true);
+                            break;
+                        }
+                    case ETuringMessageType.OpenStreamRequest:
+                        {
+                            Guid id = Guid.NewGuid();
+                            OpenStreamMessageRequest msg = (OpenStreamMessageRequest)message;
+                            Stream stream = GetRandomStream(sender, EFuzzerStreamType.Read, id);
+
+                            if (stream == null) throw new Exception("Not found stream");
+
+                            sender[id.ToString()] = stream;
+
+                            response = new OpenStreamMessageResponse(id)
+                            {
+                                CanRead = stream.CanRead,
+                                CanSeek = stream.CanSeek,
+                                CanTimeout = stream.CanTimeout,
+                                CanWrite = stream.CanWrite
+                            };
+                            break;
+                        }
+                    case ETuringMessageType.GetStreamLengthRequest:
+                        {
+                            GetStreamLengthMessageRequest msg = (GetStreamLengthMessageRequest)message;
+                            Stream stream = (Stream)sender[msg.Id.ToString()];
+                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+
+                            response = new LongMessageResponse(stream.Length);
+                            break;
+                        }
+                    case ETuringMessageType.GetStreamPositionRequest:
+                        {
+                            GetStreamPositionMessageRequest msg = (GetStreamPositionMessageRequest)message;
+                            Stream stream = (Stream)sender[msg.Id.ToString()];
+                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+
+                            response = new LongMessageResponse(stream.Position);
+                            break;
+                        }
+                    case ETuringMessageType.SetStreamRequest:
+                        {
+                            SetStreamMessageRequest msg = (SetStreamMessageRequest)message;
+                            Stream stream = (Stream)sender[msg.Id.ToString()];
+                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+
+                            switch (msg.ValueType)
+                            {
+                                case SetStreamMessageRequest.EMode.Position: stream.Position = msg.Value; break;
+                                case SetStreamMessageRequest.EMode.Length: stream.SetLength(msg.Value); break;
+                            }
+
+                            response = new BoolMessageResponse(true);
+                            break;
+                        }
+                    case ETuringMessageType.FlushStreamRequest:
+                        {
+                            FlushStreamMessageRequest msg = (FlushStreamMessageRequest)message;
+                            Stream stream = (Stream)sender[msg.Id.ToString()];
+                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+
+                            stream.Flush();
+
+                            response = new BoolMessageResponse(true);
+                            break;
+                        }
+                    case ETuringMessageType.CloseStreamRequest:
+                        {
+                            CloseStreamMessageRequest msg = (CloseStreamMessageRequest)message;
+                            Stream stream = (Stream)sender[msg.Id.ToString()];
+                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+
+                            try { stream.Close(); } catch { }
+                            try { stream.Dispose(); } catch { }
+                            sender[msg.Id.ToString()] = null;
+
+                            response = new BoolMessageResponse(true);
+                            break;
+                        }
+                    case ETuringMessageType.ReadStreamRequest:
+                        {
+                            StreamReadMessageRequest msg = (StreamReadMessageRequest)message;
+                            Stream stream = (Stream)sender[msg.Id.ToString()];
+                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+
+                            byte[] data = new byte[msg.Length];
+                            int r = stream.Read(data, 0, data.Length);
+
+                            if (r != data.Length) Array.Resize(ref data, r);
+
+                            response = new ByteArrayMessageResponse(data);
+                            break;
+                        }
+                    case ETuringMessageType.WriteStreamRequest:
+                        {
+                            StreamWriteMessageRequest msg = (StreamWriteMessageRequest)message;
+                            Stream stream = (Stream)sender[msg.Id.ToString()];
+                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+
+                            stream.Write(msg.Data, 0, msg.Data.Length);
+                            response = new BoolMessageResponse(true);
+                            break;
+                        }
+                }
             }
+            catch (Exception e)
+            {
+                response = new ExceptionMessage(e.ToString());
+            }
+            sender.SendMessage(response);
+        }
+        Stream GetRandomStream(TuringSocket sender, EFuzzerStreamType type, Guid id)
+        {
+            FuzzerStat<IFuzzingInput> sinput = RandomHelper.GetRandom(Inputs);
+            if (sinput != null)
+            {
+                IFuzzingInput input = sinput.Source;
+                if (input == null) throw (new Exception("Require input"));
+
+                sender["INPUT"] = sinput;
+
+                // Fuzz
+                if (type != EFuzzerStreamType.None)
+                {
+                    FuzzerStat<IFuzzingConfig> sconfig = RandomHelper.GetRandom(Configurations);
+
+                    if (sconfig != null && sconfig != null)
+                    {
+                        IFuzzingConfig config = sconfig.Source;
+                        if (sconfig == null) throw (new Exception("Require fuzzer configuration"));
+
+                        sender["CONFIG"] = sconfig;
+
+                        Stream stream = input.GetStream();
+                        return config.CreateStream(input.GetStream(), id.ToString(), type == EFuzzerStreamType.Read, type == EFuzzerStreamType.Write);
+                    }
+                }
+
+                return input.GetStream();
+            }
+            return null;
         }
     }
 }

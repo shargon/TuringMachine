@@ -129,6 +129,10 @@
     <None Include="Resources\add_socket.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TuringMachine.Client\TuringMachine.Client.csproj">
+      <Project>{593EDA10-605B-4078-8671-F8C2D7673346}</Project>
+      <Name>TuringMachine.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TuringMachine.Core\TuringMachine.Core.csproj">
       <Project>{255B9399-EA53-41C5-8272-389B43B48764}</Project>
       <Name>TuringMachine.Core</Name>

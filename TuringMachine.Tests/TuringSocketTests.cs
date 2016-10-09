@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading;
 using TuringMachine.Client.Sockets;
-using TuringMachine.Client.Sockets.Messages;
+using TuringMachine.Client.Sockets.Messages.Requests;
 
 namespace TuringMachine.Tests
 {
@@ -20,7 +20,7 @@ namespace TuringMachine.Tests
                 using (TuringSocket client = TuringSocket.ConnectTo(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9787)))
                 {
                     client.OnMessage += Client_OnMessage;
-                    client.SendMessage(new TuringConfigMessage() { InputType = TuringConfigMessage.EInputType.Random });
+                    client.SendMessage(new OpenStreamMessageRequest() { });
 
                     for (int x = 0; x < 20 && !isOk; x++)
                         Thread.Sleep(1000);
@@ -31,14 +31,11 @@ namespace TuringMachine.Tests
         }
         void Server_OnMessage(TuringSocket sender, TuringMessage message)
         {
-            sender.SendMessage(new TuringConfigMessage()
-            {
-                InputType = TuringConfigMessage.EInputType.Proxy,
-            });
+            sender.SendMessage(new CloseStreamMessageRequest() { });
         }
         void Client_OnMessage(TuringSocket sender, TuringMessage message)
         {
-            isOk = message is TuringConfigMessage && ((TuringConfigMessage)message).InputType == TuringConfigMessage.EInputType.Proxy;
+            isOk = message is CloseStreamMessageRequest;
         }
     }
 }

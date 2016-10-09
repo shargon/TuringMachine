@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using TuringMachine.Client;
 using TuringMachine.Core;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Inputs;
@@ -17,7 +18,8 @@ namespace TuringMachine
 {
     public partial class FMain : Form
     {
-        int _Test = 0, _Crash = 0, _Fails = 0;
+        class dummyStat : IType { public string Type { get { return "Dummy"; } } }
+        FuzzerStat<dummyStat> _Stat = new FuzzerStat<dummyStat>(null);
         TuringServer _Fuzzer;
 
         /// <summary>
@@ -36,6 +38,8 @@ namespace TuringMachine
             _Fuzzer.OnListenChange += _Fuzzer_OnListenChange;
             _Fuzzer.OnTestEnd += _Fuzzer_OnTestEnd;
             _Fuzzer.OnCrashLog += _Fuzzer_OnCrashLog;
+
+            chart1.ChartAreas[0].AxisY.Maximum = double.NaN;
 
             // Configure grids
             gridConfig.AutoGenerateColumns = false;
@@ -66,11 +70,7 @@ namespace TuringMachine
                 return;
             }
 
-            _Test++;
-            if (log.Type == ETestResult.Fail) _Fails++;
-            else _Crash++;
-
-            gridLog.DataSource = _Fuzzer.Logs;
+            gridLog.DataSource = _Fuzzer.Logs.ToArray();
             toolStripLabel2.Text = "Crashes" + (_Fuzzer.Logs.Count <= 0 ? "" : " (" + _Fuzzer.Logs.Count.ToString() + ")");
         }
         void _Fuzzer_OnConfigurationsChange(object sender, EventArgs e)
@@ -199,22 +199,21 @@ namespace TuringMachine
         }
         #endregion
         #region Test End
-        void _Fuzzer_OnTestEnd(object sender, ETestResult result)
+        void _Fuzzer_OnTestEnd(object sender, EFuzzingReturn result, FuzzerStat<IFuzzingInput> sinput, FuzzerStat<IFuzzingConfig> sconfig)
         {
-            _Test++;
-            switch (result)
-            {
-                case ETestResult.Crash: _Crash++; break;
-                case ETestResult.Fail: _Fails++; break;
-            }
+            _Stat.Increment(result);
         }
         void timer1_Tick(object sender, EventArgs e)
         {
-            AddToSerie(chart1.Series["Test"], _Test);
-            AddToSerie(chart1.Series["Crash"], _Crash);
-            AddToSerie(chart1.Series["Fails"], _Fails);
+            AddToSerie(chart1.Series["Test"], _Stat.Tests);
+            AddToSerie(chart1.Series["Crash"], _Stat.Crashes);
+            AddToSerie(chart1.Series["Fails"], _Stat.Fails);
 
-            _Test = _Crash = _Fails = 0;
+            chart1.ChartAreas[0].RecalculateAxesScale();
+            _Stat.Reset();
+
+            gridInput.Invalidate();
+            gridConfig.Invalidate();
         }
         void AddToSerie(Series series, int r)
         {
@@ -326,7 +325,7 @@ namespace TuringMachine
                     {
                         if (config != null)
                         {
-                            using (Stream fzs = config.CreateStream(stream, "Test"))
+                            using (Stream fzs = config.CreateStream(stream, "Test", true, false))
                                 fzs.CopyTo(fs);
                         }
                         else
@@ -390,7 +389,7 @@ namespace TuringMachine
             if (gridLog.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
                 FuzzerLog log = (FuzzerLog)gridLog.Rows[e.RowIndex].DataBoundItem;
-                if (Directory.Exists(log.Path))
+                if (File.Exists(log.Path))
                     Process.Start(log.Path);
             }
         }

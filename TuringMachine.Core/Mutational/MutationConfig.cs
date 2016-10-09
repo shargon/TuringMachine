@@ -80,9 +80,11 @@ namespace TuringMachine.Core.Mutational
         /// </summary>
         /// <param name="original">Original stream</param>
         /// <param name="sampleId">Sample Id</param>
-        public Stream CreateStream(Stream original, string sampleId)
+        /// <param name="fuzzRead">Fuzzing for read</param>
+        /// <param name="fuzzWrite">Fuzzing for write</param>
+        public Stream CreateStream(Stream original, string sampleId, bool fuzzRead, bool fuzzWrite)
         {
-            return new MutationalStream(original, this, sampleId);
+            return new MutationalStream(original, this, sampleId, fuzzRead, fuzzWrite);
         }
     }
 }

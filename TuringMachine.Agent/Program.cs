@@ -19,13 +19,13 @@ namespace TuringMachine.Agent
             object dummy = new BasicAgents.StartProcessAndSendTcpData();
             args = new string[]
             {
-                "NumTasks=1",
-                "RetrySeconds=3",
+                "NumTasks=6",
+                "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
 
                 "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
                 "AgentClassName=StartProcessAndSendTcpData",
-                "AgentArguments={\"FileName\":\"D:/bof/vulnserver.exe\",\"Arguments\":\"9{Task000}\",\"ConnectTo\":\"127.0.0.1,9{Task000}\"}",
+                "AgentArguments={\"FileName\":\"D:/Fuzzing/vulnserver/vulnserver.exe\",\"Arguments\":\"9{Task000}\",\"ConnectTo\":\"127.0.0.1,9{Task000}\"}",
             };
 #endif
             Config = new AgentConfig();
@@ -158,7 +158,7 @@ namespace TuringMachine.Agent
 
             WriteSeparator();
 
-            Console.WriteLine(e.ToString());
+            Console.WriteLine(Config.Verbose ? e.ToString() : e.Message.ToString());
             WriteSeparator(true);
 
             if (taskNum >= 0) Thread.Sleep(Config.RetrySeconds * 1000);

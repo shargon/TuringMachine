@@ -3,7 +3,9 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using TuringMachine.Client.Collections;
 using TuringMachine.Client.Sockets.Enums;
+using TuringMachine.Client.Sockets.Messages;
 
 namespace TuringMachine.Client.Sockets
 {
@@ -22,12 +24,23 @@ namespace TuringMachine.Client.Sockets
         /// True for Enqueue messages
         /// </summary>
         public bool EnqueueMessages { get; set; }
-
+        /// <summary>
+        /// Variables
+        /// </summary>
+        public VariableCollection<string, object> Variables { get; private set; }
         /// <summary>
         /// ListenEndPoint
         /// </summary>
-        IPEndPoint EndPoint { get; set; }
-
+        public IPEndPoint EndPoint { get; private set; }
+        /// <summary>
+        /// Index to variables
+        /// </summary>
+        /// <param name="name">Variable name</param>
+        public object this[string name]
+        {
+            get { return Variables[name]; }
+            set { Variables[name] = value; }
+        }
         /// <summary>
         /// Constructor
         /// </summary>
@@ -37,6 +50,7 @@ namespace TuringMachine.Client.Sockets
         {
             _Socket = socket;
             EndPoint = endPoint;
+            Variables = new VariableCollection<string, object>();
         }
         /// <summary>
         /// Bind socket
@@ -65,7 +79,7 @@ namespace TuringMachine.Client.Sockets
             TuringSocket ret = new TuringSocket(socket, remote);
 
             // WaitMessage
-            // ReadMessageAsync(new TuringMessageState(ret));
+            ReadMessageAsync(new TuringMessageState(ret));
 
             return ret;
         }
@@ -75,7 +89,7 @@ namespace TuringMachine.Client.Sockets
         /// <param name="message">Message</param>
         public void SendMessage(TuringMessage message)
         {
-            if (message == null) return;
+            if (message == null || _Socket == null) return;
 
             lock (_Socket)
             {
@@ -92,17 +106,15 @@ namespace TuringMachine.Client.Sockets
         /// </summary>
         static void ReadMessageAsync(TuringMessageState state)
         {
-            try
-            {
-                state.Source._Socket.BeginReceive(state.Buffer, state.Index, state.Buffer.Length, 0, state.Source.OnDataReceive, state);
-            }
-            catch { }
+            state.Source._Socket.BeginReceive(state.Buffer, state.Index, state.Buffer.Length - state.Index, 0, state.Source.OnDataReceive, state);
         }
         /// <summary>
         /// Read Message Sync
         /// </summary>
         public TuringMessage ReadMessage()
         {
+            if (_Signal == null) return null;
+
             _Signal.WaitOne();
             lock (_Readed)
             {
@@ -110,6 +122,17 @@ namespace TuringMachine.Client.Sockets
                 while (!_Readed.TryDequeue(out item)) { Thread.Sleep(1); }
                 return item;
             }
+        }
+        public T ReadMessage<T>() where T : TuringMessage
+        {
+            TuringMessage ret = ReadMessage();
+            if (ret is T)
+                return (T)ret;
+
+            if (ret is ExceptionMessage)
+                throw (new Exception(((ExceptionMessage)ret).Error));
+
+            throw (new Exception("Bad response"));
         }
         void OnAccept(IAsyncResult result)
         {
@@ -135,13 +158,18 @@ namespace TuringMachine.Client.Sockets
 
                 ReadMessageAsync(new TuringMessageState(ret));
             }
-            catch { }
+            catch (Exception e)
+            {
+
+            }
 
             // Re-accept
             try { main._Socket.BeginAccept(OnAccept, main); } catch { }
         }
         void RaiseOnMessage(TuringSocket sender, TuringMessage message)
         {
+            if (message == null) return;
+
             // Enqueue
             if (EnqueueMessages)
             {
@@ -157,20 +185,14 @@ namespace TuringMachine.Client.Sockets
             {
                 int bytesRead = state.Source._Socket.EndReceive(result);
                 if (bytesRead > 0)
-                    state.CheckData(bytesRead);
-
-                switch (state.State)
                 {
-                    case ETuringMessageState.Full:
-                        {
-                            RaiseOnMessage(state.Source, TuringMessage.Create(state.MessageType, state.Buffer));
-                            break;
-                        }
+                    TuringMessage msg = state.CheckData(bytesRead);
+                    if (msg != null) RaiseOnMessage(state.Source, msg);
                 }
 
                 ReadMessageAsync(state);
             }
-            catch
+            catch (Exception e)
             {
                 state.Source.Dispose();
             }
@@ -210,6 +232,16 @@ namespace TuringMachine.Client.Sockets
             {
                 try { _Signal.Dispose(); } catch { }
                 _Signal = null;
+            }
+            if (Variables != null)
+            {
+                foreach (object o in Variables.Values)
+                    try
+                    {
+                        if (o != null && o is IDisposable)
+                            ((IDisposable)o).Dispose();
+                    }
+                    catch { }
             }
         }
     }

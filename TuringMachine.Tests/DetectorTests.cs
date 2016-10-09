@@ -14,7 +14,7 @@ namespace TuringMachine.Tests
 
             string ext;
             byte[] data;
-            w.IsCrashed(out data, out ext);
+            w.IsCrashed(null, out data, out ext, null);
         }
     }
 }

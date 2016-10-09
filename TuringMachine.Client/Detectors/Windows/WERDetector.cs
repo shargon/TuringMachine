@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
+using System.Threading;
+using TuringMachine.Client.Sockets;
 
 namespace TuringMachine.Client.Detectors.Windows
 {
@@ -23,11 +26,8 @@ namespace TuringMachine.Client.Detectors.Windows
         string[] _FileNames;
         static string _CrashPath;
         Process[] _Process;
-
-        /// <summary>
-        /// Wait process End
-        /// </summary>
-        bool KillProcess { get; set; }
+        string _StoreLocation;
+        RegistryView _View;
 
         /// <summary>
         /// Load CrashPath
@@ -54,15 +54,6 @@ namespace TuringMachine.Client.Detectors.Windows
             _CrashPath = Environment.ExpandEnvironmentVariables(_CrashPath);
         }
         /// <summary>
-        /// Receive is alive signal
-        /// </summary>
-        /// <param name="isAlive">Alive</param>
-        public void IsAliveSignal(bool isAlive)
-        {
-            if (!isAlive)
-                KillProcess = false;
-        }
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="startInfo">Process startInfo</param>
@@ -78,36 +69,79 @@ namespace TuringMachine.Client.Detectors.Windows
                     string file = Path.GetFileName(pi.FileName);
 
                     Process p = Process.Start(pi);
+
+                    if (Is64Bit(p.Handle)) _View = RegistryView.Registry64;
+                    else _View = RegistryView.Registry32;
+
                     lp.Add(p);
                     ls.Add(Path.Combine(_CrashPath, file + "." + p.Id.ToString() + ".dmp"));
                 }
 
                 _FileNames = ls.ToArray();
                 _Process = lp.ToArray();
+                _StoreLocation = GetStoreLocation();
             }
+        }
 
-            KillProcess = true;
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWow64Process([In] IntPtr hProcess, [Out] out bool lpSystemInfo);
+        static bool Is64Bit(IntPtr handle)
+        {
+            bool retVal;
+            IsWow64Process(handle, out retVal);
+            return retVal;
+        }
+        /// <summary>
+        /// Check in Store location (its called first)
+        /// </summary>
+        string GetStoreLocation()
+        {
+            try
+            {
+                // Read path
+                using (RegistryKey r = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, _View).OpenSubKey(@"SOFTWARE\Microsoft\Windows\Windows Error Reporting\Debug", false))
+                    return r.GetValue("StoreLocation", "").ToString();
+            }
+            catch { }
+            return null;
         }
         /// <summary>
         /// Return if are WER file
         /// </summary>
+        /// <param name="socket">Socket</param>
         /// <param name="crashData">Crash data</param>
         /// <param name="crashExtension">Crash extension</param>
-        public override bool IsCrashed(out byte[] crashData, out string crashExtension)
+        /// <param name="isAlive">IsAlive</param>
+        public override bool IsCrashed(TuringSocket socket, out byte[] crashData, out string crashExtension, ITuringMachineAgent.delItsAlive isAlive)
         {
             crashData = null;
             crashExtension = null;
 
             if (_Process == null) return false;
 
-            if (KillProcess)
+            Thread.Sleep(500);
+
+            // Check store location
+            bool isBreak = GetStoreLocation() != _StoreLocation;
+
+            // Search file 
+            if (!isBreak)
+                foreach (string file in _FileNames)
+                    if (File.Exists(file)) { isBreak = true; break; }
+
+            // Wait if break detection
+            if (isBreak) Thread.Sleep(5000);
+
+            // If its alive kill them
+            if (isAlive == null || isAlive.Invoke(socket))
             {
-                // Kill
                 foreach (Process p in _Process)
-                    try { p.Kill(); } catch { }
+                    try { p.Kill(); }
+                    catch { }
             }
 
-            // Wait
+            // Wait for exit
             foreach (Process p in _Process)
                 try { p.WaitForExit(); } catch { }
 
@@ -116,8 +150,9 @@ namespace TuringMachine.Client.Detectors.Windows
             {
                 foreach (string file in _FileNames)
                 {
-                    Stream fread = WaitOpenRead(file);
-                    if (fread == null) continue;
+                    Stream fread = WaitOpenRead(file, isBreak);
+                    if (fread == null)
+                        continue;
 
                     using (fread)
                     using (ZipArchive archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
@@ -141,11 +176,20 @@ namespace TuringMachine.Client.Detectors.Windows
         /// Wait for read
         /// </summary>
         /// <param name="fileName">File</param>
-        Stream WaitOpenRead(string fileName)
+        /// <param name="ensureFile">EnsureFile</param>
+        Stream WaitOpenRead(string fileName, bool ensureFile)
         {
             while (true)
             {
-                if (!File.Exists(fileName)) return null;
+                if (!File.Exists(fileName))
+                {
+                    if (ensureFile)
+                    {
+                        Thread.Sleep(1000);
+                        if (!File.Exists(fileName)) return null;
+                    }
+                    else return null;
+                }
 
                 try
                 {

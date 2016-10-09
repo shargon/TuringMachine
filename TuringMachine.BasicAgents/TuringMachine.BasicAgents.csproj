@@ -47,6 +47,10 @@
       <Project>{593eda10-605b-4078-8671-f8c2d7673346}</Project>
       <Name>TuringMachine.Client</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TuringMachine.Core\TuringMachine.Core.csproj">
+      <Project>{255B9399-EA53-41C5-8272-389B43B48764}</Project>
+      <Name>TuringMachine.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

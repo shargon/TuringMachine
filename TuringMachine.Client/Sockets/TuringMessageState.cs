@@ -32,15 +32,12 @@ namespace TuringMachine.Client.Sockets
         public TuringMessageState(TuringSocket source)
         {
             Source = source;
-
-            Buffer = new byte[TuringMessage.HeaderLength];
-            Index = 0;
-            State = ETuringMessageState.ReadingHeader;
+            Clear();
         }
         /// <summary>
         /// Check Data
         /// </summary>
-        public void CheckData(int read)
+        public TuringMessage CheckData(int read)
         {
             Index += read;
 
@@ -57,7 +54,13 @@ namespace TuringMachine.Client.Sockets
                                 Index = 0;
                                 Buffer = new byte[length];
                                 MessageType = type;
-                                State = length == 0 ? ETuringMessageState.Full : ETuringMessageState.ReadingData;
+                                State = ETuringMessageState.ReadingData;
+
+                                if (length == 0)
+                                {
+                                    Clear();
+                                    return TuringMessage.Create(type, Buffer);
+                                }
                             }
                         }
                         break;
@@ -66,12 +69,23 @@ namespace TuringMachine.Client.Sockets
                     {
                         if (Index == Buffer.Length)
                         {
-                            State = ETuringMessageState.Full;
-                            break;
+                            TuringMessage ret = TuringMessage.Create(MessageType, Buffer);
+                            Clear();
+                            return ret;
                         }
                         break;
                     }
             }
+            return null;
+        }
+        /// <summary>
+        /// Clear state
+        /// </summary>
+        public void Clear()
+        {
+            Buffer = new byte[TuringMessage.HeaderLength];
+            Index = 0;
+            State = ETuringMessageState.ReadingHeader;
         }
     }
 }

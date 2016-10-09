@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Text;
 using TuringMachine.Client.Sockets.Enums;
 using TuringMachine.Client.Sockets.Messages;
+using TuringMachine.Client.Sockets.Messages.Requests;
+using TuringMachine.Client.Sockets.Messages.Responses;
 using TuringMachine.Helpers;
 
 namespace TuringMachine.Client.Sockets
@@ -19,16 +22,9 @@ namespace TuringMachine.Client.Sockets
         /// </summary>
         /// <param name="messageType">Message Type</param>
         /// <param name="data">Data</param>
-        public TuringMessage(ETuringMessageType messageType, byte[] data = null)
+        public TuringMessage(ETuringMessageType messageType)
         {
             Type = messageType;
-        }
-        /// <summary>
-        /// Get Data
-        /// </summary>
-        public virtual byte[] GetData()
-        {
-            return null;
         }
         /// <summary>
         /// GetHeader of message
@@ -74,10 +70,32 @@ namespace TuringMachine.Client.Sockets
         {
             switch (messageType)
             {
-                case ETuringMessageType.ConfigMessage: return new TuringConfigMessage(buffer);
+                case ETuringMessageType.Exception: return SerializationHelper.DeserializeFromJson<ExceptionMessage>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.EndTask: return SerializationHelper.DeserializeFromJson<EndTaskMessage>(Encoding.UTF8.GetString(buffer));
+                    
+                case ETuringMessageType.OpenStreamRequest: return SerializationHelper.DeserializeFromJson<OpenStreamMessageRequest>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.CloseStreamRequest: return SerializationHelper.DeserializeFromJson<CloseStreamMessageRequest>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.GetStreamLengthRequest: return SerializationHelper.DeserializeFromJson<GetStreamLengthMessageRequest>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.GetStreamPositionRequest: return SerializationHelper.DeserializeFromJson<GetStreamPositionMessageRequest>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.SetStreamRequest: return SerializationHelper.DeserializeFromJson<SetStreamMessageRequest>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.FlushStreamRequest: return SerializationHelper.DeserializeFromJson<FlushStreamMessageRequest>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.ReadStreamRequest: return SerializationHelper.DeserializeFromJson<StreamReadMessageRequest>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.WriteStreamRequest: return SerializationHelper.DeserializeFromJson<StreamWriteMessageRequest>(Encoding.UTF8.GetString(buffer));
+
+                case ETuringMessageType.BoolResponse: return SerializationHelper.DeserializeFromJson<BoolMessageResponse>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.LongResponse: return SerializationHelper.DeserializeFromJson<LongMessageResponse>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.OpenStreamResponse: return SerializationHelper.DeserializeFromJson<OpenStreamMessageResponse>(Encoding.UTF8.GetString(buffer));
+                case ETuringMessageType.ByteArrayResponse: return SerializationHelper.DeserializeFromJson<ByteArrayMessageResponse>(Encoding.UTF8.GetString(buffer));
             }
 
-            return new TuringMessage(messageType, buffer);
+            return new TuringMessage(messageType);
+        }
+        /// <summary>
+        /// Get Data
+        /// </summary>
+        public virtual byte[] GetData()
+        {
+            return Encoding.UTF8.GetBytes(SerializationHelper.SerializeToJson(this, false));
         }
     }
 }

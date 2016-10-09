@@ -43,6 +43,10 @@ namespace TuringMachine.Agent
         /// Arguments
         /// </summary>
         public string AgentArguments { get; set; }
+        /// <summary>
+        /// Verbose
+        /// </summary>
+        public bool Verbose { get; set; }
 
         /// <summary>
         /// Load from arguments

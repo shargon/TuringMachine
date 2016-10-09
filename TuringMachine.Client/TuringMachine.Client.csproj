@@ -42,11 +42,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\VariableCollection.cs" />
     <Compile Include="Detectors\ICrashDetector.cs" />
     <Compile Include="Detectors\Windows\WERDetector.cs" />
     <Compile Include="EFuzzingReturn.cs" />
     <Compile Include="ITuringMachineAgent.cs" />
-    <Compile Include="Sockets\Messages\TuringConfigMessage.cs" />
+    <Compile Include="Sockets\Messages\Requests\StreamWriteMessageRequest.cs" />
+    <Compile Include="Sockets\Messages\Requests\StreamReadMessageRequest.cs" />
+    <Compile Include="Sockets\Messages\Requests\FlushStreamMessageRequest.cs" />
+    <Compile Include="Sockets\Messages\Responses\ByteArrayMessageResponse.cs" />
+    <Compile Include="Sockets\Messages\EndTaskMessage.cs" />
+    <Compile Include="Sockets\Messages\Requests\SetStreamMessageRequest.cs" />
+    <Compile Include="Sockets\Messages\Requests\GetStreamPositionMessageRequest.cs" />
+    <Compile Include="Sockets\Messages\Requests\GetStreamLengthMessageRequest.cs" />
+    <Compile Include="Sockets\Messages\Responses\LongMessageResponse.cs" />
+    <Compile Include="Sockets\Messages\Responses\OpenStreamMessageResponse.cs" />
+    <Compile Include="Sockets\Messages\Requests\CloseStreamMessageRequest.cs" />
+    <Compile Include="Sockets\Messages\Responses\BoolMessageResponse.cs" />
+    <Compile Include="Sockets\Messages\ExceptionMessage.cs" />
+    <Compile Include="Sockets\Messages\Requests\OpenStreamMessageRequest.cs" />
     <Compile Include="Sockets\Enums\ETuringMessageState.cs" />
     <Compile Include="Sockets\Enums\ETuringMessageType.cs" />
     <Compile Include="Sockets\TuringSocket.cs" />

@@ -7,10 +7,12 @@ namespace TuringMachine.Core.Mutational
     public class MutationalStream : Stream
     {
         Stream _Source;
+        bool _ReadedAll;
         long _RealOffset;
         List<byte> _Buffer;
         List<MutationLog> _Log;
         MutationLog[] _Replicate;
+        bool _FuzzRead, _FuzzWrite;
 
         /// <summary>
         /// Fuzzing conditions
@@ -31,13 +33,17 @@ namespace TuringMachine.Core.Mutational
         /// <param name="stream">Stream</param>
         /// <param name="config">Mutations</param>
         /// <param name="sampleId">Mutation sample id</param>
-        public MutationalStream(Stream stream, MutationConfig config, string sampleId)
+        /// <param name="fuzzRead">Fuzzing for read</param>
+        /// <param name="fuzzWrite">Fuzzing for write</param>
+        public MutationalStream(Stream stream, MutationConfig config, string sampleId, bool fuzzRead, bool fuzzWrite)
         {
             _Source = stream;
             Config = config;
             _RealOffset = 0;
             _Buffer = new List<byte>();
             SampleId = sampleId;
+            _FuzzRead = fuzzRead;
+            _FuzzWrite = fuzzWrite;
             _Log = new List<MutationLog>();
         }
         /// <summary>
@@ -74,7 +80,15 @@ namespace TuringMachine.Core.Mutational
         }
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (count <= 0) return 0;
+            if (count <= 0 || _ReadedAll)
+                return 0;
+
+            if (!_FuzzRead)
+            {
+                int ret = ReadFromOriginal(_Source, buffer, ref offset, count);
+                _RealOffset += ret;
+                return ret;
+            }
 
             // Read buffer first
             int lee = ReadBuffer(ref buffer, ref offset, ref count);
@@ -101,13 +115,10 @@ namespace TuringMachine.Core.Mutational
                     // Remove from source
                     if (log.Remove > 0)
                     {
+                        int ix = 0;
                         byte[] r = new byte[log.Remove];
-                        int ret= StreamHelper.ReadFull(_Source, r, 0, log.Remove);
-                        if (ret <= 0)
-                        {
-                            count = 0;
-                            break;
-                        }
+                        int ret = ReadFromOriginal(_Source, r, ref ix, log.Remove);
+                        if (ret <= 0) break;
 
                         _RealOffset += ret;
                     }
@@ -119,12 +130,9 @@ namespace TuringMachine.Core.Mutational
                 if (d <= 0)
                 {
                     // Peek one byte if not from buffer
-                    d = StreamHelper.ReadFull(_Source, buffer, ref offset, 1);
-                    if (d <= 0)
-                    {
-                        count = 0;
-                        break;
-                    }
+                    d = ReadFromOriginal(_Source, buffer, ref offset, 1);
+                    if (d <= 0) break;
+
                     _RealOffset += d;
                 }
 
@@ -134,7 +142,13 @@ namespace TuringMachine.Core.Mutational
 
             return lee;
         }
-
+        int ReadFromOriginal(Stream source, byte[] buffer, ref int offset, int v)
+        {
+            // Try read from original
+            int ret = StreamHelper.ReadFull(source, buffer, ref offset, v);
+            if (ret <= 0) _ReadedAll = true;
+            return ret;
+        }
         public override long Seek(long offset, SeekOrigin origin)
         {
             _RealOffset = _Source.Seek(offset, origin);
@@ -145,7 +159,6 @@ namespace TuringMachine.Core.Mutational
         #region Write
         public override bool CanWrite { get { return _Source.CanWrite; } }
         public override void Flush() { _Source.Flush(); }
-
         public override void SetLength(long value)
         {
             _RealOffset = value;
@@ -153,8 +166,16 @@ namespace TuringMachine.Core.Mutational
         }
         public override void Write(byte[] buffer, int offset, int count)
         {
+            if (count <= 0) return;
+
             _RealOffset += count;
-            _Source.Write(buffer, offset, count);
+
+            if (!_FuzzWrite)
+            {
+                _Source.Write(buffer, offset, count);
+                return;
+            }
+
         }
         #endregion
 

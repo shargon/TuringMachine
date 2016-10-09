@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -23,14 +24,25 @@ namespace TuringMachine.BasicAgents
         /// Connect to
         /// </summary>
         public IPEndPoint ConnectTo { get; set; }
+        /// <summary>
+        /// Connect timeout
+        /// </summary>
+        public TimeSpan ConnectTimeout { get; set; }
 
-        public override ICrashDetector CreateDetector(TuringSocket socket)
+        bool ConnectedOk;
+        public StartProcessAndSendTcpData()
+        {
+            ConnectTimeout = TimeSpan.FromSeconds(30);
+            ConnectedOk = false;
+        }
+
+        public override ICrashDetector GetCrashDetector(TuringSocket socket)
         {
             // Create process
             return new WERDetector(new ProcessStartInfo(FileName, Arguments)
             {
-                //CreateNoWindow = true,
-                //WindowStyle = ProcessWindowStyle.Hidden
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden
             });
         }
         public override void OnRun(TuringSocket socket)
@@ -38,16 +50,30 @@ namespace TuringMachine.BasicAgents
             // Create client
             using (TcpClient ret = new TcpClient())
             {
-                ret.Connect(ConnectTo);
+                // Try connect to server
+                IAsyncResult result = ret.BeginConnect(ConnectTo.Address, ConnectTo.Port, null, null);
+                bool success = result.AsyncWaitHandle.WaitOne(ConnectTimeout);
+                ret.EndConnect(result);
+
+                if (!success) return;
+
+                // Flag as connected
+                ConnectedOk = true;
 
                 // Fuzzer stream
                 using (TuringStream stream = new TuringStream(socket))
                     try
                     {
-                        // Try send all we can
-                        using (Stream sr = ret.GetStream()) stream.CopyTo(sr);
+                        //Try send all we can
+                        using (Stream sr = ret.GetStream())
+                        {
+                            stream.CopyTo(sr);
+                            sr.Flush();
+                        }
                     }
-                    catch { }
+                    catch (Exception e)
+                    {
+                    }
             }
         }
         /// <summary>
@@ -59,14 +85,21 @@ namespace TuringMachine.BasicAgents
             try
             {
                 using (TcpClient ret = new TcpClient())
+                {
                     ret.Connect(ConnectTo);
+                    //IAsyncResult result = ret.BeginConnect(ConnectTo.Address, ConnectTo.Port, null, null);
+                    //bool success = result.AsyncWaitHandle.WaitOne(ConnectTimeout);
+                    //ret.EndConnect(result);
 
-                return true;
+                    //if (success)
+                    return true;
+                }
             }
             catch
             {
-                return false;
             }
+            // If sometime connected, and now not, are dead
+            return !ConnectedOk;
         }
     }
 }

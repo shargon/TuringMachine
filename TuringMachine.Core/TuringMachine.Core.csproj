@@ -51,7 +51,7 @@
     <Compile Include="Design\ListArrayReadOnlyConverter.cs" />
     <Compile Include="Design\ListArrayConverter.cs" />
     <Compile Include="Enums\EFuzzerState.cs" />
-    <Compile Include="Enums\ETestResult.cs" />
+    <Compile Include="Enums\EFuzzerStreamType.cs" />
     <Compile Include="FixedValue.cs" />
     <Compile Include="FromToValue.cs" />
     <Compile Include="FuzzerLog.cs" />

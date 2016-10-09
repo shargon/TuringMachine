@@ -1,4 +1,6 @@
-﻿using TuringMachine.Core.Interfaces;
+﻿using System;
+using TuringMachine.Client;
+using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core
 {
@@ -37,6 +39,29 @@ namespace TuringMachine.Core
         public FuzzerStat(T source)
         {
             _Source = source;
+        }
+        /// <summary>
+        /// Increment
+        /// </summary>
+        /// <param name="result">Result</param>
+        public void Increment(EFuzzingReturn result)
+        {
+            Tests++;
+
+            switch (result)
+            {
+                case EFuzzingReturn.Crash: Crashes++; break;
+                case EFuzzingReturn.Fail: Fails++; break;
+            }
+        }
+        /// <summary>
+        /// Reset stats
+        /// </summary>
+        public void Reset()
+        {
+            Tests = 0;
+            Crashes = 0;
+            Fails = 0;
         }
         /// <summary>
         /// String representation

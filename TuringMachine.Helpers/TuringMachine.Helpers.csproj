@@ -48,6 +48,7 @@
     <Compile Include="Converters\IPAddressConverter.cs" />
     <Compile Include="Converters\IPEndPointConverter.cs" />
     <Compile Include="Extensions\IpEndPointExtension.cs" />
+    <Compile Include="HashHelper.cs" />
     <Compile Include="Interfaces\IRandomValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomHelper.cs" />

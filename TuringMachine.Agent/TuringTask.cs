@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TuringMachine.Client;
 using TuringMachine.Client.Detectors;
 using TuringMachine.Client.Sockets;
+using TuringMachine.Client.Sockets.Messages;
 using TuringMachine.Helpers;
 
 namespace TuringMachine.Agent
@@ -30,17 +31,9 @@ namespace TuringMachine.Agent
         private ITuringMachineAgent Agent { get; set; }
 
         /// <summary>
-        /// ResultData
+        /// Result
         /// </summary>
-        byte[] ResultData { get; set; }
-        /// <summary>
-        /// ResultExtension
-        /// </summary>
-        string ResultExtension { get; set; }
-        /// <summary>
-        /// Return
-        /// </summary>
-        EFuzzingReturn Result { get; set; }
+        EndTaskMessage Result { get; set; }
 
         /// <summary>
         /// Constructor
@@ -50,8 +43,6 @@ namespace TuringMachine.Agent
         /// <param name="taskNumber">TaskNumber</param>
         public TuringTask(Type agent, string arguments, int taskNumber)
         {
-            Result = EFuzzingReturn.Test;
-
             if (string.IsNullOrEmpty(arguments))
                 arguments = "{}";
 
@@ -72,30 +63,37 @@ namespace TuringMachine.Agent
             Task = new Task<EFuzzingReturn>(() =>
             {
                 // Create detector
-                ICrashDetector crash = Agent.CreateDetector(Socket);
+                ICrashDetector crash = Agent.GetCrashDetector(Socket);
                 if (crash == null) return EFuzzingReturn.Fail;
 
                 // Run action
-                try { Agent.OnRun(Socket); } catch { }
-
-                // Detect are alive
-                try { crash.SetIsAlive(Agent.GetItsAlive(Socket)); } catch { }
-
-                byte[] crashData;
-                string crashExtension;
-
-                if (crash.IsCrashed(out crashData, out crashExtension))
+                try
                 {
-                    ResultData = crashData;
-                    ResultExtension = crashExtension;
+                    Agent.OnRun(Socket);
 
+                    byte[] crashData;
+                    string crashExtension;
+
+                    if (crash.IsCrashed(Socket, out crashData, out crashExtension, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive)))
+                    {
+                        Result = new EndTaskMessage(EFuzzingReturn.Crash)
+                        {
+                            Data = crashData,
+                            Extension = crashExtension
+                        };
+
+                        return EFuzzingReturn.Crash;
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw (e);
+                }
+                finally
+                {
                     // Free and return
                     if (crash is IDisposable) ((IDisposable)crash).Dispose();
-                    return EFuzzingReturn.Crash;
                 }
-
-                // Free and return
-                if (crash is IDisposable) ((IDisposable)crash).Dispose();
                 return EFuzzingReturn.Test;
             });
         }
@@ -105,16 +103,14 @@ namespace TuringMachine.Agent
         /// <param name="e">Exception</param>
         public void SetException(Exception e)
         {
-            if (Result != EFuzzingReturn.Crash && e != null)
+            if (Result == null && e != null)
             {
                 // Error result
-                if (ResultData == null || ResultData.Length == 0)
+                Result = new EndTaskMessage(EFuzzingReturn.Fail)
                 {
-                    ResultData = Encoding.UTF8.GetBytes(e.ToString());
-                    ResultExtension = "txt";
-                }
-
-                Result = EFuzzingReturn.Fail;
+                    Data = Encoding.UTF8.GetBytes(e.ToString()),
+                    Extension = "txt",
+                };
             }
         }
         /// <summary>
@@ -130,12 +126,6 @@ namespace TuringMachine.Agent
                     // Error result
                     SetException(Task.Exception);
                 }
-                else
-                {
-                    // Check if crash
-                    if (Task.Result == EFuzzingReturn.Crash)
-                        Result = EFuzzingReturn.Crash;
-                }
 
                 Task.Dispose();
                 Task = null;
@@ -143,10 +133,12 @@ namespace TuringMachine.Agent
 
             if (Socket != null)
             {
-                // Send end
-                //ResultData
-                //ResultExtension
-                //Result
+                // Test
+                if (Result == null) Socket.SendMessage(new EndTaskMessage(EFuzzingReturn.Test));
+                // Other result
+                else Socket.SendMessage(Result);
+
+                TuringMessage msg = Socket.ReadMessage();
 
                 Socket.Dispose();
                 Socket = null;

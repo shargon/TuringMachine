@@ -1,4 +1,5 @@
 ﻿using System;
+using TuringMachine.Client.Sockets;
 
 namespace TuringMachine.Client.Detectors
 {
@@ -14,9 +15,11 @@ namespace TuringMachine.Client.Detectors
         /// <summary>
         /// Return crashed data
         /// </summary>
+        /// <param name="socket">Socket</param>
         /// <param name="crashData">Crash data</param>
         /// <param name="crashExtension">Crash extension</param>
-        public virtual bool IsCrashed(out byte[] crashData, out string crashExtension)
+        /// <param name="isAlive">Its alive</param>
+        public virtual bool IsCrashed(TuringSocket socket, out byte[] crashData, out string crashExtension, ITuringMachineAgent.delItsAlive isAlive)
         {
             throw new NotImplementedException();
         }
