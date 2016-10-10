@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-using TuringMachine.Client;
 using TuringMachine.Core;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Inputs;
@@ -179,8 +178,8 @@ namespace TuringMachine
             using (OpenFileDialog dialog = new OpenFileDialog()
             {
                 Multiselect = true,
-                DefaultExt = "*",
-                Filter = "Turing Machine Mutation files|*.fmut"
+                DefaultExt = "*.fmut;*.fpatch",
+                Filter = "All fuzzing files|*.fmut;*.fpatch|Mutational fuzzing file|*.fmut|Patch fuzzing file|*.fpatch",
             })
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
@@ -199,7 +198,7 @@ namespace TuringMachine
         }
         #endregion
         #region Test End
-        void _Fuzzer_OnTestEnd(object sender, EFuzzingReturn result, FuzzerStat<IFuzzingInput> sinput, FuzzerStat<IFuzzingConfig> sconfig)
+        void _Fuzzer_OnTestEnd(object sender, EFuzzingReturn result, FuzzerStat<IFuzzingInput>[] sinput, FuzzerStat<IFuzzingConfig>[] sconfig)
         {
             _Stat.Increment(result);
         }
@@ -325,7 +324,7 @@ namespace TuringMachine
                     {
                         if (config != null)
                         {
-                            using (Stream fzs = config.CreateStream(stream, "Test", true, false))
+                            using (Stream fzs = config.CreateStream(stream, "Test"))
                                 fzs.CopyTo(fs);
                         }
                         else

@@ -1,5 +1,4 @@
-﻿using System;
-using TuringMachine.Client;
+﻿using TuringMachine.Core.Enums;
 using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core

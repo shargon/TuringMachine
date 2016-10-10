@@ -2,10 +2,11 @@
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using TuringMachine.Client;
-using TuringMachine.Client.Detectors;
-using TuringMachine.Client.Sockets;
-using TuringMachine.Client.Sockets.Messages;
+using TuringMachine.Core.Detectors;
+using TuringMachine.Core.Enums;
+using TuringMachine.Core.Interfaces;
+using TuringMachine.Core.Sockets;
+using TuringMachine.Core.Sockets.Messages;
 using TuringMachine.Helpers;
 
 namespace TuringMachine.Agent

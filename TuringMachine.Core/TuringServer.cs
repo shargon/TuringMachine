@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
-using TuringMachine.Client;
-using TuringMachine.Client.Sockets;
-using TuringMachine.Client.Sockets.Enums;
-using TuringMachine.Client.Sockets.Messages;
-using TuringMachine.Client.Sockets.Messages.Requests;
-using TuringMachine.Client.Sockets.Messages.Responses;
 using TuringMachine.Core.Enums;
+using TuringMachine.Core.FuzzingMethods.Mutational;
+using TuringMachine.Core.FuzzingMethods.Patchs;
 using TuringMachine.Core.Interfaces;
-using TuringMachine.Core.Mutational;
+using TuringMachine.Core.Sockets;
+using TuringMachine.Core.Sockets.Enums;
+using TuringMachine.Core.Sockets.Messages;
+using TuringMachine.Core.Sockets.Messages.Requests;
+using TuringMachine.Core.Sockets.Messages.Responses;
 using TuringMachine.Helpers;
 
 namespace TuringMachine.Core
@@ -23,7 +24,7 @@ namespace TuringMachine.Core
     /// </summary>
     public class TuringServer
     {
-        public delegate void delOnTestEnd(object sender, EFuzzingReturn result, FuzzerStat<IFuzzingInput> sinput, FuzzerStat<IFuzzingConfig> sconfig);
+        public delegate void delOnTestEnd(object sender, EFuzzingReturn result, FuzzerStat<IFuzzingInput>[] sinput, FuzzerStat<IFuzzingConfig>[] sconfig);
         public delegate void delOnCrashLog(object sender, FuzzerLog log);
 
         public event EventHandler OnListenChange;
@@ -104,6 +105,16 @@ namespace TuringMachine.Core
                         }
                         break;
                     }
+                case ".fpatch":
+                    {
+                        PatchConfig c = null;
+                        try { c = PatchConfig.FromJson(File.ReadAllText(file, Encoding.UTF8)); } catch { }
+                        if (c != null)
+                        {
+                            Configurations.Add(new FuzzerStat<IFuzzingConfig>(c));
+                        }
+                        break;
+                    }
             }
         }
         /// <summary>
@@ -121,10 +132,10 @@ namespace TuringMachine.Core
         /// Raise end of test
         /// </summary>
         /// <param name="result">Result</param>
-        void RaiseOnTestEnd(EFuzzingReturn result, FuzzerStat<IFuzzingInput> sinput, FuzzerStat<IFuzzingConfig> sconfig)
+        void RaiseOnTestEnd(EFuzzingReturn result, FuzzerStat<IFuzzingInput>[] sinput, FuzzerStat<IFuzzingConfig>[] sconfig)
         {
-            if (sinput != null) sinput.Increment(result);
-            if (sconfig != null) sconfig.Increment(result);
+            if (sinput != null) foreach (FuzzerStat<IFuzzingInput> i in sinput) i.Increment(result);
+            if (sconfig != null) foreach (FuzzerStat<IFuzzingConfig> i in sconfig) i.Increment(result);
 
             OnTestEnd?.Invoke(this, result, sinput, sconfig);
         }
@@ -187,24 +198,15 @@ namespace TuringMachine.Core
                         {
                             EndTaskMessage msg = (EndTaskMessage)message;
 
-                            FuzzerStat<IFuzzingInput> sinput = (FuzzerStat<IFuzzingInput>)sender["INPUT"];
-                            FuzzerStat<IFuzzingConfig> sconfig = (FuzzerStat<IFuzzingConfig>)sender["CONFIG"];
+                            List<FuzzerStat<IFuzzingInput>> sinput = null;
+                            List<FuzzerStat<IFuzzingConfig>> sconfig = null;
 
-                            if (msg.Result != EFuzzingReturn.Test)
-                            {
-                                // Log Crash!
-                                RaiseOnCrashLog(new FuzzerLog()
-                                {
-                                    Input = sinput == null ? "" : sinput.ToString(),
-                                    Config = sconfig == null ? "" : sconfig.ToString(),
-                                    Type = msg.Result,
-                                    Origin = sender.EndPoint,
-                                    Path = msg.SaveResult(),
-                                });
-                            }
+                            // Log if are data
+                            FuzzerLog log = msg.SaveResult(sender, out sinput, out sconfig);
+                            if (log != null) RaiseOnCrashLog(log);
 
                             // Send message of the end
-                            RaiseOnTestEnd(msg.Result, sinput, sconfig);
+                            RaiseOnTestEnd(msg.Result, sinput == null ? null : sinput.ToArray(), sconfig == null ? null : sconfig.ToArray());
                             response = new BoolMessageResponse(true);
                             break;
                         }
@@ -212,7 +214,7 @@ namespace TuringMachine.Core
                         {
                             Guid id = Guid.NewGuid();
                             OpenStreamMessageRequest msg = (OpenStreamMessageRequest)message;
-                            Stream stream = GetRandomStream(sender, EFuzzerStreamType.Read, id);
+                            Stream stream = GetRandomStream(sender, true, id);
 
                             if (stream == null) throw new Exception("Not found stream");
 
@@ -279,7 +281,20 @@ namespace TuringMachine.Core
 
                             try { stream.Close(); } catch { }
                             try { stream.Dispose(); } catch { }
+
                             sender[msg.Id.ToString()] = null;
+
+                            if (stream is FuzzingStream)
+                            {
+                                // Save patch for dump
+                                FuzzingStream fs = (FuzzingStream)stream;
+
+                                if (!string.IsNullOrEmpty(fs.Info))
+                                    sender["Info=" + msg.Id.ToString()] = fs.Info;
+
+                                sender["Original=" + msg.Id.ToString()] = fs.OriginalData;
+                                sender["Patch=" + msg.Id.ToString()] = new PatchConfig(msg.Id.ToString(), fs.Log);
+                            }
 
                             response = new BoolMessageResponse(true);
                             break;
@@ -316,7 +331,7 @@ namespace TuringMachine.Core
             }
             sender.SendMessage(response);
         }
-        Stream GetRandomStream(TuringSocket sender, EFuzzerStreamType type, Guid id)
+        Stream GetRandomStream(TuringSocket sender, bool fuzzer, Guid id)
         {
             FuzzerStat<IFuzzingInput> sinput = RandomHelper.GetRandom(Inputs);
             if (sinput != null)
@@ -324,10 +339,19 @@ namespace TuringMachine.Core
                 IFuzzingInput input = sinput.Source;
                 if (input == null) throw (new Exception("Require input"));
 
-                sender["INPUT"] = sinput;
+                if (sender["INPUT"] == null)
+                {
+                    List<FuzzerStat<IFuzzingInput>> ls = new List<FuzzerStat<IFuzzingInput>>();
+                    ls.Add(sinput);
+                    sender["INPUT"] = ls;
+                }
+                else
+                {
+                    List<FuzzerStat<IFuzzingInput>> ls = (List<FuzzerStat<IFuzzingInput>>)sender["INPUT"];
+                    ls.Add(sinput);
+                }
 
-                // Fuzz
-                if (type != EFuzzerStreamType.None)
+                if (fuzzer)
                 {
                     FuzzerStat<IFuzzingConfig> sconfig = RandomHelper.GetRandom(Configurations);
 
@@ -336,14 +360,26 @@ namespace TuringMachine.Core
                         IFuzzingConfig config = sconfig.Source;
                         if (sconfig == null) throw (new Exception("Require fuzzer configuration"));
 
-                        sender["CONFIG"] = sconfig;
+                        if (sender["CONFIG"] == null)
+                        {
+                            List<FuzzerStat<IFuzzingConfig>> ls = new List<FuzzerStat<IFuzzingConfig>>();
+                            ls.Add(sconfig);
+                            sender["CONFIG"] = ls;
+                        }
+                        else
+                        {
+                            List<FuzzerStat<IFuzzingConfig>> ls = (List<FuzzerStat<IFuzzingConfig>>)sender["CONFIG"];
+                            ls.Add(sconfig);
+                        }
 
-                        Stream stream = input.GetStream();
-                        return config.CreateStream(input.GetStream(), id.ToString(), type == EFuzzerStreamType.Read, type == EFuzzerStreamType.Write);
+                        FuzzingStream ret = config.CreateStream(input.GetStream(), id.ToString());
+                        if (ret != null) ret.Info = sinput.ToString() + " => " + sconfig.ToString();
+                        return ret;
                     }
                 }
 
-                return input.GetStream();
+                // Disable Fuzzing
+                return new FuzzingStream(input.GetStream(), null, id.ToString()) { Info = sinput.ToString() };
             }
             return null;
         }

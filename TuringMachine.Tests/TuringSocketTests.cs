@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 using System.Threading;
-using TuringMachine.Client.Sockets;
-using TuringMachine.Client.Sockets.Messages.Requests;
+using TuringMachine.Core.Sockets;
+using TuringMachine.Core.Sockets.Messages.Requests;
 
 namespace TuringMachine.Tests
 {

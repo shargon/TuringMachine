@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +55,8 @@
     <Compile Include="RandomHelper.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="SerializationHelper.cs" />
+    <Compile Include="StringHelper.cs" />
+    <Compile Include="ZipHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

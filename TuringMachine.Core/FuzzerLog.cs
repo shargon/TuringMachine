@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using TuringMachine.Client;
+using TuringMachine.Core.Enums;
 
 namespace TuringMachine.Core
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TuringMachine.Core;
-using TuringMachine.Core.Mutational;
+using TuringMachine.Core.FuzzingMethods.Mutational;
+using TuringMachine.Core.FuzzingMethods.Patchs;
 
 namespace TuringMachine.Tests
 {
@@ -17,7 +18,7 @@ namespace TuringMachine.Tests
                 AppendLength = new FromToValue<ushort>(1),
             };
 
-            MutationLog ret = c.Process(0);
+            PatchChange ret = c.Process(0);
             ret = c.Process(0);
             ret = c.Process(0);
         }
@@ -30,26 +31,23 @@ namespace TuringMachine.Tests
                 ValidOffset = new FromToValue<ulong>(0, ulong.MaxValue),
             };
 
-            c.Changes.AddRange(new MutationalChange[]
-                       {
-                       new MutationalChange()
-                        {
-                            Weight=9,
-                            AppendByte = new FromToValue<byte>((byte)'A'),
-                            RemoveLength = new FromToValue<ushort>(5),
-                        },
-                       new MutationalChange()
+            c.Changes.Add(new MutationalChange()
+            {
+                Weight = 9,
+                AppendByte = new FromToValue<byte>((byte)'A'),
+                RemoveLength = new FromToValue<ushort>(5),
+            });
+            c.Changes.Add(new MutationalChange()
                         {
                            // Remmove
                             Weight=1,
                             RemoveLength = new FromToValue<ushort>(1),
                             AppendLength=new FromToValue<ushort>(0)
-                        }
                         });
 
             for (int x = 0; x < 100; x++)
             {
-                MutationalChange next = c.Get();
+                MutationalChange next = c.Get(0);
                 if (next != null)
                 {
 

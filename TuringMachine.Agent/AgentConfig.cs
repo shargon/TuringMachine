@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Reflection;
-using TuringMachine.Client;
+using TuringMachine.Core.Interfaces;
 using TuringMachine.Helpers;
-using TuringMachine.Helpers.Converters;
 
 namespace TuringMachine.Agent
 {

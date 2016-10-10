@@ -13,8 +13,6 @@ namespace TuringMachine.Core.Interfaces
         /// </summary>
         /// <param name="original">Original stream</param>
         /// <param name="sampleId">Sample Id</param>
-        /// <param name="fuzzRead">Fuzzing for read</param>
-        /// <param name="fuzzWrite">Fuzzing for write</param>
-        Stream CreateStream(Stream original, string sampleId, bool fuzzRead, bool fuzzWrite);
+        FuzzingStream CreateStream(Stream original, string sampleId);
     }
 }

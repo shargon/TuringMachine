@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
-using TuringMachine.Client.Detectors.Windows;
+using TuringMachine.Core.Detectors.Windows;
 
 namespace TuringMachine.Tests
 {

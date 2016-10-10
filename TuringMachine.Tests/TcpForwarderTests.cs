@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 using System.Threading;
-using TuringMachine.Client.Sockets.Forwarder;
+using TuringMachine.Core.Sockets.Forwarder;
 
 namespace TuringMachine.Tests
 {

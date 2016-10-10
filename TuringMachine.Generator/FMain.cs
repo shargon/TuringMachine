@@ -2,8 +2,9 @@
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using TuringMachine.Core.FuzzingMethods.Mutational;
+using TuringMachine.Core.FuzzingMethods.Patchs;
 using TuringMachine.Core.Interfaces;
-using TuringMachine.Core.Mutational;
 
 namespace TuringMachine.Generator
 {
@@ -24,7 +25,7 @@ namespace TuringMachine.Generator
         {
             using (SaveFileDialog dialog = new SaveFileDialog()
             {
-                Filter = "Mutational fuzzing file|*.fmut",
+                Filter = "All fuzzing files|*.fmut;*.fpatch|Mutational fuzzing file|*.fmut|Patch fuzzing file|*.fpatch",
                 DefaultExt = "*.fmut",
             })
             {
@@ -36,8 +37,8 @@ namespace TuringMachine.Generator
         {
             using (OpenFileDialog dialog = new OpenFileDialog()
             {
-                Filter = "Mutational fuzzing file|*.fmut",
-                DefaultExt = "*.fmut",
+                Filter = "All fuzzing files|*.fmut;*.fpatch|Mutational fuzzing file|*.fmut|Patch fuzzing file|*.fpatch",
+                DefaultExt = "*.fmut;*.fpatch",
                 CheckFileExists = true,
                 CheckPathExists = true
             })
@@ -54,6 +55,11 @@ namespace TuringMachine.Generator
                 case ".fmut":
                     {
                         _Cur = MutationConfig.FromJson(File.ReadAllText(file, Encoding.UTF8));
+                        break;
+                    }
+                case ".fpatch":
+                    {
+                        _Cur = PatchConfig.FromJson(File.ReadAllText(file, Encoding.UTF8));
                         break;
                     }
             }

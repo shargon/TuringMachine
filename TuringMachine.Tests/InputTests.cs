@@ -4,7 +4,6 @@ using System.Net;
 using System.Text;
 using TuringMachine.Core;
 using TuringMachine.Core.Inputs;
-using TuringMachine.Core.Mutational;
 
 namespace TuringMachine.Tests
 {

@@ -3,10 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using TuringMachine.Client;
-using TuringMachine.Client.Detectors;
-using TuringMachine.Client.Detectors.Windows;
-using TuringMachine.Client.Sockets;
+using TuringMachine.Core;
+using TuringMachine.Core.Detectors;
+using TuringMachine.Core.Detectors.Windows;
+using TuringMachine.Core.Interfaces;
+using TuringMachine.Core.Sockets;
 
 namespace TuringMachine.BasicAgents
 {
