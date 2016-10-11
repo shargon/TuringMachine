@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using TuringMachine.Core.FuzzingMethods.Patchs;
 using TuringMachine.Core.Interfaces;
+using TuringMachine.Helpers;
 
 namespace TuringMachine.Core
 {
@@ -14,6 +15,10 @@ namespace TuringMachine.Core
         List<byte> _Buffer;
         byte[] _OriginalData;
         List<PatchChange> _Log;
+
+        public delegate void delOnPercentFactor(FuzzingStream stream, ref double percentFactor);
+
+        public event delOnPercentFactor OnPercentFactor;
 
         /// <summary>
         /// Fuzzing conditions
@@ -30,25 +35,28 @@ namespace TuringMachine.Core
         /// <summary>
         /// Sample Id
         /// </summary>
-        public string SampleId { get; private set; }
+        public Guid SampleId { get; private set; }
         /// <summary>
-        /// Description
+        /// Input name
         /// </summary>
-        public string Info { get; set; }
+        public string InputName { get; set; }
+        /// <summary>
+        /// Config name
+        /// </summary>
+        public string ConfigName { get; set; }
 
         /// <summary>
         /// Fuzzer constructor
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="config">Mutations</param>
-        /// <param name="sampleId">Mutation sample id</param>
-        public FuzzingStream(Stream stream, IGetPatch config, string sampleId)
+        public FuzzingStream(Stream stream, IGetPatch config)
         {
             _Source = stream;
             Config = config;
             _RealOffset = 0;
             _Buffer = new List<byte>();
-            SampleId = sampleId;
+            SampleId = Guid.NewGuid();
             _Log = new List<PatchChange>();
         }
 
@@ -91,7 +99,19 @@ namespace TuringMachine.Core
 
                     // If no buffer are available (FUZZ!)
                     if (_Buffer.Count == 0)
-                        log = Config.Get(offset, 0);
+                    {
+                        log = Config.Get(offset);
+                        if (log != null)
+                        {
+                            // Check percent factor
+                            double percentFactor = 100;
+                            OnPercentFactor?.Invoke(this, ref percentFactor);
+                            
+                            // Discard change by factor
+                            if (!RandomHelper.IsRandomPercentOk(percentFactor))
+                                log = null;
+                        }
+                    }
 
                     // If change!
                     if (log != null)

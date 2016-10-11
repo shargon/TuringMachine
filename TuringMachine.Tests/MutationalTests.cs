@@ -47,7 +47,7 @@ namespace TuringMachine.Tests
 
             for (int x = 0; x < 100; x++)
             {
-                MutationalChange next = c.Get(0);
+                MutationalChange next = c.Get();
                 if (next != null)
                 {
 

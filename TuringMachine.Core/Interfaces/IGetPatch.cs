@@ -8,7 +8,6 @@ namespace TuringMachine.Core.Interfaces
         /// Get Patch
         /// </summary>
         /// <param name="offset">Offset</param>
-        /// <param name="elapsedSeconds">Elapsed seconds</param>
-        PatchChange Get(long offset, long elapsedSeconds);
+        PatchChange Get(long offset);
     }
 }

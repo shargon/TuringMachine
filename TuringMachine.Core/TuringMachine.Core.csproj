@@ -60,6 +60,7 @@
     <Compile Include="FixedValue.cs" />
     <Compile Include="FromToValue.cs" />
     <Compile Include="FuzzerLog.cs" />
+    <Compile Include="FuzzingLogInfo.cs" />
     <Compile Include="FuzzingMethods\Patchs\PatchConfig.cs" />
     <Compile Include="Interfaces\IGetPatch.cs" />
     <Compile Include="Interfaces\ITuringMachineAgent.cs" />

@@ -32,6 +32,7 @@ namespace TuringMachine
 
             // Create fuzzer
             _Fuzzer = new TuringServer();
+            _Fuzzer.OnPercentFactor += _Fuzzer_OnPercentFactor;
             _Fuzzer.Inputs.CollectionChanged += _Fuzzer_OnInputsChange;
             _Fuzzer.Configurations.CollectionChanged += _Fuzzer_OnConfigurationsChange;
             _Fuzzer.OnListenChange += _Fuzzer_OnListenChange;
@@ -54,6 +55,11 @@ namespace TuringMachine
             }
 
             _Fuzzer_OnListenChange(null, null);
+        }
+        void _Fuzzer_OnPercentFactor(FuzzingStream stream, ref double percentFactor)
+        {
+            // TODO: Extract percentage in secuence
+            //percentFactor = uPercentWave1.GetPercentFactor(stream);
         }
         void _Fuzzer_OnListenChange(object sender, EventArgs e)
         {
@@ -234,10 +240,30 @@ namespace TuringMachine
                     }
             }
         }
+        void tbStop_Click(object sender, EventArgs e)
+        {
+            if (_Fuzzer.Stop())
+            {
+                uPercentWave1.Stop();
+
+                tbPlay.Enabled = true;
+                tbPause.Enabled = false;
+                tbStop.Enabled = false;
+                toolStripStatusLabel2.Enabled = true;
+
+                toolStripDropDownButton1.Enabled = true;
+                toolStripDropDownButton2.Enabled = true;
+
+                gridInput_SelectionChanged(null, null);
+                gridConfig_SelectionChanged(null, null);
+            }
+        }
         void tbPlay_Click(object sender, EventArgs e)
         {
             if (_Fuzzer.Start())
             {
+                uPercentWave1.Start();
+
                 tbPlay.Enabled = false;
                 tbPause.Enabled = true;
                 tbStop.Enabled = true;
@@ -257,6 +283,8 @@ namespace TuringMachine
         {
             if (_Fuzzer.Pause())
             {
+                uPercentWave1.Pause();
+
                 tbPause.Enabled = false;
                 tbPlay.Enabled = true;
 
@@ -288,11 +316,11 @@ namespace TuringMachine
         }
         void gridInput_SelectionChanged(object sender, EventArgs e)
         {
-            toolStripButton1.Enabled = gridInput.SelectedRows.Count > 0 && (AllowHotEdit || _Fuzzer.State == EFuzzerState.Stopped);
+            toolStripButton1.Enabled = gridInput.SelectedRows.Count > 0 && (AllowHotEdit || _Fuzzer.State != EFuzzerState.Started);
         }
         void gridConfig_SelectionChanged(object sender, EventArgs e)
         {
-            toolStripButton2.Enabled = gridConfig.SelectedRows.Count > 0 && (AllowHotEdit || _Fuzzer.State == EFuzzerState.Stopped);
+            toolStripButton2.Enabled = gridConfig.SelectedRows.Count > 0 && (AllowHotEdit || _Fuzzer.State != EFuzzerState.Started);
         }
         void originalInputToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -324,7 +352,7 @@ namespace TuringMachine
                     {
                         if (config != null)
                         {
-                            using (Stream fzs = config.CreateStream(stream, "Test"))
+                            using (Stream fzs = config.CreateStream(stream))
                                 fzs.CopyTo(fs);
                         }
                         else
@@ -367,22 +395,6 @@ namespace TuringMachine
 
             contextMenuStrip1.Show(gridInput, new Point(e.X, e.Y));
         }
-        void tbStop_Click(object sender, EventArgs e)
-        {
-            if (_Fuzzer.Stop())
-            {
-                tbPlay.Enabled = true;
-                tbPause.Enabled = false;
-                tbStop.Enabled = false;
-                toolStripStatusLabel2.Enabled = true;
-
-                toolStripDropDownButton1.Enabled = true;
-                toolStripDropDownButton2.Enabled = true;
-
-                gridInput_SelectionChanged(null, null);
-                gridConfig_SelectionChanged(null, null);
-            }
-        }
         void gridLog_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (gridLog.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
@@ -391,6 +403,10 @@ namespace TuringMachine
                 if (File.Exists(log.Path))
                     Process.Start(log.Path);
             }
+        }
+        void FMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            tbStop_Click(sender, e);
         }
     }
 }

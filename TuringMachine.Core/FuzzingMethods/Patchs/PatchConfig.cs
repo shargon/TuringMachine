@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using TuringMachine.Core.Design;
@@ -46,10 +47,9 @@ namespace TuringMachine.Core.FuzzingMethods.Patchs
         /// Create a Fuzzer Stream
         /// </summary>
         /// <param name="original">Original stream</param>
-        /// <param name="sampleId">Sample Id</param>
-        public FuzzingStream CreateStream(Stream original, string sampleId)
+        public FuzzingStream CreateStream(Stream original)
         {
-            return new FuzzingStream(original, this, sampleId);
+            return new FuzzingStream(original, this);
         }
         /// <summary>
         /// Deserialize from Json
@@ -77,8 +77,7 @@ namespace TuringMachine.Core.FuzzingMethods.Patchs
         /// Get fixed patch
         /// </summary>
         /// <param name="offset">Offset</param>
-        /// <param name="elapsedSeconds">Elapsed seconds</param>
-        public PatchChange Get(long offset, long elapsedSeconds)
+        public PatchChange Get(long offset)
         {
             foreach (PatchChange p in Changes)
                 if (p.Offset == offset)

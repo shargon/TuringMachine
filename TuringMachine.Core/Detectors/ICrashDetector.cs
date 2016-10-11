@@ -12,10 +12,9 @@ namespace TuringMachine.Core.Detectors
         /// Return crashed data
         /// </summary>
         /// <param name="socket">Socket</param>
-        /// <param name="crashData">Crash data</param>
-        /// <param name="crashExtension">Crash extension</param>
+        /// <param name="zipCrashData">Crash data</param>
         /// <param name="isAlive">Its alive</param>
-        public virtual bool IsCrashed(TuringSocket socket, out byte[] crashData, out string crashExtension, ITuringMachineAgent.delItsAlive isAlive)
+        public virtual bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, ITuringMachineAgent.delItsAlive isAlive)
         {
             throw new NotImplementedException();
         }

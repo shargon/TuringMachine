@@ -31,6 +31,7 @@ namespace TuringMachine.Core
 
         public event delOnTestEnd OnTestEnd;
         public event delOnCrashLog OnCrashLog;
+        public event FuzzingStream.delOnPercentFactor OnPercentFactor;
 
         bool _Paused;
         EFuzzerState _State;
@@ -214,10 +215,11 @@ namespace TuringMachine.Core
                         {
                             Guid id = Guid.NewGuid();
                             OpenStreamMessageRequest msg = (OpenStreamMessageRequest)message;
-                            Stream stream = GetRandomStream(sender, true, id);
+                            FuzzingStream stream = GetRandomStream(sender, true, id);
 
                             if (stream == null) throw new Exception("Not found stream");
 
+                            stream.OnPercentFactor += Stream_OnPercentFactor;
                             sender[id.ToString()] = stream;
 
                             response = new OpenStreamMessageResponse(id)
@@ -289,11 +291,7 @@ namespace TuringMachine.Core
                                 // Save patch for dump
                                 FuzzingStream fs = (FuzzingStream)stream;
 
-                                if (!string.IsNullOrEmpty(fs.Info))
-                                    sender["Info=" + msg.Id.ToString()] = fs.Info;
-
-                                sender["Original=" + msg.Id.ToString()] = fs.OriginalData;
-                                sender["Patch=" + msg.Id.ToString()] = new PatchConfig(msg.Id.ToString(), fs.Log);
+                                sender["Info=" + msg.Id.ToString()] = new FuzzingLogInfo(fs);
                             }
 
                             response = new BoolMessageResponse(true);
@@ -331,7 +329,11 @@ namespace TuringMachine.Core
             }
             sender.SendMessage(response);
         }
-        Stream GetRandomStream(TuringSocket sender, bool fuzzer, Guid id)
+        void Stream_OnPercentFactor(FuzzingStream stream, ref double percentFactor)
+        {
+            OnPercentFactor?.Invoke(stream, ref percentFactor);
+        }
+        FuzzingStream GetRandomStream(TuringSocket sender, bool fuzzer, Guid id)
         {
             FuzzerStat<IFuzzingInput> sinput = RandomHelper.GetRandom(Inputs);
             if (sinput != null)
@@ -372,14 +374,18 @@ namespace TuringMachine.Core
                             ls.Add(sconfig);
                         }
 
-                        FuzzingStream ret = config.CreateStream(input.GetStream(), id.ToString());
-                        if (ret != null) ret.Info = sinput.ToString() + " => " + sconfig.ToString();
+                        FuzzingStream ret = config.CreateStream(input.GetStream());
+                        if (ret != null)
+                        {
+                            ret.InputName = sinput.ToString();
+                            ret.ConfigName = sconfig.ToString();
+                        }
                         return ret;
                     }
                 }
 
                 // Disable Fuzzing
-                return new FuzzingStream(input.GetStream(), null, id.ToString()) { Info = sinput.ToString() };
+                return new FuzzingStream(input.GetStream(), null) { InputName = sinput.ToString() };
             }
             return null;
         }

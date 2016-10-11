@@ -13,7 +13,7 @@ namespace TuringMachine.Core
         /// <summary>
         /// Origin
         /// </summary>
-        public IPEndPoint Origin { get; set; }
+        public IPAddress Origin { get; set; }
         /// <summary>
         /// Type
         /// </summary>

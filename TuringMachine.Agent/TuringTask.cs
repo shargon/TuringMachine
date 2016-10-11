@@ -72,17 +72,11 @@ namespace TuringMachine.Agent
                 {
                     Agent.OnRun(Socket);
 
-                    byte[] crashData;
-                    string crashExtension;
+                    byte[] zipData;
 
-                    if (crash.IsCrashed(Socket, out crashData, out crashExtension, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive)))
+                    if (crash.IsCrashed(Socket, out zipData, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive)))
                     {
-                        Result = new EndTaskMessage(EFuzzingReturn.Crash)
-                        {
-                            Data = crashData,
-                            Extension = crashExtension
-                        };
-
+                        Result = new EndTaskMessage(EFuzzingReturn.Crash) { ZipData = zipData, };
                         return EFuzzingReturn.Crash;
                     }
                 }
@@ -107,11 +101,9 @@ namespace TuringMachine.Agent
             if (Result == null && e != null)
             {
                 // Error result
-                Result = new EndTaskMessage(EFuzzingReturn.Fail)
-                {
-                    Data = Encoding.UTF8.GetBytes(e.ToString()),
-                    Extension = "txt",
-                };
+                byte[] zip = null;
+                if (ZipHelper.AppendOrCreateZip(ref zip, new ZipHelper.FileEntry[] { new ZipHelper.FileEntry("exception.txt", Encoding.UTF8.GetBytes(e.ToString())) }) > 0)
+                    Result = new EndTaskMessage(EFuzzingReturn.Fail) { ZipData = zip };
             }
         }
         /// <summary>
@@ -139,7 +131,7 @@ namespace TuringMachine.Agent
                 // Other result
                 else Socket.SendMessage(Result);
 
-                TuringMessage msg = Socket.ReadMessage();
+                TuringMessage msg = Socket.ReadMessage<TuringMessage>();
 
                 Socket.Dispose();
                 Socket = null;

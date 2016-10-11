@@ -94,11 +94,10 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
         /// <summary>
         /// Get next mutation change (if happend)
         /// </summary>
-        /// <param name="elapsedSeconds">Elapsed secods</param>
-        public MutationalChange Get(long elapsedSeconds)
+        public MutationalChange Get()
         {
             // Check Percent
-            if (RandomHelper.GetRandom(0, 10000) > _FuzzPercent * 100) return null;
+            if (!RandomHelper.IsRandomPercentOk(_FuzzPercent)) return null;
 
             // Get Item
             return RandomHelper.GetRandom(_Changes);

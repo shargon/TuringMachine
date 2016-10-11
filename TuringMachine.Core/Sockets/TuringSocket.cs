@@ -109,26 +109,23 @@ namespace TuringMachine.Core.Sockets
             state.Source._Socket.BeginReceive(state.Buffer, state.Index, state.Buffer.Length - state.Index, 0, state.Source.OnDataReceive, state);
         }
         /// <summary>
-        /// Read Message Sync
+        /// Read message
         /// </summary>
-        public TuringMessage ReadMessage()
+        /// <typeparam name="T">Type</typeparam>
+        public T ReadMessage<T>() where T : TuringMessage
         {
             if (_Signal == null) return null;
+
+            TuringMessage ret = null;
 
             _Signal.WaitOne();
             lock (_Readed)
             {
-                TuringMessage item;
-                while (!_Readed.TryDequeue(out item)) { Thread.Sleep(1); }
-                return item;
+                while (_Readed != null && !_Readed.TryDequeue(out ret)) { Thread.Sleep(1); }
             }
-        }
-        public T ReadMessage<T>() where T : TuringMessage
-        {
-            TuringMessage ret = ReadMessage();
-            if (ret is T)
-                return (T)ret;
 
+            if (ret == null) throw (new Exception("Disconnected"));
+            if (ret is T) return (T)ret;
             if (ret is ExceptionMessage)
                 throw (new Exception(((ExceptionMessage)ret).Error));
 
@@ -188,9 +185,8 @@ namespace TuringMachine.Core.Sockets
                 {
                     TuringMessage msg = state.CheckData(bytesRead);
                     if (msg != null) RaiseOnMessage(state.Source, msg);
+                    ReadMessageAsync(state);
                 }
-
-                ReadMessageAsync(state);
             }
             catch (Exception e)
             {

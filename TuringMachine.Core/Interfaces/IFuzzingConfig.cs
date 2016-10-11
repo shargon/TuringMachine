@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace TuringMachine.Core.Interfaces
 {
@@ -12,7 +13,6 @@ namespace TuringMachine.Core.Interfaces
         /// Create a Fuzzer Stream
         /// </summary>
         /// <param name="original">Original stream</param>
-        /// <param name="sampleId">Sample Id</param>
-        FuzzingStream CreateStream(Stream original, string sampleId);
+        FuzzingStream CreateStream(Stream original);
     }
 }

@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using TuringMachine.Core.Enums;
-using TuringMachine.Core.FuzzingMethods.Patchs;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Sockets.Enums;
 using TuringMachine.Helpers;
@@ -13,15 +11,11 @@ namespace TuringMachine.Core.Sockets.Messages
 {
     public class EndTaskMessage : TuringMessage
     {
-        byte[] _Data;
-        /// <summary>
-        /// Extension
-        /// </summary>
-        public string Extension { get; set; }
+        byte[] _ZipData;
         /// <summary>
         /// Data
         /// </summary>
-        public byte[] Data { get { return _Data; } set { _Data = value; } }
+        public byte[] ZipData { get { return _ZipData; } set { _ZipData = value; } }
         /// <summary>
         /// Result
         /// </summary>
@@ -48,28 +42,28 @@ namespace TuringMachine.Core.Sockets.Messages
             sinput = (List<FuzzerStat<IFuzzingInput>>)sender["INPUT"];
             sconfig = (List<FuzzerStat<IFuzzingConfig>>)sender["CONFIG"];
 
-            if (Data != null && Data.Length > 0 && !string.IsNullOrEmpty(Extension))
+            if (ZipData != null && ZipData.Length > 0)
             {
-                ZipHelper.AppendOrCreateZip(ref _Data, GetLogsEntry(sender));
+                ZipHelper.AppendOrCreateZip(ref _ZipData, GetLogsEntry(sender));
 
                 // Save
-                if (Data != null)
+                if (ZipData != null)
                 {
-                    string data = Path.Combine(Application.StartupPath, "Dumps", HashHelper.SHA1(Data) + ".zip");
+                    string data = Path.Combine(Application.StartupPath, "Dumps", HashHelper.SHA1(ZipData) + ".zip");
 
                     // Create dir
                     if (!Directory.Exists(Path.GetDirectoryName(data)))
                         Directory.CreateDirectory(Path.GetDirectoryName(data));
 
                     // Write file
-                    File.WriteAllBytes(data, Data);
+                    File.WriteAllBytes(data, ZipData);
 
                     return new FuzzerLog()
                     {
                         Input = StringHelper.List2String(sinput, "; "),
                         Config = StringHelper.List2String(sconfig, "; "),
                         Type = Result,
-                        Origin = sender.EndPoint,
+                        Origin = sender.EndPoint.Address,
                         Path = data
                     };
                 }
@@ -89,33 +83,15 @@ namespace TuringMachine.Core.Sockets.Messages
                     object o = socket.Variables[key];
                     if (o == null) continue;
 
-                    PatchConfig cfg = null;
+                    FuzzingLogInfo cfg = null;
                     if (o is FuzzingStream)
                     {
                         FuzzingStream f = (FuzzingStream)o;
-                        cfg = new PatchConfig(f.SampleId, f.Log);
+                        cfg = new FuzzingLogInfo(f);
                     }
                     else
                     {
-                        if (o is PatchConfig) cfg = (PatchConfig)o;
-                        else
-                        {
-                            if (o is byte[] && key.StartsWith("Original"))
-                            {
-                                string iz, dr;
-                                StringHelper.SplitInTwo(key, "=", out iz, out dr);
-
-                                yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1((byte[])o) + ".dat", (byte[])o);
-                            }
-                            else if (o is string && key.StartsWith("Info"))
-                            {
-                                string iz, dr;
-                                StringHelper.SplitInTwo(key, "=", out iz, out dr);
-
-                                byte[] data = Encoding.UTF8.GetBytes(o.ToString());
-                                yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1(data) + ".txt", data);
-                            }
-                        }
+                        if (o is FuzzingLogInfo) cfg = (FuzzingLogInfo)o;
                     }
 
                     if (cfg != null)
@@ -123,9 +99,23 @@ namespace TuringMachine.Core.Sockets.Messages
                         string iz, dr;
                         StringHelper.SplitInTwo(key, "=", out iz, out dr);
 
-                        byte[] bjson = Encoding.UTF8.GetBytes(cfg.ToJson());
-                        yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1(bjson) + ".fpatch", bjson);
-                        continue;
+                        // Save original input
+                        if (cfg.OriginalData != null)
+                            yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1(cfg.OriginalData) + ".dat", cfg.OriginalData);
+
+                        if (!string.IsNullOrEmpty(cfg.Info))
+                        {
+                            // Save info
+                            byte[] data = Encoding.UTF8.GetBytes(cfg.Info);
+                            yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1(data) + ".txt", data);
+                        }
+
+                        if (cfg.Patch != null)
+                        {
+                            // Save patch
+                            byte[] bjson = Encoding.UTF8.GetBytes(cfg.Patch.ToJson());
+                            yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1(bjson) + ".fpatch", bjson);
+                        }
                     }
                 }
         }

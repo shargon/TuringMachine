@@ -45,6 +45,18 @@ namespace TuringMachine.Helpers
             return _Rand.Next(from, to + 1);
         }
         /// <summary>
+        /// Return random percent is checked
+        /// </summary>
+        /// <param name="percent">Percent</param>
+        public static bool IsRandomPercentOk(double percent)
+        {
+            if (percent >= 100) return true;
+            if (percent <= 0) return false;
+
+            // max 2 decimal places
+            return GetRandom(0, 10000) <= (percent * 100);
+        }
+        /// <summary>
         /// Return next long
         /// </summary>
         /// <param name="from">From byte</param>

@@ -3,13 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Sockets;
 using TuringMachine.Helpers;
-using System.Collections;
 
 namespace TuringMachine.Core.Detectors.Windows
 {
@@ -113,13 +111,11 @@ namespace TuringMachine.Core.Detectors.Windows
         /// Return if are WER file
         /// </summary>
         /// <param name="socket">Socket</param>
-        /// <param name="crashData">Crash data</param>
-        /// <param name="crashExtension">Crash extension</param>
+        /// <param name="zipCrashData">Crash data</param>
         /// <param name="isAlive">IsAlive</param>
-        public override bool IsCrashed(TuringSocket socket, out byte[] crashData, out string crashExtension, ITuringMachineAgent.delItsAlive isAlive)
+        public override bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, ITuringMachineAgent.delItsAlive isAlive)
         {
-            crashData = null;
-            crashExtension = null;
+            zipCrashData = null;
 
             if (_Process == null) return false;
 
@@ -151,12 +147,9 @@ namespace TuringMachine.Core.Detectors.Windows
             // Compress to zip
             byte[] zip = null;
             if (ZipHelper.AppendOrCreateZip(ref zip, GetDumpFiles(_FileNames, isBreak)) > 0 && zip != null && zip.Length > 0)
-            {
-                crashData = zip;
-                crashExtension = "zip";
-            }
+                zipCrashData = zip;
 
-            return !string.IsNullOrEmpty(crashExtension);
+            return zipCrashData != null && zipCrashData.Length > 0;
         }
         IEnumerable<ZipHelper.FileEntry> GetDumpFiles(string[] fileNames, bool isBreak)
         {

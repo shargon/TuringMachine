@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\UPercentWave.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\UPercentWave.Designer.cs">
+      <DependentUpon>UPercentWave.cs</DependentUpon>
+    </Compile>
     <Compile Include="FMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +83,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Res.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Controls\UPercentWave.resx">
+      <DependentUpon>UPercentWave.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FMain.resx">
       <DependentUpon>FMain.cs</DependentUpon>
     </EmbeddedResource>

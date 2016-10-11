@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using TuringMachine.Core.Design;
@@ -36,8 +37,7 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
         /// Get next mutation
         /// </summary>
         /// <param name="offset">Offset</param>
-        /// <param name="elapsedSeconds">ElapsedSeconds</param>
-        public PatchChange Get(long offset, long elapsedSeconds)
+        public PatchChange Get(long offset)
         {
             if (Mutations == null) return null;
 
@@ -48,7 +48,7 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
                     continue;
 
                 // Try change
-                MutationalChange change = cond.Get(elapsedSeconds);
+                MutationalChange change = cond.Get();
                 if (change != null)
                     return change.Process(offset);
             }
@@ -81,10 +81,9 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
         /// Create a Fuzzer Stream
         /// </summary>
         /// <param name="original">Original stream</param>
-        /// <param name="sampleId">Sample Id</param>
-        public FuzzingStream CreateStream(Stream original, string sampleId)
+        public FuzzingStream CreateStream(Stream original)
         {
-            return new FuzzingStream(original, this, sampleId);
+            return new FuzzingStream(original, this);
         }
     }
 }
