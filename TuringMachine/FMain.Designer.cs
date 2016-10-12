@@ -95,7 +95,6 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveInputWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.originalInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.uPercentWave1 = new TuringMachine.Controls.UPercentWave();
             ((System.ComponentModel.ISupportInitialize)(this.gridInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLog)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -133,7 +132,7 @@
             this.gridInput.ReadOnly = true;
             this.gridInput.RowHeadersVisible = false;
             this.gridInput.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridInput.Size = new System.Drawing.Size(489, 185);
+            this.gridInput.Size = new System.Drawing.Size(489, 214);
             this.gridInput.TabIndex = 0;
             this.gridInput.VirtualMode = true;
             this.gridInput.SelectionChanged += new System.EventHandler(this.gridInput_SelectionChanged);
@@ -203,7 +202,7 @@
             this.gridLog.ReadOnly = true;
             this.gridLog.RowHeadersVisible = false;
             this.gridLog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridLog.Size = new System.Drawing.Size(1001, 181);
+            this.gridLog.Size = new System.Drawing.Size(1001, 210);
             this.gridLog.TabIndex = 1;
             this.gridLog.VirtualMode = true;
             this.gridLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridLog_CellContentClick);
@@ -276,7 +275,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.gridConfig);
             this.splitContainer1.Panel2.Controls.Add(this.toolStrip3);
-            this.splitContainer1.Size = new System.Drawing.Size(1001, 219);
+            this.splitContainer1.Size = new System.Drawing.Size(1001, 248);
             this.splitContainer1.SplitterDistance = 489;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -388,7 +387,7 @@
             this.gridConfig.ReadOnly = true;
             this.gridConfig.RowHeadersVisible = false;
             this.gridConfig.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridConfig.Size = new System.Drawing.Size(508, 185);
+            this.gridConfig.Size = new System.Drawing.Size(508, 214);
             this.gridConfig.TabIndex = 2;
             this.gridConfig.VirtualMode = true;
             this.gridConfig.SelectionChanged += new System.EventHandler(this.gridConfig_SelectionChanged);
@@ -506,7 +505,7 @@
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 121);
+            this.splitContainer2.Location = new System.Drawing.Point(0, 63);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -518,8 +517,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.gridLog);
             this.splitContainer2.Panel2.Controls.Add(this.toolStrip2);
-            this.splitContainer2.Size = new System.Drawing.Size(1001, 429);
-            this.splitContainer2.SplitterDistance = 219;
+            this.splitContainer2.Size = new System.Drawing.Size(1001, 487);
+            this.splitContainer2.SplitterDistance = 248;
             this.splitContainer2.TabIndex = 3;
             // 
             // toolStrip2
@@ -702,14 +701,6 @@
             this.originalInputToolStripMenuItem.Text = "Original input";
             this.originalInputToolStripMenuItem.Click += new System.EventHandler(this.originalInputToolStripMenuItem_Click);
             // 
-            // uPercentWave1
-            // 
-            this.uPercentWave1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.uPercentWave1.Location = new System.Drawing.Point(0, 63);
-            this.uPercentWave1.Name = "uPercentWave1";
-            this.uPercentWave1.Size = new System.Drawing.Size(1001, 58);
-            this.uPercentWave1.TabIndex = 7;
-            // 
             // FMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -718,7 +709,6 @@
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.uPercentWave1);
             this.Controls.Add(this.toolStrip4);
             this.DoubleBuffered = true;
             this.Name = "FMain";
@@ -808,7 +798,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cLogInput;
         private System.Windows.Forms.DataGridViewTextBoxColumn cInputConfig;
         private System.Windows.Forms.DataGridViewButtonColumn cLogGoto;
-        private Controls.UPercentWave uPercentWave1;
     }
 }
 

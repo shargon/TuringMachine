@@ -15,8 +15,7 @@ namespace TuringMachine.Tests
         {
             ExecutionFuzzingInput c = new ExecutionFuzzingInput("cmd.exe", "/C dir c:") { };
 
-            MemoryStream ms = new MemoryStream();
-            c.GetStream().CopyTo(ms);
+            MemoryStream ms = new MemoryStream(c.GetStream());
 
             string ret = Encoding.ASCII.GetString(ms.ToArray());
         }
@@ -25,8 +24,7 @@ namespace TuringMachine.Tests
         {
             FileFuzzingInput c = new FileFuzzingInput("d:\\bof\\vulnserver.fmut") { };
 
-            MemoryStream ms = new MemoryStream();
-            c.GetStream().CopyTo(ms);
+            MemoryStream ms = new MemoryStream(c.GetStream());
 
             string ret = Encoding.ASCII.GetString(ms.ToArray());
         }
@@ -47,8 +45,7 @@ Accept-Language: en-US,en;q=0.8,es;q=0.6
 
 "));
 
-            MemoryStream ms = new MemoryStream();
-            c.GetStream().CopyTo(ms);
+            MemoryStream ms = new MemoryStream(c.GetStream());
 
             string ret = Encoding.ASCII.GetString(ms.ToArray());
         }

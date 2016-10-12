@@ -24,9 +24,9 @@ namespace TuringMachine.Core.Inputs
         /// <summary>
         /// Get file stream
         /// </summary>
-        public Stream GetStream()
+        public byte[] GetStream()
         {
-            return File.OpenRead(FileName);
+            return File.ReadAllBytes(FileName);
         }
         /// <summary>
         /// String representation

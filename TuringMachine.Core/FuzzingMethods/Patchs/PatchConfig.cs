@@ -47,7 +47,7 @@ namespace TuringMachine.Core.FuzzingMethods.Patchs
         /// Create a Fuzzer Stream
         /// </summary>
         /// <param name="original">Original stream</param>
-        public FuzzingStream CreateStream(Stream original)
+        public FuzzingStream CreateStream(byte[] original)
         {
             return new FuzzingStream(original, this);
         }

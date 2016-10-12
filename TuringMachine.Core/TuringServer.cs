@@ -31,7 +31,6 @@ namespace TuringMachine.Core
 
         public event delOnTestEnd OnTestEnd;
         public event delOnCrashLog OnCrashLog;
-        public event FuzzingStream.delOnPercentFactor OnPercentFactor;
 
         bool _Paused;
         EFuzzerState _State;
@@ -219,7 +218,6 @@ namespace TuringMachine.Core
 
                             if (stream == null) throw new Exception("Not found stream");
 
-                            stream.OnPercentFactor += Stream_OnPercentFactor;
                             sender[id.ToString()] = stream;
 
                             response = new OpenStreamMessageResponse(id)
@@ -328,10 +326,6 @@ namespace TuringMachine.Core
                 response = new ExceptionMessage(e.ToString());
             }
             sender.SendMessage(response);
-        }
-        void Stream_OnPercentFactor(FuzzingStream stream, ref double percentFactor)
-        {
-            OnPercentFactor?.Invoke(stream, ref percentFactor);
         }
         FuzzingStream GetRandomStream(TuringSocket sender, bool fuzzer, Guid id)
         {

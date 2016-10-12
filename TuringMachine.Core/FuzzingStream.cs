@@ -3,22 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using TuringMachine.Core.FuzzingMethods.Patchs;
 using TuringMachine.Core.Interfaces;
-using TuringMachine.Helpers;
 
 namespace TuringMachine.Core
 {
     public class FuzzingStream : Stream
     {
-        Stream _Source;
+        MemoryStream _Source;
         bool _ReadedAll;
         long _RealOffset;
         List<byte> _Buffer;
-        byte[] _OriginalData;
         List<PatchChange> _Log;
-
-        public delegate void delOnPercentFactor(FuzzingStream stream, ref double percentFactor);
-
-        public event delOnPercentFactor OnPercentFactor;
 
         /// <summary>
         /// Fuzzing conditions
@@ -27,7 +21,7 @@ namespace TuringMachine.Core
         /// <summary>
         /// Readed
         /// </summary>
-        public byte[] OriginalData { get { return _OriginalData; } }
+        public byte[] OriginalData { get { return _Source.ToArray(); } }
         /// <summary>
         /// Log
         /// </summary>
@@ -50,9 +44,9 @@ namespace TuringMachine.Core
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="config">Mutations</param>
-        public FuzzingStream(Stream stream, IGetPatch config)
+        public FuzzingStream(byte[] stream, IGetPatch config)
         {
-            _Source = stream;
+            _Source = new MemoryStream(stream);
             Config = config;
             _RealOffset = 0;
             _Buffer = new List<byte>();
@@ -101,16 +95,6 @@ namespace TuringMachine.Core
                     if (_Buffer.Count == 0)
                     {
                         log = Config.Get(offset);
-                        if (log != null)
-                        {
-                            // Check percent factor
-                            double percentFactor = 100;
-                            OnPercentFactor?.Invoke(this, ref percentFactor);
-                            
-                            // Discard change by factor
-                            if (!RandomHelper.IsRandomPercentOk(percentFactor))
-                                log = null;
-                        }
                     }
 
                     // If change!
@@ -157,22 +141,7 @@ namespace TuringMachine.Core
             int lee = StreamHelper.ReadFull(source, buffer, ref offset, v);
 
             if (lee <= 0) _ReadedAll = true;
-            else
-            {
-                _RealOffset += lee;
-
-                if (_OriginalData == null)
-                {
-                    _OriginalData = new byte[lee];
-                    Array.Copy(buffer, saveOffset, _OriginalData, 0, lee);
-                }
-                else
-                {
-                    int asize = _OriginalData.Length;
-                    Array.Resize(ref _OriginalData, asize + lee);
-                    Array.Copy(buffer, saveOffset, _OriginalData, asize, lee);
-                }
-            }
+            else _RealOffset += lee;
 
             return lee;
         }

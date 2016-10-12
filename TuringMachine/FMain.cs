@@ -32,7 +32,6 @@ namespace TuringMachine
 
             // Create fuzzer
             _Fuzzer = new TuringServer();
-            _Fuzzer.OnPercentFactor += _Fuzzer_OnPercentFactor;
             _Fuzzer.Inputs.CollectionChanged += _Fuzzer_OnInputsChange;
             _Fuzzer.Configurations.CollectionChanged += _Fuzzer_OnConfigurationsChange;
             _Fuzzer.OnListenChange += _Fuzzer_OnListenChange;
@@ -244,8 +243,6 @@ namespace TuringMachine
         {
             if (_Fuzzer.Stop())
             {
-                uPercentWave1.Stop();
-
                 tbPlay.Enabled = true;
                 tbPause.Enabled = false;
                 tbStop.Enabled = false;
@@ -262,8 +259,6 @@ namespace TuringMachine
         {
             if (_Fuzzer.Start())
             {
-                uPercentWave1.Start();
-
                 tbPlay.Enabled = false;
                 tbPause.Enabled = true;
                 tbStop.Enabled = true;
@@ -283,8 +278,6 @@ namespace TuringMachine
         {
             if (_Fuzzer.Pause())
             {
-                uPercentWave1.Pause();
-
                 tbPause.Enabled = false;
                 tbPlay.Enabled = true;
 
@@ -348,8 +341,8 @@ namespace TuringMachine
                         File.Delete(s.FileName);
 
                     using (FileStream fs = File.OpenWrite(s.FileName))
-                    using (Stream stream = inp.Source.GetStream())
                     {
+                        byte[] stream = inp.Source.GetStream();
                         if (config != null)
                         {
                             using (Stream fzs = config.CreateStream(stream))
@@ -357,7 +350,7 @@ namespace TuringMachine
                         }
                         else
                         {
-                            stream.CopyTo(fs);
+                            fs.Write(stream, 0, stream.Length);
                         }
                     }
                 }

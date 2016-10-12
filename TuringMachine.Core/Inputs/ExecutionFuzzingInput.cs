@@ -31,7 +31,7 @@ namespace TuringMachine.Core.Inputs
         /// <summary>
         /// Get process stream
         /// </summary>
-        public Stream GetStream()
+        public byte[] GetStream()
         {
             Process pr = Process.Start(new ProcessStartInfo()
             {
@@ -41,7 +41,11 @@ namespace TuringMachine.Core.Inputs
                 UseShellExecute = false
             });
 
-            return pr.StandardOutput.BaseStream;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                pr.StandardOutput.BaseStream.CopyTo(ms);
+                return ms.ToArray();
+            }
         }
         /// <summary>
         /// String representation

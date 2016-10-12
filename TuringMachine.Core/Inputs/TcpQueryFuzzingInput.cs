@@ -44,7 +44,7 @@ namespace TuringMachine.Core.Inputs
         /// Get Tcp stream
         /// </summary>
         /// <returns></returns>
-        public Stream GetStream()
+        public byte[] GetStream()
         {
             TcpClient tcp = new TcpClient();
             tcp.Connect(EndPoint);
@@ -52,7 +52,12 @@ namespace TuringMachine.Core.Inputs
             NetworkStream ret = tcp.GetStream();
             if (Request != null)
                 ret.Write(Request, 0, Request.Length);
-            return ret;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                ret.CopyTo(ms);
+                return ms.ToArray();
+            }
         }
         /// <summary>
         /// String representation

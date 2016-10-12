@@ -13,6 +13,7 @@ namespace TuringMachine.BasicAgents
 {
     public class StartProcessAndSendTcpData : ITuringMachineAgent
     {
+        bool ConnectedOk;
         /// <summary>
         /// Process path
         /// </summary>
@@ -30,7 +31,6 @@ namespace TuringMachine.BasicAgents
         /// </summary>
         public TimeSpan ConnectTimeout { get; set; }
 
-        bool ConnectedOk;
         public StartProcessAndSendTcpData()
         {
             ConnectTimeout = TimeSpan.FromSeconds(30);

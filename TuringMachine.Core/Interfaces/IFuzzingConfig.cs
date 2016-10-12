@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace TuringMachine.Core.Interfaces
+﻿namespace TuringMachine.Core.Interfaces
 {
     public interface IFuzzingConfig : IType
     {
@@ -13,6 +10,6 @@ namespace TuringMachine.Core.Interfaces
         /// Create a Fuzzer Stream
         /// </summary>
         /// <param name="original">Original stream</param>
-        FuzzingStream CreateStream(Stream original);
+        FuzzingStream CreateStream(byte[] original);
     }
 }

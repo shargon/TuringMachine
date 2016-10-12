@@ -7,6 +7,6 @@ namespace TuringMachine.Core.Interfaces
         /// <summary>
         /// Get Stream
         /// </summary>
-        Stream GetStream();
+        byte[] GetStream();
     }
 }
