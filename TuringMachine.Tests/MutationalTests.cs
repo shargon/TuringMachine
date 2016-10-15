@@ -27,7 +27,7 @@ namespace TuringMachine.Tests
         {
             MutationalOffset c = new MutationalOffset()
             {
-                FuzzPercent = 5F,
+                FuzzPercent = new FromToValue<double>(0, 5),
                 ValidOffset = new FromToValue<ulong>(0, ulong.MaxValue),
             };
 
@@ -38,16 +38,16 @@ namespace TuringMachine.Tests
                 RemoveLength = new FromToValue<ushort>(5),
             });
             c.Changes.Add(new MutationalChange()
-                        {
-                           // Remmove
-                            Weight=1,
-                            RemoveLength = new FromToValue<ushort>(1),
-                            AppendLength=new FromToValue<ushort>(0)
-                        });
+            {
+                // Remmove
+                Weight = 1,
+                RemoveLength = new FromToValue<ushort>(1),
+                AppendLength = new FromToValue<ushort>(0)
+            });
 
             for (int x = 0; x < 100; x++)
             {
-                MutationalChange next = c.Get();
+                MutationalChange next = c.Get(null, 0);
                 if (next != null)
                 {
 

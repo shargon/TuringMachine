@@ -1,8 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
 using System.Net;
 using System.Text;
-using TuringMachine.Core;
 using TuringMachine.Core.Inputs;
 
 namespace TuringMachine.Tests
@@ -15,18 +13,14 @@ namespace TuringMachine.Tests
         {
             ExecutionFuzzingInput c = new ExecutionFuzzingInput("cmd.exe", "/C dir c:") { };
 
-            MemoryStream ms = new MemoryStream(c.GetStream());
-
-            string ret = Encoding.ASCII.GetString(ms.ToArray());
+            string ret = Encoding.ASCII.GetString(c.GetStream());
         }
         [TestMethod]
         public void FileFuzzingInput()
         {
             FileFuzzingInput c = new FileFuzzingInput("d:\\bof\\vulnserver.fmut") { };
 
-            MemoryStream ms = new MemoryStream(c.GetStream());
-
-            string ret = Encoding.ASCII.GetString(ms.ToArray());
+            string ret = Encoding.ASCII.GetString(c.GetStream());
         }
         [TestMethod]
         public void TestTcpQueryFuzzingInput()
@@ -45,9 +39,7 @@ Accept-Language: en-US,en;q=0.8,es;q=0.6
 
 "));
 
-            MemoryStream ms = new MemoryStream(c.GetStream());
-
-            string ret = Encoding.ASCII.GetString(ms.ToArray());
+            string ret = Encoding.ASCII.GetString(c.GetStream());
         }
     }
 }

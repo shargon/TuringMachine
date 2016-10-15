@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using TuringMachine.Core.Design;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Helpers;
@@ -76,14 +74,17 @@ namespace TuringMachine.Core.FuzzingMethods.Patchs
         /// <summary>
         /// Get fixed patch
         /// </summary>
-        /// <param name="offset">Offset</param>
-        public PatchChange Get(long offset)
+        /// <param name="stream">Stream</param>
+        public PatchChange Get(FuzzingStream stream)
         {
+            long offset = stream.Position;
+
             foreach (PatchChange p in Changes)
                 if (p.Offset == offset)
                     return p;
 
             return null;
         }
+        public void InitFor(FuzzingStream stream) { }
     }
 }

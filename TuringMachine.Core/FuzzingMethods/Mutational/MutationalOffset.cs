@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using TuringMachine.Core.Design;
 using TuringMachine.Helpers;
 using TuringMachine.Core.Interfaces;
@@ -10,23 +9,24 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
 {
     public class MutationalOffset
     {
-        float _FuzzPercent;
         ObservableCollection<MutationalChange> _Changes;
         MutationalChange[] _Steps;
 
         /// <summary>
         /// Description
         /// </summary>
+        [Category("3 - Info")]
         public string Description { get; set; }
         /// <summary>
         /// Valid offset
         /// </summary>
-        [Category("Condition")]
+        [Category("1 - Condition")]
         public IGetValue<ulong> ValidOffset { get; set; }
         /// <summary>
         /// Changes
         /// </summary>
         [TypeConverter(typeof(ListArrayReadOnlyConverter))]
+        [Category("2 - Collection")]
         public ObservableCollection<MutationalChange> Changes
         {
             get { return _Changes; }
@@ -47,15 +47,21 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
         /// <summary>
         /// Fuzz Percent
         /// </summary>
-        [Category("Condition")]
-        public float FuzzPercent { get { return _FuzzPercent; } set { _FuzzPercent = Math.Max(0, Math.Min(value, 100)); } }
+        [Category("1 - Condition")]
+        public IGetValue<double> FuzzPercent { get; set; }
+        /// <summary>
+        /// MaxChanges
+        /// </summary>
+        [Category("1 - Condition")]
+        public IGetValue<ushort> MaxChanges { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public MutationalOffset()
         {
-            FuzzPercent = 5F;
+            FuzzPercent = new FromToValue<double>(0F, 5F);
+            MaxChanges = new FromToValue<ushort>(0, 2);
             ValidOffset = new FromToValue<ulong>(ulong.MinValue, ulong.MaxValue);
             Changes = new ObservableCollection<MutationalChange>();
             Description = "Unnamed";
@@ -69,14 +75,20 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
             {
                 int count = 0;
                 foreach (MutationalChange c in _Changes)
+                {
+                    if (!c.Enabled) continue;
                     count += c.Weight;
+                }
 
                 _Steps = new MutationalChange[count];
 
                 int w = 0;
                 for (int x = 0, y = 0; x < count; x++)
                 {
-                    if (_Changes[y].Weight <= w)
+                    MutationalChange c = _Changes[y];
+                    if (!c.Enabled) continue;
+
+                    if (c.Weight <= w)
                     {
                         y++;
                         w = 0;
@@ -92,15 +104,32 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
             }
         }
         /// <summary>
+        /// Init for
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        public void InitFor(FuzzingStream stream, int index)
+        {
+            // Max changes
+            stream.Variables["MaxChanges_" + index.ToString()] = MaxChanges.Get();
+        }
+        /// <summary>
         /// Get next mutation change (if happend)
         /// </summary>
-        public MutationalChange Get()
+        /// <param name="stream">Stream</param>
+        /// <param name="index">Index</param>
+        public MutationalChange Get(FuzzingStream stream, int index)
         {
+            // Check Max changes
+            ushort max = (ushort)stream.Variables["MaxChanges_" + index.ToString()];
+            if (stream.Log.Length >= max) return null;
+
             // Check Percent
-            if (!RandomHelper.IsRandomPercentOk(_FuzzPercent)) return null;
+            double value = FuzzPercent.Get();
+
+            if (!RandomHelper.IsRandomPercentOk(value)) return null;
 
             // Get Item
-            return RandomHelper.GetRandom(_Changes);
+            return RandomHelper.GetRandom(_Steps);
         }
         /// <summary>
         /// String representation

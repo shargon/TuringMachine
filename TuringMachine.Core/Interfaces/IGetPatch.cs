@@ -7,7 +7,12 @@ namespace TuringMachine.Core.Interfaces
         /// <summary>
         /// Get Patch
         /// </summary>
-        /// <param name="offset">Offset</param>
-        PatchChange Get(long offset);
+        /// <param name="stream">Stream</param>
+        PatchChange Get(FuzzingStream stream);
+        /// <summary>
+        /// Init for this stream
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        void InitFor(FuzzingStream stream);
     }
 }

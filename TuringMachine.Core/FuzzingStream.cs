@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using TuringMachine.Core.Collections;
 using TuringMachine.Core.FuzzingMethods.Patchs;
 using TuringMachine.Core.Interfaces;
 
@@ -8,7 +9,8 @@ namespace TuringMachine.Core
 {
     public class FuzzingStream : Stream
     {
-        MemoryStream _Source;
+        Stream _Source;
+        MemoryStream _Original;
         bool _ReadedAll;
         long _RealOffset;
         List<byte> _Buffer;
@@ -19,9 +21,13 @@ namespace TuringMachine.Core
         /// </summary>
         public IGetPatch Config { get; private set; }
         /// <summary>
+        /// Variables
+        /// </summary>
+        public VariableCollection<string,object> Variables { get; private set; }
+        /// <summary>
         /// Readed
         /// </summary>
-        public byte[] OriginalData { get { return _Source.ToArray(); } }
+        public byte[] OriginalData { get { return _Original.ToArray(); } }
         /// <summary>
         /// Log
         /// </summary>
@@ -44,14 +50,23 @@ namespace TuringMachine.Core
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="config">Mutations</param>
-        public FuzzingStream(byte[] stream, IGetPatch config)
+        public FuzzingStream(byte[] stream, IGetPatch config) : this(new MemoryStream(stream), config) { }
+        /// <summary>
+        /// Fuzzer constructor
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        /// <param name="config">Mutations</param>
+        public FuzzingStream(Stream stream, IGetPatch config)
         {
-            _Source = new MemoryStream(stream);
-            Config = config;
             _RealOffset = 0;
+            _Source = stream;
+            Config = config;
+            _Original = new MemoryStream();
+            _Log = new List<PatchChange>();
             _Buffer = new List<byte>();
             SampleId = Guid.NewGuid();
-            _Log = new List<PatchChange>();
+            Variables = new VariableCollection<string, object>();
+            if (Config != null) Config.InitFor(this);
         }
 
         #region Read
@@ -93,9 +108,7 @@ namespace TuringMachine.Core
 
                     // If no buffer are available (FUZZ!)
                     if (_Buffer.Count == 0)
-                    {
-                        log = Config.Get(offset);
-                    }
+                        log = Config.Get(this);
 
                     // If change!
                     if (log != null)
@@ -141,7 +154,11 @@ namespace TuringMachine.Core
             int lee = StreamHelper.ReadFull(source, buffer, ref offset, v);
 
             if (lee <= 0) _ReadedAll = true;
-            else _RealOffset += lee;
+            else
+            {
+                _RealOffset += lee;
+                _Original.Write(buffer, offset - lee, lee);
+            }
 
             return lee;
         }
@@ -165,13 +182,11 @@ namespace TuringMachine.Core
             if (count <= 0) return;
 
             _RealOffset += count;
-
             //if (!_FuzzWrite)
             //{
             //    _Source.Write(buffer, offset, count);
             //    return;
             //}
-
         }
         #endregion
 
@@ -185,6 +200,8 @@ namespace TuringMachine.Core
         {
             base.Dispose(disposing);
             _Source.Dispose();
+            _Original.Dispose();
+            Variables.Dispose();
         }
         /// <summary>
         /// Read from buffer

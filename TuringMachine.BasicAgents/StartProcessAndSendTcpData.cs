@@ -36,7 +36,6 @@ namespace TuringMachine.BasicAgents
             ConnectTimeout = TimeSpan.FromSeconds(30);
             ConnectedOk = false;
         }
-
         public override ICrashDetector GetCrashDetector(TuringSocket socket)
         {
             // Create process

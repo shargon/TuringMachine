@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TuringMachine.Core.Collections
 {
@@ -41,6 +42,16 @@ namespace TuringMachine.Core.Collections
         public VariableCollection()
         {
             _Internal = new Dictionary<TKey, TValue>();
+        }
+        /// <summary>
+        /// Free resources
+        /// </summary>
+        public void Dispose()
+        {
+            foreach (object o in _Internal.Values)
+                if (o is IDisposable) ((IDisposable)o).Dispose();
+
+            _Internal.Clear();
         }
     }
 }

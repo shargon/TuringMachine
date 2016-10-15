@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using TuringMachine.Core.Design;
 using TuringMachine.Core.FuzzingMethods.Patchs;
 using TuringMachine.Core.Interfaces;
@@ -15,14 +13,17 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
         /// Mutations
         /// </summary>
         [TypeConverter(typeof(ListArrayReadOnlyConverter))]
+        [Category("1 - Collection")]
         public List<MutationalOffset> Mutations { get; set; }
         /// <summary>
         /// Type
         /// </summary>
+        [Category("2 - Info")]
         public string Type { get { return "Mutational"; } }
         /// <summary>
         /// Description
         /// </summary>
+        [Category("2 - Info")]
         public string Description { get; set; }
 
         /// <summary>
@@ -34,23 +35,44 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
             Description = "Unnamed";
         }
         /// <summary>
+        /// Init for
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        public void InitFor(FuzzingStream stream)
+        {
+            if (Mutations == null) return;
+
+            int x = 0;
+            foreach (MutationalOffset cond in Mutations)
+            {
+                cond.InitFor(stream, x);
+                x++;
+            }
+        }
+        /// <summary>
         /// Get next mutation
         /// </summary>
-        /// <param name="offset">Offset</param>
-        public PatchChange Get(long offset)
+        /// <param name="stream">Stream</param>
+        public PatchChange Get(FuzzingStream stream)
         {
             if (Mutations == null) return null;
 
+            long offset = stream.Position;
+
             // Fuzzer
+            int x = 0;
             foreach (MutationalOffset cond in Mutations)
             {
                 if (!cond.ValidOffset.ItsValid((ulong)offset))
+                {
+                    x++;
                     continue;
+                }
 
                 // Try change
-                MutationalChange change = cond.Get();
-                if (change != null)
-                    return change.Process(offset);
+                MutationalChange change = cond.Get(stream, x);
+                if (change != null) return change.Process(offset);
+                x++;
             }
 
             return null;

@@ -5,6 +5,12 @@ namespace TuringMachine.Core.Inputs
 {
     public class FileFuzzingInput : IFuzzingInput
     {
+        byte[] _Data;
+        FileInfo _Info;
+        /// <summary>
+        /// Use Cache
+        /// </summary>
+        public bool UseCache { get; set; }
         /// <summary>
         /// Name
         /// </summary>
@@ -20,13 +26,26 @@ namespace TuringMachine.Core.Inputs
         public FileFuzzingInput(string filename)
         {
             FileName = filename;
+            _Info = new FileInfo(filename);
+            UseCache = true;
         }
         /// <summary>
         /// Get file stream
         /// </summary>
         public byte[] GetStream()
         {
-            return File.ReadAllBytes(FileName);
+            if (!UseCache) return File.ReadAllBytes(FileName);
+
+            if (_Data != null)
+            {
+                // Check Cache state
+                _Info.Refresh();
+                if (_Data.Length == _Info.Length)
+                    return _Data;
+            }
+
+            _Data = File.ReadAllBytes(FileName);
+            return _Data;
         }
         /// <summary>
         /// String representation

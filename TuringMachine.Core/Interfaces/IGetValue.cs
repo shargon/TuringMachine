@@ -12,10 +12,6 @@ namespace TuringMachine.Core.Interfaces
     public interface IGetValue<T> : IRandomValue<T>
     {
         /// <summary>
-        /// Get next value
-        /// </summary>
-        T Get();
-        /// <summary>
         /// Check if value its valid
         /// </summary>
         /// <param name="value">Value</param>
