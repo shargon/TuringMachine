@@ -11,6 +11,7 @@ namespace TuringMachine.Core
     /// </summary>
     public class TuringStream : Stream
     {
+        Stream _Base;
         TuringSocket _Socket;
         Guid _StreamId;
 
@@ -20,12 +21,33 @@ namespace TuringMachine.Core
         /// Constructor
         /// </summary>
         /// <param name="socket">Socket</param>
-        public TuringStream(TuringSocket socket)
+        public TuringStream(TuringSocket socket) : this(socket, null) { }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="socket">Socket</param>
+        /// <param name="stream">Stream</param>
+        public TuringStream(TuringSocket socket, Stream stream)
         {
+            _Base = stream;
             _Socket = socket;
 
             socket.EnqueueMessages = true;
-            socket.SendMessage(new OpenStreamMessageRequest());
+            if (stream != null)
+            {
+                socket.SendMessage(new OpenStreamMessageRequest()
+                {
+                    RequireStream = true,
+                    CanRead = stream.CanRead,
+                    CanSeek = stream.CanSeek,
+                    CanTimeout = stream.CanTimeout,
+                    CanWrite = stream.CanWrite
+                });
+            }
+            else
+            {
+                socket.SendMessage(new OpenStreamMessageRequest() { RequireStream = false });
+            }
 
             OpenStreamMessageResponse ret = socket.ReadMessage<OpenStreamMessageResponse>();
 
@@ -44,6 +66,8 @@ namespace TuringMachine.Core
         {
             get
             {
+                if (_Base != null) return _Base.Length;
+
                 _Socket.SendMessage(new GetStreamLengthMessageRequest(_StreamId));
 
                 LongMessageResponse ret = _Socket.ReadMessage<LongMessageResponse>();
@@ -54,6 +78,8 @@ namespace TuringMachine.Core
         {
             get
             {
+                if (_Base != null) return _Base.Position;
+
                 _Socket.SendMessage(new GetStreamPositionMessageRequest(_StreamId));
 
                 LongMessageResponse ret = _Socket.ReadMessage<LongMessageResponse>();
@@ -61,14 +87,28 @@ namespace TuringMachine.Core
             }
             set
             {
-                _Socket.SendMessage(new SetStreamMessageRequest(_StreamId) { Value = value, ValueType = SetStreamMessageRequest.EMode.Position });
+                if (_Base != null)
+                {
+                    _Base.Position = value;
+                }
+                else
+                {
+                    _Socket.SendMessage(new SetStreamMessageRequest(_StreamId) { Value = value, ValueType = SetStreamMessageRequest.EMode.Position });
 
-                BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
-                if (!ret.Result) throw (new Exception("Error setting stream position"));
+                    BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
+                    if (!ret.Result) throw (new Exception("Error setting stream position"));
+                }
             }
         }
         public override void Close()
         {
+            if (_Base != null)
+            {
+                _Base.Close();
+                _Base.Dispose();
+                _Base = null;
+            }
+
             _Socket.SendMessage(new CloseStreamMessageRequest(_StreamId));
 
             BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
@@ -76,10 +116,17 @@ namespace TuringMachine.Core
         }
         public override void SetLength(long value)
         {
-            _Socket.SendMessage(new SetStreamMessageRequest(_StreamId) { Value = value, ValueType = SetStreamMessageRequest.EMode.Length });
+            if (_Base != null)
+            {
+                _Base.SetLength(value);
+            }
+            else
+            {
+                _Socket.SendMessage(new SetStreamMessageRequest(_StreamId) { Value = value, ValueType = SetStreamMessageRequest.EMode.Length });
 
-            BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
-            if (!ret.Result) throw (new Exception("Error setting stream length"));
+                BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
+                if (!ret.Result) throw (new Exception("Error setting stream length"));
+            }
         }
         public override long Seek(long offset, SeekOrigin origin)
         {
@@ -109,17 +156,31 @@ namespace TuringMachine.Core
         }
         public override void Flush()
         {
-            _Socket.SendMessage(new FlushStreamMessageRequest(_StreamId));
+            if (_Base != null) _Base.Flush();
+            else
+            {
+                _Socket.SendMessage(new FlushStreamMessageRequest(_StreamId));
 
-            BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
-            if (!ret.Result) throw (new Exception("Error flushing stream"));
+                BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
+                if (!ret.Result) throw (new Exception("Error flushing stream"));
+            }
         }
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (count <= 0)
                 return 0;
 
-            _Socket.SendMessage(new StreamReadMessageRequest(_StreamId) { Length = count });
+            byte[] append = null;
+            if (_Base != null)
+            {
+                append = new byte[count];
+                count = _Base.Read(append, 0, count);
+
+                if (count != append.Length)
+                    Array.Resize(ref append, count);
+            }
+
+            _Socket.SendMessage(new StreamReadMessageRequest(_StreamId) { Length = count, PreAppend = append, PreAppendReSeek = true });
 
             ByteArrayMessageResponse ret = _Socket.ReadMessage<ByteArrayMessageResponse>();
             if (ret.Result == null)

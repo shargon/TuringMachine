@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using TuringMachine.Core.Design;
 using TuringMachine.Core.FuzzingMethods.Patchs;
@@ -7,7 +8,7 @@ using TuringMachine.Helpers;
 
 namespace TuringMachine.Core.FuzzingMethods.Mutational
 {
-    public class MutationConfig : IFuzzingConfig, IGetPatch
+    public class MutationConfig : IFuzzingConfig
     {
         /// <summary>
         /// Mutations
@@ -60,7 +61,7 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
             long offset = stream.Position;
 
             // Fuzzer
-            int x = 0;
+            ulong x = 0;
             foreach (MutationalOffset cond in Mutations)
             {
                 if (!cond.ValidOffset.ItsValid((ulong)offset))
@@ -98,14 +99,6 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
         public override string ToString()
         {
             return Description;
-        }
-        /// <summary>
-        /// Create a Fuzzer Stream
-        /// </summary>
-        /// <param name="original">Original stream</param>
-        public FuzzingStream CreateStream(byte[] original)
-        {
-            return new FuzzingStream(original, this);
         }
     }
 }

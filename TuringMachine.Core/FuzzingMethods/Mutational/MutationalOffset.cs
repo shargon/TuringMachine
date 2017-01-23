@@ -4,6 +4,11 @@ using TuringMachine.Helpers;
 using TuringMachine.Core.Interfaces;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using TuringMachine.Core.Enums;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System;
 
 namespace TuringMachine.Core.FuzzingMethods.Mutational
 {
@@ -50,17 +55,29 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
         [Category("1 - Condition")]
         public IGetValue<double> FuzzPercent { get; set; }
         /// <summary>
+        /// Fuzz Percent Type
+        /// </summary>
+        [Category("1 - Condition")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public EFuzzingPercentType FuzzPercentType { get; set; }
+        /// <summary>
         /// MaxChanges
         /// </summary>
         [Category("1 - Condition")]
         public IGetValue<ushort> MaxChanges { get; set; }
+
+        class step
+        {
+            public int MaxChanges = 0;
+            public List<ulong> FuzzIndex = new List<ulong>();
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public MutationalOffset()
         {
-            FuzzPercent = new FromToValue<double>(0F, 5F);
+            FuzzPercent = new FromToValue<double>(0, 5);
             MaxChanges = new FromToValue<ushort>(0, 2);
             ValidOffset = new FromToValue<ulong>(ulong.MinValue, ulong.MaxValue);
             Changes = new ObservableCollection<MutationalChange>();
@@ -109,27 +126,62 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
         /// <param name="stream">Stream</param>
         public void InitFor(FuzzingStream stream, int index)
         {
+            step s = new step();
             // Max changes
-            stream.Variables["MaxChanges_" + index.ToString()] = MaxChanges.Get();
+            s.MaxChanges = MaxChanges.Get();
+
+            if (FuzzPercentType == EFuzzingPercentType.PeerStream)
+            {
+                // Fill indexes
+                long length = stream.Length;
+                for (long x = Math.Max(1, (long)((length * FuzzPercent.Get()) / 100.0)); x >= 0; x--)
+                {
+                    ulong value;
+
+                    do
+                    {
+                        value = Math.Min((ulong)length, ValidOffset.Get());
+                    }
+                    while (!s.FuzzIndex.Contains(value));
+
+                    s.FuzzIndex.Add(value);
+                }
+            }
+
+            stream.Variables["Config_" + index.ToString()] = s;
         }
         /// <summary>
         /// Get next mutation change (if happend)
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="index">Index</param>
-        public MutationalChange Get(FuzzingStream stream, int index)
+        public MutationalChange Get(FuzzingStream stream, ulong index)
         {
             // Check Max changes
-            ushort max = (ushort)stream.Variables["MaxChanges_" + index.ToString()];
-            if (stream.Log.Length >= max) return null;
+            step s = (step)stream.Variables["Config_" + index.ToString()];
+            if (stream.Log.Length >= s.MaxChanges) return null;
 
-            // Check Percent
-            double value = FuzzPercent.Get();
+            switch (FuzzPercentType)
+            {
+                case EFuzzingPercentType.PeerByte:
+                    {
+                        // Check Percent
+                        double value = FuzzPercent.Get();
 
-            if (!RandomHelper.IsRandomPercentOk(value)) return null;
+                        if (!RandomHelper.IsRandomPercentOk(value)) return null;
 
-            // Get Item
-            return RandomHelper.GetRandom(_Steps);
+                        // Get Item
+                        return RandomHelper.GetRandom(_Steps);
+                    }
+                case EFuzzingPercentType.PeerStream:
+                    {
+                        if (!s.FuzzIndex.Contains(index)) return null;
+
+                        return RandomHelper.GetRandom(_Steps);
+                    }
+            }
+
+            return null;
         }
         /// <summary>
         /// String representation

@@ -23,7 +23,7 @@ namespace TuringMachine.Core
         /// <summary>
         /// Variables
         /// </summary>
-        public VariableCollection<string,object> Variables { get; private set; }
+        public VariableCollection<string, object> Variables { get; private set; }
         /// <summary>
         /// Readed
         /// </summary>
@@ -177,11 +177,19 @@ namespace TuringMachine.Core
             _RealOffset = value;
             _Source.SetLength(value);
         }
+        public void AppendToSource(byte[] buffer, int offset, int count, bool reSeek)
+        {
+            long ps = 0;
+            if (reSeek) ps = _Source.Position;
+            _Source.Write(buffer, offset, count);
+            if (reSeek) _Source.Position = ps;
+        }
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (count <= 0) return;
 
             _RealOffset += count;
+            //_Original.Write(buffer, offset , count);
             //if (!_FuzzWrite)
             //{
             //    _Source.Write(buffer, offset, count);

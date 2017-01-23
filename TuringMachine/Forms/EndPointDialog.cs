@@ -8,9 +8,45 @@ namespace TuringMachine.Forms
     public partial class EndPointDialog : Form
     {
         /// <summary>
+        /// Title
+        /// </summary>
+        public string Title { get { return Text; } set { Text = value; } }
+        /// <summary>
         /// EndPoint
         /// </summary>
-        public IPEndPoint EndPoint { get; private set; }
+        public IPEndPoint EndPoint
+        {
+            get
+            {
+                IPAddress ip;
+                if (!IPAddress.TryParse(tAddress.Text, out ip))
+                {
+                    errorProvider1.SetError(tAddress, "Invalid ip address");
+                    return null;
+                }
+
+                if (tPort.Value > ushort.MaxValue || tPort.Value < ushort.MinValue)
+                {
+                    errorProvider1.SetError(tPort, "Invalid port");
+                    return null;
+                }
+
+                return new IPEndPoint(ip, Convert.ToInt32(tPort.Value));
+            }
+            set
+            {
+                if (value == null)
+                {
+                    tAddress.Text = "";
+                    tPort.Value = tPort.Minimum;
+                }
+                else
+                {
+                    tAddress.Text = value.Address.ToString();
+                    tPort.Value = value.Port;
+                }
+            }
+        }
         /// <summary>
         /// Request file
         /// </summary>
@@ -63,8 +99,6 @@ namespace TuringMachine.Forms
                 e.Cancel = true;
                 return;
             }
-
-            EndPoint = new IPEndPoint(ip, Convert.ToInt32(tPort.Value));
         }
         void textBox1_TextChanged(object sender, System.EventArgs e)
         {

@@ -13,6 +13,14 @@ namespace TuringMachine.Core.Sockets.Messages.Requests
         /// Length
         /// </summary>
         public int Length { get; set; }
+        /// <summary>
+        /// Pre-Append data
+        /// </summary>
+        public byte[] PreAppend { get; set; }
+        /// <summary>
+        /// ReSeek when PreAppend
+        /// </summary>
+        public bool PreAppendReSeek { get; set; }
 
         /// <summary>
         /// Constructor

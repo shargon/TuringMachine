@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using TuringMachine.Core.Arguments;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Sockets;
 using TuringMachine.Helpers;
@@ -29,6 +30,8 @@ namespace TuringMachine.Core.Detectors.Windows
         Process[] _Process;
         string _StoreLocation;
         RegistryView _View;
+
+        public event EventHandler OnDispose;
 
         /// <summary>
         /// Load CrashPath
@@ -113,7 +116,7 @@ namespace TuringMachine.Core.Detectors.Windows
         /// <param name="socket">Socket</param>
         /// <param name="zipCrashData">Crash data</param>
         /// <param name="isAlive">IsAlive</param>
-        public override bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, ITuringMachineAgent.delItsAlive isAlive)
+        public override bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, ITuringMachineAgent.delItsAlive isAlive, TuringAgentArgs e)
         {
             zipCrashData = null;
 
@@ -133,7 +136,7 @@ namespace TuringMachine.Core.Detectors.Windows
             if (isBreak) Thread.Sleep(5000);
 
             // If its alive kill them
-            if (isAlive == null || isAlive.Invoke(socket))
+            if (isAlive == null || isAlive.Invoke(socket, e))
             {
                 foreach (Process p in _Process)
                     try { p.Kill(); }
@@ -207,6 +210,8 @@ namespace TuringMachine.Core.Detectors.Windows
 
                 _Process = null;
             }
+
+            OnDispose?.Invoke(null, null);
         }
     }
 }

@@ -6,7 +6,7 @@ using TuringMachine.Helpers;
 
 namespace TuringMachine.Core.FuzzingMethods.Patchs
 {
-    public class PatchConfig : IFuzzingConfig, IGetPatch
+    public class PatchConfig : IFuzzingConfig
     {
         /// <summary>
         /// Mutations
@@ -41,14 +41,6 @@ namespace TuringMachine.Core.FuzzingMethods.Patchs
             Changes.AddRange(changes);
         }
 
-        /// <summary>
-        /// Create a Fuzzer Stream
-        /// </summary>
-        /// <param name="original">Original stream</param>
-        public FuzzingStream CreateStream(byte[] original)
-        {
-            return new FuzzingStream(original, this);
-        }
         /// <summary>
         /// Deserialize from Json
         /// </summary>

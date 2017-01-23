@@ -11,6 +11,7 @@ using TuringMachine.Core;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Inputs;
 using TuringMachine.Core.Interfaces;
+using TuringMachine.Core.Sockets;
 using TuringMachine.Forms;
 
 namespace TuringMachine
@@ -229,7 +230,10 @@ namespace TuringMachine
         #endregion
         void toolStripStatusLabel2_Click(object sender, EventArgs e)
         {
-            using (EndPointDialog dialog = new EndPointDialog())
+            using (EndPointDialog dialog = new EndPointDialog()
+            {
+                EndPoint = _Fuzzer == null ? null : _Fuzzer.Listen
+            })
             {
                 if (dialog.ShowDialog() == DialogResult.OK)
                     try { _Fuzzer.Listen = dialog.EndPoint; }
@@ -345,7 +349,7 @@ namespace TuringMachine
                         byte[] stream = inp.Source.GetStream();
                         if (config != null)
                         {
-                            using (Stream fzs = config.CreateStream(stream))
+                            using (Stream fzs = new FuzzingStream(stream, config))
                                 fzs.CopyTo(fs);
                         }
                         else

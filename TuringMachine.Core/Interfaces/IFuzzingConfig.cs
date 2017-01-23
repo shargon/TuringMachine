@@ -1,15 +1,10 @@
 ﻿namespace TuringMachine.Core.Interfaces
 {
-    public interface IFuzzingConfig : IType
+    public interface IFuzzingConfig : IType, IGetPatch
     {
         /// <summary>
         /// Serialize to Json
         /// </summary>
         string ToJson();
-        /// <summary>
-        /// Create a Fuzzer Stream
-        /// </summary>
-        /// <param name="original">Original stream</param>
-        FuzzingStream CreateStream(byte[] original);
     }
 }

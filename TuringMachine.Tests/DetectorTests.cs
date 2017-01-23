@@ -13,7 +13,7 @@ namespace TuringMachine.Tests
             WERDetector w = new WERDetector(new ProcessStartInfo(@"D:\CrashDumps\test.exe"));
 
             byte[] data;
-            w.IsCrashed(null, out data, null);
+            w.IsCrashed(null, out data, null, null);
         }
     }
 }

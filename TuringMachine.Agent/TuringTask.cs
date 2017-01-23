@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using TuringMachine.Core.Arguments;
 using TuringMachine.Core.Detectors;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Interfaces;
@@ -63,31 +64,38 @@ namespace TuringMachine.Agent
 
             Task = new Task<EFuzzingReturn>(() =>
             {
-                // Create detector
-                ICrashDetector crash = Agent.GetCrashDetector(Socket);
-                if (crash == null) return EFuzzingReturn.Fail;
+                TuringAgentArgs e = new TuringAgentArgs();
 
-                // Run action
+                ICrashDetector crash = null;
                 try
                 {
-                    Agent.OnRun(Socket);
+                    //Agent.OnLoad(Socket, e);
+
+                    // Create detector
+                    crash = Agent.GetCrashDetector(Socket, e);
+                    if (crash == null) return EFuzzingReturn.Fail;
+
+                    // Run action
+
+                    Agent.OnRun(Socket, e);
 
                     byte[] zipData;
 
-                    if (crash.IsCrashed(Socket, out zipData, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive)))
+                    if (crash.IsCrashed(Socket, out zipData, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive), e))
                     {
                         Result = new EndTaskMessage(EFuzzingReturn.Crash) { ZipData = zipData, };
                         return EFuzzingReturn.Crash;
                     }
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    throw (e);
+                    throw (ex);
                 }
                 finally
                 {
                     // Free and return
-                    if (crash is IDisposable) ((IDisposable)crash).Dispose();
+                    if (crash != null && crash is IDisposable) ((IDisposable)crash).Dispose();
+                    //Agent.OnFree(Socket, e);
                 }
                 return EFuzzingReturn.Test;
             });

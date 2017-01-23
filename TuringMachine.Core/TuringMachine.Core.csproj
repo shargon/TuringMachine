@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arguments\TuringAgentArgs.cs" />
     <Compile Include="Collections\VariableCollection.cs" />
     <Compile Include="Design\IGetValueEditor.cs" />
     <Compile Include="Design\JsonFromToConverter.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Detectors\ICrashDetector.cs" />
     <Compile Include="Detectors\Windows\WERDetector.cs" />
     <Compile Include="Enums\EFuzzerState.cs" />
+    <Compile Include="Enums\EFuzzingPercentType.cs" />
     <Compile Include="Enums\EFuzzingReturn.cs" />
     <Compile Include="FixedValue.cs" />
     <Compile Include="FromToValue.cs" />
@@ -66,8 +68,13 @@
     <Compile Include="Interfaces\ITuringMachineAgent.cs" />
     <Compile Include="Sockets\Enums\ETuringMessageState.cs" />
     <Compile Include="Sockets\Enums\ETuringMessageType.cs" />
-    <Compile Include="Sockets\Forwarder\TcpForwarder.cs" />
-    <Compile Include="Sockets\Forwarder\TcpForwarderState.cs" />
+    <Compile Include="Sockets\Proxy\Enums\ESource.cs" />
+    <Compile Include="Sockets\Proxy\EventArguments\ProxyDataEventArgs.cs" />
+    <Compile Include="Sockets\Proxy\ExtensionMethods\AwaitExtensionMethods.cs" />
+    <Compile Include="Sockets\Proxy\Interfaces\IProxy.cs" />
+    <Compile Include="Sockets\Proxy\TcpForwarder.cs" />
+    <Compile Include="Sockets\Proxy\TcpForwarderState.cs" />
+    <Compile Include="Sockets\Proxy\TcpProxy.cs" />
     <Compile Include="Sockets\Messages\EndTaskMessage.cs" />
     <Compile Include="Sockets\Messages\ExceptionMessage.cs" />
     <Compile Include="Sockets\Messages\Requests\CloseStreamMessageRequest.cs" />
@@ -112,6 +119,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sockets\Fordwarder\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

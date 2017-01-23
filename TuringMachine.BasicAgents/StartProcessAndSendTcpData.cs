@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using TuringMachine.Core;
+using TuringMachine.Core.Arguments;
 using TuringMachine.Core.Detectors;
 using TuringMachine.Core.Detectors.Windows;
 using TuringMachine.Core.Interfaces;
@@ -36,7 +37,7 @@ namespace TuringMachine.BasicAgents
             ConnectTimeout = TimeSpan.FromSeconds(30);
             ConnectedOk = false;
         }
-        public override ICrashDetector GetCrashDetector(TuringSocket socket)
+        public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
         {
             // Create process
             return new WERDetector(new ProcessStartInfo(FileName, Arguments)
@@ -45,7 +46,7 @@ namespace TuringMachine.BasicAgents
                 WindowStyle = ProcessWindowStyle.Hidden
             });
         }
-        public override void OnRun(TuringSocket socket)
+        public override void OnRun(TuringSocket socket, TuringAgentArgs e)
         {
             // Create client
             using (TcpClient ret = new TcpClient())
@@ -71,7 +72,7 @@ namespace TuringMachine.BasicAgents
                             sr.Flush();
                         }
                     }
-                    catch (Exception e)
+                    catch //(Exception e)
                     {
                     }
             }
@@ -80,7 +81,7 @@ namespace TuringMachine.BasicAgents
         /// Check if can reconnect (¿its alive?)
         /// </summary>
         /// <param name="socket">Socket</param>
-        public override bool GetItsAlive(TuringSocket socket)
+        public override bool GetItsAlive(TuringSocket socket, TuringAgentArgs e)
         {
             try
             {
