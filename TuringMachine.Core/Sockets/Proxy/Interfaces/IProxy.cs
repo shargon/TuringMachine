@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace NRepeat
+namespace TuringMachine.Core.Sockets.Proxy.Interfaces
 {
     public interface IProxy
     {

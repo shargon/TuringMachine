@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using TuringMachine.Core.Collections;
-using TuringMachine.Core.Sockets.Enums;
 using TuringMachine.Core.Sockets.Messages;
 
 namespace TuringMachine.Core.Sockets
@@ -155,7 +154,7 @@ namespace TuringMachine.Core.Sockets
 
                 ReadMessageAsync(new TuringMessageState(ret));
             }
-            catch (Exception e)
+            catch// (Exception e)
             {
 
             }
@@ -188,7 +187,7 @@ namespace TuringMachine.Core.Sockets
                     ReadMessageAsync(state);
                 }
             }
-            catch (Exception e)
+            catch// (Exception e)
             {
                 state.Source.Dispose();
             }

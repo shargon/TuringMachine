@@ -1,5 +1,4 @@
-﻿using NRepeat;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -9,6 +8,7 @@ using TuringMachine.Core.Detectors;
 using TuringMachine.Core.Detectors.Windows;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Sockets;
+using TuringMachine.Core.Sockets.Proxy;
 using TuringMachine.Core.Sockets.Proxy.Enums;
 
 namespace TuringMachine.BasicAgents
@@ -47,12 +47,18 @@ namespace TuringMachine.BasicAgents
         /// </summary>
         public EFuzzingType Type { get; set; }
 
-        public StartProcessAndProxy() { }
+        public StartProcessAndProxy()
+        {
+            ConnectTimeout = TimeSpan.FromSeconds(30);
+            Type = EFuzzingType.ClientToServer;
+        }
 
         public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
         {
-            TcpProxy proxy = new TcpProxy(ListenEndPoint, ConnectTo) { Tag = socket };
+            // Create proxy ( auto-dispose whith socket )
+            TcpInvisibleProxy proxy = new TcpInvisibleProxy(ListenEndPoint, ConnectTo) { Tag = socket };
 
+            //proxy.OnCreateStream += Proxy_OnCreateStream;
             socket[ProxyVarName] = proxy;
             proxy.Start();
 
@@ -63,9 +69,10 @@ namespace TuringMachine.BasicAgents
                 WindowStyle = ProcessWindowStyle.Hidden,
             });
         }
+
         Stream Proxy_OnCreateStream(object sender, Stream stream, ESource owner)
         {
-            TcpProxy proxy = (TcpProxy)sender;
+            TcpInvisibleProxy proxy = (TcpInvisibleProxy)sender;
             TuringSocket socket = (TuringSocket)proxy.Tag;
 
             switch (Type)
@@ -73,10 +80,14 @@ namespace TuringMachine.BasicAgents
                 case EFuzzingType.ClientToServer: return owner == ESource.Client ? stream : new TuringStream(socket, stream);
                 case EFuzzingType.ServerToClient: return owner == ESource.Server ? stream : new TuringStream(socket, stream);
             }
+
             return stream;
         }
-
         public override void OnRun(TuringSocket socket, TuringAgentArgs e) { }
-        public override bool GetItsAlive(TuringSocket socket, TuringAgentArgs e) { return true; }
+        public override bool GetItsAlive(TuringSocket socket, TuringAgentArgs e)
+        {
+            TcpInvisibleProxy proxy = (TcpInvisibleProxy)socket[ProxyVarName];
+            return proxy != null && proxy.Running;
+        }
     }
 }

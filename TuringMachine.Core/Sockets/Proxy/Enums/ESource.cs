@@ -2,7 +2,13 @@
 {
     public enum ESource
     {
+        /// <summary>
+        /// Server
+        /// </summary>
         Server,
+        /// <summary>
+        /// Client
+        /// </summary>
         Client
     }
 }

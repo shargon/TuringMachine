@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NRepeat
+namespace TuringMachine.Core.Sockets.Proxy
 {
     public static class AwaitExtensionMethods
     {

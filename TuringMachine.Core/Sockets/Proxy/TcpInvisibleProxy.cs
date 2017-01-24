@@ -1,15 +1,19 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using TuringMachine.Core.Sockets.Proxy.Enums;
+using TuringMachine.Core.Sockets.Proxy.EventArguments;
+using TuringMachine.Core.Sockets.Proxy.Interfaces;
 
-namespace NRepeat
+namespace TuringMachine.Core.Sockets.Proxy
 {
-    public class TcpProxy : IProxy, IDisposable
+    /// <summary>
+    /// Original source "NRepeat" available in github "https://github.com/jeremychild/NRepeat"
+    /// </summary>
+    public class TcpInvisibleProxy : IProxy, IDisposable
     {
         public IPEndPoint Server { get; set; }
         public IPEndPoint Client { get; set; }
@@ -17,9 +21,9 @@ namespace NRepeat
         public object Tag { get; set; }
         public bool Running { get; set; }
 
-        private static TcpListener listener;
+        static TcpListener listener;
+        CancellationTokenSource cancellationTokenSource;
 
-        private CancellationTokenSource cancellationTokenSource;
         public delegate Stream delOnChangeStream(object sender, Stream stream, ESource owner);
 
         public event delOnChangeStream OnCreateStream;
@@ -31,7 +35,7 @@ namespace NRepeat
         /// <summary>
         /// Start the TCP Proxy
         /// </summary>
-        public async void Start()
+        public void Start()
         {
             if (Running == false)
             {
@@ -39,20 +43,19 @@ namespace NRepeat
                 // Check if the listener is null, this should be after the proxy has been stopped
                 if (listener == null)
                 {
-                    await AcceptConnections();
+                    Running = true;
+                    Task t = new Task(() => { AcceptConnections(); });
+                    t.Start();
                 }
             }
         }
         /// <summary>
         /// Accept Connections
         /// </summary>
-        /// <returns></returns>
-        private async Task AcceptConnections()
+        void AcceptConnections()
         {
             listener = new TcpListener(Server.Address, Server.Port);
-            var bufferSize = Buffer; // Get the current buffer size on start
             listener.Start();
-            Running = true;
 
             // If there is an exception we want to output the message to the console for debugging
             try
@@ -60,23 +63,26 @@ namespace NRepeat
                 // While the Running bool is true, the listener is not null and there is no cancellation requested
                 while (Running && listener != null && !cancellationTokenSource.Token.IsCancellationRequested)
                 {
-                    var client = await listener.AcceptTcpClientAsync().WithWaitCancellation(cancellationTokenSource.Token);
+                    TcpClient client = listener.AcceptTcpClient();
+
                     if (client != null)
                     {
                         // Proxy the data from the client to the server until the end of stream filling the buffer.
-                        await ProxyClientConnection(client, bufferSize);
+                        //Task t = new Task(() =>
+                        //{
+                        ProxyClientConnection(client, Buffer);
+                        //});
+                        //t.Start();
                     }
-
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
             }
 
-            listener.Stop();
+            Stop();
         }
-
         /// <summary>
         /// Send and receive data between the Client and Server
         /// </summary>
@@ -85,18 +91,25 @@ namespace NRepeat
         /// <param name="clientStream"></param>
         /// <param name="bufferSize"></param>
         /// <param name="cancellationToken"></param>
-        private void ProxyClientDataToServer(TcpClient client, Stream serverStream, Stream clientStream, int bufferSize, CancellationToken cancellationToken)
+        void ProxyClientDataToServer(TcpClient client, Stream serverStream, Stream clientStream, int bufferSize, CancellationToken cancellationToken)
         {
-            byte[] message = new byte[bufferSize];
             int clientBytes;
+            byte[] message = new byte[bufferSize];
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
                     clientBytes = clientStream.Read(message, 0, bufferSize);
+
+                    // Client disconnected.
+                    if (clientBytes == 0) break;
+
                     if (OnClientBytesTransferedToServer != null)
                     {
-                        var messageTrimed = message.Reverse().SkipWhile(x => x == 0).Reverse().ToArray();
+                        byte[] messageTrimed = new byte[clientBytes];
+                        Array.Copy(message, 0, messageTrimed, 0, clientBytes);
+
                         OnClientBytesTransferedToServer(this, new ProxyByteDataEventArgs(messageTrimed, ESource.Client));
                     }
                 }
@@ -105,11 +118,7 @@ namespace NRepeat
                     // Socket error - exit loop.  Client will have to reconnect.
                     break;
                 }
-                if (clientBytes == 0)
-                {
-                    // Client disconnected.
-                    break;
-                }
+
                 serverStream.Write(message, 0, clientBytes);
 
                 OnClientDataSentToServer?.Invoke(this, new ProxyDataEventArgs(clientBytes));
@@ -118,7 +127,6 @@ namespace NRepeat
             message = null;
             client.Close();
         }
-
         /// <summary>
         /// Send and receive data between the Server and Client
         /// </summary>
@@ -126,20 +134,28 @@ namespace NRepeat
         /// <param name="clientStream"></param>
         /// <param name="bufferSize"></param>
         /// <param name="cancellationToken"></param>
-        private void ProxyServerDataToClient(Stream serverStream, Stream clientStream, int bufferSize, CancellationToken cancellationToken)
+        void ProxyServerDataToClient(Stream serverStream, Stream clientStream, int bufferSize, CancellationToken cancellationToken)
         {
-            byte[] message = new byte[bufferSize];
             int serverBytes;
+            byte[] message = new byte[bufferSize];
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
                     serverBytes = serverStream.Read(message, 0, bufferSize);
+
+                    // Server disconnected
+                    if (serverBytes == 0) break;
+
                     if (OnServerBytesTransferedToClient != null)
                     {
-                        var messageTrimed = message.Reverse().SkipWhile(x => x == 0).Reverse().ToArray();
+                        byte[] messageTrimed = new byte[serverBytes];
+                        Array.Copy(message, 0, messageTrimed, 0, serverBytes);
+
                         OnServerBytesTransferedToClient(this, new ProxyByteDataEventArgs(messageTrimed, ESource.Server));
                     }
+
                     clientStream.Write(message, 0, serverBytes);
                 }
                 catch
@@ -147,11 +163,7 @@ namespace NRepeat
                     // Server socket error - exit loop.  Client will have to reconnect.
                     break;
                 }
-                if (serverBytes == 0)
-                {
-                    // server disconnected.
-                    break;
-                }
+
                 OnServerDataSentToClient?.Invoke(this, new ProxyDataEventArgs(serverBytes));
             }
             message = null;
@@ -159,39 +171,36 @@ namespace NRepeat
         /// <summary>
         /// Process the client with a predetermined buffer size
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="bufferSize"></param>
-        /// <returns></returns>
-        private async Task ProxyClientConnection(TcpClient client, int bufferSize)
+        /// <param name="client">Client</param>
+        /// <param name="bufferSize">Buffer size</param>
+        void ProxyClientConnection(TcpClient client, int bufferSize)
         {
-            // Handle this client
-            // Send the server data to client and client data to server - swap essentially.
-            Stream clientStream = client.GetStream();
-
-            if (OnCreateStream != null)
-                clientStream = OnCreateStream(this, clientStream, ESource.Client);
-
-            TcpClient server = new TcpClient(Client.Address.ToString(), Client.Port);
-            Stream serverStream = server.GetStream();
-
-            if (OnCreateStream != null)
-                serverStream = OnCreateStream(this, serverStream, ESource.Client);
-
-            CancellationToken cancellationToken = cancellationTokenSource.Token;
-
             try
             {
+                // Handle this client
+                // Send the server data to client and client data to server - swap essentially.
+                Stream clientStream = client.GetStream();
+
+                if (OnCreateStream != null)
+                    clientStream = OnCreateStream(this, clientStream, ESource.Client);
+
+                TcpClient server = new TcpClient(Client.Address.ToString(), Client.Port);
+                Stream serverStream = server.GetStream();
+
+                if (OnCreateStream != null)
+                    serverStream = OnCreateStream(this, serverStream, ESource.Server);
+
+                CancellationToken cancellationToken = cancellationTokenSource.Token;
+
                 // Continually do the proxying
                 new Task(() => ProxyClientDataToServer(client, serverStream, clientStream, bufferSize, cancellationToken), cancellationToken).Start();
                 new Task(() => ProxyServerDataToClient(serverStream, clientStream, bufferSize, cancellationToken), cancellationToken).Start();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine(ex.Message);
             }
-
         }
-
         /// <summary>
         /// Stop the Proxy Server
         /// </summary>
@@ -204,6 +213,7 @@ namespace NRepeat
                     Running = false;
                     listener.Stop();
                     cancellationTokenSource.Cancel();
+                    listener = null;
                 }
                 catch (Exception ex)
                 {
@@ -211,18 +221,29 @@ namespace NRepeat
                 }
 
                 cancellationTokenSource = null;
-
             }
         }
-
-        public void Dispose() { Stop(); }
-
-        public TcpProxy(IPEndPoint server, IPEndPoint client, int buffer)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="server">Server EndPoint</param>
+        /// <param name="client">Client EndPoint</param>
+        /// <param name="buffer">Buffer</param>
+        public TcpInvisibleProxy(IPEndPoint server, IPEndPoint client, int buffer)
         {
             Server = server;
             Client = client;
             Buffer = buffer;
         }
-        public TcpProxy(IPEndPoint server, IPEndPoint client) : this(server, client, 4096) { }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="server">Server EndPoint</param>
+        /// <param name="client">Client EndPoint</param>
+        public TcpInvisibleProxy(IPEndPoint server, IPEndPoint client) : this(server, client, 4096) { }
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose() { Stop(); }
     }
 }

@@ -27,6 +27,17 @@ namespace TuringMachine.Agent
                 "AgentClassName=StartProcessAndSendTcpData",
                 "AgentArguments={\"FileName\":\"D:/Fuzzing/vulnserver/vulnserver.exe\",\"Arguments\":\"9{Task000}\",\"ConnectTo\":\"127.0.0.1,9{Task000}\"}",
             };
+
+            args = new string[]
+            {
+                "NumTasks=1",
+                "RetrySeconds=5",
+                "TuringServer=127.0.0.1,7777",
+
+                "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
+                "AgentClassName=StartProcessAndProxy",
+                "AgentArguments={\"FileName\":\"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql.exe\",\"Arguments\":\"-u root -h 192.168.1.5 -P 7{Task000} -e 'select 1,SLEEP(1);'\",\"ConnectTo\":\"192.168.1.5,3306\",\"ListenEndPoint\":\"0.0.0.0,7{Task000}\",\"Type\":\"ClientToServer\"}",
+          };
 #endif
             Config = new AgentConfig();
             try

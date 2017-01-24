@@ -139,7 +139,12 @@ namespace TuringMachine.Core.Detectors.Windows
             if (isAlive == null || isAlive.Invoke(socket, e))
             {
                 foreach (Process p in _Process)
-                    try { p.Kill(); }
+                    try
+                    {
+                        // p.Refresh();
+                        // if (!p.HasExited)
+                        p.Kill();
+                    }
                     catch { }
             }
 

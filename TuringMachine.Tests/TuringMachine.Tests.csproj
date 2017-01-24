@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="DetectorTests.cs" />
     <Compile Include="TuringSocketTests.cs" />
-    <Compile Include="TcpForwarderTests.cs" />
+    <Compile Include="TcpProxyTests.cs" />
     <Compile Include="InputTests.cs" />
     <Compile Include="MutationalTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

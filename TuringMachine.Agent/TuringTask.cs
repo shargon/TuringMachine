@@ -139,7 +139,7 @@ namespace TuringMachine.Agent
                 // Other result
                 else Socket.SendMessage(Result);
 
-                TuringMessage msg = Socket.ReadMessage<TuringMessage>();
+                //TuringMessage msg = Socket.ReadMessage<TuringMessage>();
 
                 Socket.Dispose();
                 Socket = null;
