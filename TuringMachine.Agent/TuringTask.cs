@@ -134,10 +134,14 @@ namespace TuringMachine.Agent
 
             if (Socket != null)
             {
-                // Test
-                if (Result == null) Socket.SendMessage(new EndTaskMessage(EFuzzingReturn.Test));
-                // Other result
-                else Socket.SendMessage(Result);
+                try
+                {
+                    // Test
+                    if (Result == null) Socket.SendMessage(new EndTaskMessage(EFuzzingReturn.Test));
+                    // Other result
+                    else Socket.SendMessage(Result);
+                }
+                catch { }
 
                 //TuringMessage msg = Socket.ReadMessage<TuringMessage>();
 
