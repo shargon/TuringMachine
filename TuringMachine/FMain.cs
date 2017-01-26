@@ -18,8 +18,10 @@ namespace TuringMachine
     public partial class FMain : Form
     {
         class dummyStat : IType { public string Type { get { return "Dummy"; } } }
+
         FuzzerStat<dummyStat> _Stat = new FuzzerStat<dummyStat>(null);
         TuringServer _Fuzzer;
+        Font GridBoldFont;
 
         /// <summary>
         /// Allow edit when is playing
@@ -44,6 +46,7 @@ namespace TuringMachine
             gridConfig.AutoGenerateColumns = false;
             gridInput.AutoGenerateColumns = false;
             gridLog.AutoGenerateColumns = false;
+            GridBoldFont = new Font(gridLog.Font, FontStyle.Bold);
 
             // Default values
             for (int x = 0; x < 100; x++)
@@ -403,6 +406,25 @@ namespace TuringMachine
         void FMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             tbStop_Click(sender, e);
+        }
+        void gridLog_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            DataGridViewRow row = gridLog.Rows[e.RowIndex];
+            DataGridViewCell c = row.Cells["cExploitable"];
+            string v = c.Value.ToString();
+
+            if (v == "UNKNOWN")
+            {
+                c.Style.ForeColor = Color.Black;
+                c.Style.Font = gridLog.Font;
+            }
+            else
+            {
+                c.Style.ForeColor = Color.Red;
+                c.Style.Font = GridBoldFont;
+            }
         }
     }
 }

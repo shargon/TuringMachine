@@ -12,6 +12,7 @@ namespace TuringMachine.Agent
     {
         static AgentConfig Config;
         static bool Cancel = false;
+        static int X = 0, Y = 0;
 
         static int Main(string[] args)
         {
@@ -98,6 +99,10 @@ namespace TuringMachine.Agent
             }
             Console.WriteLine("");
 
+            //Console.WriteLine("");
+            //Console.WriteLine("");
+            //WriteSeparator(true);
+
             TuringTask[] task = new TuringTask[Config.NumTasks];
 
             while (!Cancel)
@@ -171,10 +176,16 @@ namespace TuringMachine.Agent
             }
             catch { }
 
-            WriteSeparator(true);
+            if (X == 0 && Y == 0)
+            {
+                X = Console.CursorLeft;
+                Y = Console.CursorTop;
+            }
+            else Console.SetCursorPosition(X, Y);
 
+            WriteSeparator(true);
             if (taskNum >= 0) Console.WriteLine("Error at task " + taskNum.ToString() + " retry in " + Config.RetrySeconds + " seconds");
-            else Console.WriteLine("Error");
+            else Console.WriteLine(DateTime.Now.ToString("HH:mm:ss") + " - Error");
 
             WriteSeparator();
 
