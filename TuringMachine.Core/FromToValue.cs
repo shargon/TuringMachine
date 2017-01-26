@@ -22,6 +22,7 @@ namespace TuringMachine.Core
         static Type TypeInt32 = typeof(int);
         static Type TypeInt64 = typeof(long);
         static Type TypeUInt64 = typeof(ulong);
+        static Type TypeDouble = typeof(double);
 
         /// <summary>
         /// Class name
@@ -137,11 +138,20 @@ namespace TuringMachine.Core
                     }
                     else
                     {
-                        if (_Type == TypeInt64|| _Type == TypeUInt64)
+                        if (_Type == TypeInt64 || _Type == TypeUInt64)
                         {
                             // Get int byte
                             do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToInt64(From), Convert.ToInt64(To)), _Type); }
                             while (Excludes.Contains(ret));
+                        }
+                        else
+                        {
+                            if (_Type == TypeDouble)
+                            {
+                                // Get double byte
+                                do { ret = (T)Convert.ChangeType(RandomHelper.GetRandom(Convert.ToDouble(From), Convert.ToDouble(To)), _Type); }
+                                while (Excludes.Contains(ret));
+                            }
                         }
                     }
                 }

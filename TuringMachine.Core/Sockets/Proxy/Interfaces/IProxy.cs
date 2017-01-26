@@ -6,7 +6,7 @@ namespace TuringMachine.Core.Sockets.Proxy.Interfaces
     {
         IPEndPoint Server { get; set; }
         int Buffer { get; set; }
-        bool Running { get; set; }
+        bool Running { get; }
         void Start();
         void Stop();
     }

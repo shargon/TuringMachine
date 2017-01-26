@@ -11,7 +11,6 @@ using TuringMachine.Core;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Inputs;
 using TuringMachine.Core.Interfaces;
-using TuringMachine.Core.Sockets;
 using TuringMachine.Forms;
 
 namespace TuringMachine

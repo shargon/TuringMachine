@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Reflection;
 using TuringMachine.Core.Interfaces;
@@ -66,6 +67,12 @@ namespace TuringMachine.Agent
 
             v = GetWord("TuringServer", args);
             if (!string.IsNullOrEmpty(v)) TuringServer = v.ToIpEndPoint();
+
+            if(!string.IsNullOrEmpty(AgentArguments))
+            {
+                AgentArguments = Environment.ExpandEnvironmentVariables(AgentArguments);
+                AgentArguments = File.ReadAllText(AgentArguments);
+            }
         }
         string GetWord(string word, string[] args)
         {

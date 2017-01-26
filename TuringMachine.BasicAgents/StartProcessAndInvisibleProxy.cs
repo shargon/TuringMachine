@@ -13,13 +13,13 @@ using TuringMachine.Core.Sockets.Proxy.Enums;
 
 namespace TuringMachine.BasicAgents
 {
-    public class StartProcessAndProxy : ITuringMachineAgent
+    public class StartProcessAndInvisibleProxy : ITuringMachineAgent
     {
         const string ProxyVarName = "PROXY";
         public enum EFuzzingType
         {
-            ClientToServer,
-            ServerToClient,
+            Server,
+            Client,
         }
 
         /// <summary>
@@ -43,14 +43,18 @@ namespace TuringMachine.BasicAgents
         /// </summary>
         public TimeSpan ConnectTimeout { get; set; }
         /// <summary>
+        /// Exit timeout
+        /// </summary>
+        public TimeSpan ExitTimeout { get; set; }
+        /// <summary>
         /// Type
         /// </summary>
         public EFuzzingType Type { get; set; }
 
-        public StartProcessAndProxy()
+        public StartProcessAndInvisibleProxy()
         {
             ConnectTimeout = TimeSpan.FromSeconds(30);
-            Type = EFuzzingType.ClientToServer;
+            Type = EFuzzingType.Server;
         }
 
         public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
@@ -58,7 +62,7 @@ namespace TuringMachine.BasicAgents
             // Create proxy ( auto-dispose whith socket )
             TcpInvisibleProxy proxy = new TcpInvisibleProxy(ListenEndPoint, ConnectTo) { Tag = socket };
 
-            //proxy.OnCreateStream += Proxy_OnCreateStream;
+            proxy.OnCreateStream += Proxy_OnCreateStream;
             socket[ProxyVarName] = proxy;
             proxy.Start();
 
@@ -67,7 +71,11 @@ namespace TuringMachine.BasicAgents
             {
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
-            });
+                UseShellExecute = false,
+            })
+            {
+                ExitTimeout = ExitTimeout
+            };
         }
 
         Stream Proxy_OnCreateStream(object sender, Stream stream, ESource owner)
@@ -77,8 +85,8 @@ namespace TuringMachine.BasicAgents
 
             switch (Type)
             {
-                case EFuzzingType.ClientToServer: return owner == ESource.Client ? stream : new TuringStream(socket, stream);
-                case EFuzzingType.ServerToClient: return owner == ESource.Server ? stream : new TuringStream(socket, stream);
+                case EFuzzingType.Server: return owner == ESource.Server ? stream : new TuringStream(socket, stream);
+                case EFuzzingType.Client: return owner == ESource.Client ? stream : new TuringStream(socket, stream);
             }
 
             return stream;

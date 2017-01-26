@@ -5,6 +5,10 @@ namespace TuringMachine.Core.FuzzingMethods.Patchs
     public class PatchChange
     {
         /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
         /// Offset
         /// </summary>
         public long Offset { get; set; }
@@ -24,24 +28,25 @@ namespace TuringMachine.Core.FuzzingMethods.Patchs
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="description">Description</param>
         /// <param name="offset">Offset</param>
         /// <param name="remove">Remove</param>
-        public PatchChange(long offset, ushort remove)
+        public PatchChange(string description, long offset, ushort remove)
         {
+            Description = description;
             Offset = offset;
             Remove = remove;
         }
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="description">Description</param>
         /// <param name="offset">Offset</param>
         /// <param name="append">Append</param>
         /// <param name="remove">Remove</param>
-        public PatchChange(long offset, byte[] append, ushort remove)
+        public PatchChange(string description, long offset, byte[] append, ushort remove) : this(description, offset, remove)
         {
-            Offset = offset;
             Append = append;
-            Remove = remove;
         }
         /// <summary>
         /// String representation

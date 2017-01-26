@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -19,9 +21,10 @@ namespace TuringMachine.Core.Sockets.Proxy
         public IPEndPoint Client { get; set; }
         public int Buffer { get; set; }
         public object Tag { get; set; }
-        public bool Running { get; set; }
+        public bool Running { get { return _AcceptConnectionTask != null && _AcceptConnectionTask.Status == TaskStatus.Running; } }
 
-        static TcpListener listener;
+        TcpListener _Listener;
+        Task _AcceptConnectionTask;
         CancellationTokenSource cancellationTokenSource;
 
         public delegate Stream delOnChangeStream(object sender, Stream stream, ESource owner);
@@ -32,21 +35,24 @@ namespace TuringMachine.Core.Sockets.Proxy
         public event EventHandler<ProxyByteDataEventArgs> OnClientBytesTransferedToServer;
         public event EventHandler<ProxyByteDataEventArgs> OnServerBytesTransferedToClient;
 
+        List<TcpClient> _Clients = new List<TcpClient>();
+
         /// <summary>
         /// Start the TCP Proxy
         /// </summary>
         public void Start()
         {
-            if (Running == false)
+            if (Running) return;
+
+            cancellationTokenSource = new CancellationTokenSource();
+            // Check if the listener is null, this should be after the proxy has been stopped
+            if (_Listener == null)
             {
-                cancellationTokenSource = new CancellationTokenSource();
-                // Check if the listener is null, this should be after the proxy has been stopped
-                if (listener == null)
-                {
-                    Running = true;
-                    Task t = new Task(() => { AcceptConnections(); });
-                    t.Start();
-                }
+                _Listener = new TcpListener(Server.Address, Server.Port);
+                _Listener.Start();
+
+                _AcceptConnectionTask = new Task(() => { AcceptConnections(); });
+                _AcceptConnectionTask.Start();
             }
         }
         /// <summary>
@@ -54,16 +60,13 @@ namespace TuringMachine.Core.Sockets.Proxy
         /// </summary>
         void AcceptConnections()
         {
-            listener = new TcpListener(Server.Address, Server.Port);
-            listener.Start();
-
             // If there is an exception we want to output the message to the console for debugging
             try
             {
                 // While the Running bool is true, the listener is not null and there is no cancellation requested
-                while (Running && listener != null && !cancellationTokenSource.Token.IsCancellationRequested)
+                while (_Listener != null && !cancellationTokenSource.Token.IsCancellationRequested)
                 {
-                    TcpClient client = listener.AcceptTcpClient();
+                    TcpClient client = _Listener.AcceptTcpClient();
 
                     if (client != null)
                     {
@@ -112,20 +115,25 @@ namespace TuringMachine.Core.Sockets.Proxy
 
                         OnClientBytesTransferedToServer(this, new ProxyByteDataEventArgs(messageTrimed, ESource.Client));
                     }
+
+                    serverStream.Write(message, 0, clientBytes);
+                    serverStream.Flush();
+
+                    OnClientDataSentToServer?.Invoke(this, new ProxyDataEventArgs(clientBytes));
                 }
-                catch
+                catch // (Exception e)
                 {
                     // Socket error - exit loop.  Client will have to reconnect.
                     break;
                 }
-
-                serverStream.Write(message, 0, clientBytes);
-
-                OnClientDataSentToServer?.Invoke(this, new ProxyDataEventArgs(clientBytes));
             }
 
-            message = null;
-            client.Close();
+            try { client.Close(); } catch { }
+            try { client.Client.Dispose(); } catch { }
+            try { serverStream.Dispose(); } catch { }
+            try { clientStream.Dispose(); } catch { }
+
+            //Stop();
         }
         /// <summary>
         /// Send and receive data between the Server and Client
@@ -157,16 +165,21 @@ namespace TuringMachine.Core.Sockets.Proxy
                     }
 
                     clientStream.Write(message, 0, serverBytes);
+                    clientStream.Flush();
+
+                    OnServerDataSentToClient?.Invoke(this, new ProxyDataEventArgs(serverBytes));
                 }
-                catch
+                catch // (Exception e)
                 {
                     // Server socket error - exit loop.  Client will have to reconnect.
                     break;
                 }
-
-                OnServerDataSentToClient?.Invoke(this, new ProxyDataEventArgs(serverBytes));
             }
-            message = null;
+
+            try { serverStream.Dispose(); } catch { }
+            try { clientStream.Dispose(); } catch { }
+
+            //Stop();
         }
         /// <summary>
         /// Process the client with a predetermined buffer size
@@ -177,18 +190,22 @@ namespace TuringMachine.Core.Sockets.Proxy
         {
             try
             {
+                _Clients.Add(client);
+
                 // Handle this client
                 // Send the server data to client and client data to server - swap essentially.
                 Stream clientStream = client.GetStream();
 
-                if (OnCreateStream != null)
-                    clientStream = OnCreateStream(this, clientStream, ESource.Client);
-
                 TcpClient server = new TcpClient(Client.Address.ToString(), Client.Port);
                 Stream serverStream = server.GetStream();
 
+                _Clients.Add(server);
+
                 if (OnCreateStream != null)
+                {
+                    clientStream = OnCreateStream(this, clientStream, ESource.Client);
                     serverStream = OnCreateStream(this, serverStream, ESource.Server);
+                }
 
                 CancellationToken cancellationToken = cancellationTokenSource.Token;
 
@@ -206,21 +223,43 @@ namespace TuringMachine.Core.Sockets.Proxy
         /// </summary>
         public void Stop()
         {
-            if (listener != null && cancellationTokenSource != null)
+            lock (this)
             {
-                try
-                {
-                    Running = false;
-                    listener.Stop();
-                    cancellationTokenSource.Cancel();
-                    listener = null;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                if (_Listener == null || cancellationTokenSource == null) return;
 
+                try { cancellationTokenSource.Cancel(); } catch { }
                 cancellationTokenSource = null;
+
+                try { _Listener.Stop(); } catch { }
+                try { _Listener.Server.Close(); } catch { }
+                try { _Listener.Server.Dispose(); } catch { }
+
+                _Listener = null;
+            }
+
+            lock (_Clients)
+            {
+                while (_Clients.Count > 0)
+                {
+                    TcpClient tcp = _Clients.FirstOrDefault();
+                    if (tcp == null) return;
+
+                    try { tcp.Close(); } catch { }
+                    try { tcp.Client.Dispose(); } catch { }
+
+                    _Clients.Remove(tcp);
+                }
+            }
+
+            // Wait stop
+            if (_AcceptConnectionTask != null)
+            {
+                try { _AcceptConnectionTask.Wait(); }
+                catch { }
+                try { _AcceptConnectionTask.Dispose(); }
+                catch { }
+
+                _AcceptConnectionTask = null;
             }
         }
         /// <summary>

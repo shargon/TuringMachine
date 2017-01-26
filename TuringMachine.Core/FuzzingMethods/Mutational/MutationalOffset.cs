@@ -99,20 +99,13 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
 
                 _Steps = new MutationalChange[count];
 
-                int w = 0;
-                for (int x = 0, y = 0; x < count; x++)
+                int x = 0;
+                foreach (MutationalChange c in _Changes)
                 {
-                    MutationalChange c = _Changes[y];
                     if (!c.Enabled) continue;
 
-                    if (c.Weight <= w)
-                    {
-                        y++;
-                        w = 0;
-                    }
-                    else w++;
-
-                    _Steps[x] = _Changes[y];
+                    for (int w = 0; w < c.Weight; w++, x++)
+                        _Steps[x] = c;
                 }
             }
             else

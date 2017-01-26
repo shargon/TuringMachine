@@ -55,6 +55,9 @@ namespace TuringMachine.Helpers
                 {
                     foreach (FileEntry f in append)
                     {
+                        if (f.Data == null)
+                            continue;
+
                         using (Stream entryStream = archive.CreateEntry(f.FileName).Open())
                             entryStream.Write(f.Data, 0, f.Data.Length);
                         dv++;

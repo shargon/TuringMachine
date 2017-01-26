@@ -94,12 +94,12 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
             ushort size = _RemoveAndAppendAreSame ? remove : AppendLength.Get();
 
             if (size == 0)
-                return remove > 0 ? new PatchChange(realOffset, remove) : null;
+                return remove > 0 ? new PatchChange(Description, realOffset, remove) : null;
 
             byte[] data = new byte[size];
             RandomHelper.Randomize(data, 0, size, AppendByte);
 
-            return new PatchChange(realOffset, data, remove);
+            return new PatchChange(Description, realOffset, data, remove);
         }
         /// <summary>
         /// String representation

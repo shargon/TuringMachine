@@ -30,6 +30,10 @@ namespace TuringMachine.Core
         /// Path
         /// </summary>
         public string Path { get; set; }
+        /// <summary>
+        /// Explotation result
+        /// </summary>
+        public string ExplotationResult { get; set; }
 
         /// <summary>
         /// Constructor

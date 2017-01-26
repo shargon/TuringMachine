@@ -72,7 +72,8 @@ namespace TuringMachine.Core.FuzzingMethods.Mutational
 
                 // Try change
                 MutationalChange change = cond.Get(stream, x);
-                if (change != null) return change.Process(offset);
+                if (change != null)
+                    return change.Process(offset);
                 x++;
             }
 

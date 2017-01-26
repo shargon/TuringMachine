@@ -94,10 +94,13 @@ namespace TuringMachine.Core.Sockets
             {
                 byte[] data = message.GetData();
 
+                // http://stackoverflow.com/questions/5523565/socket-flush-by-temporarily-enabling-nodelay
+                //_Socket.NoDelay = true;
                 // Send header
                 _Socket.Send(message.GetHeader(data == null ? 0 : data.Length), 0, TuringMessage.HeaderLength, SocketFlags.None);
                 // Send data
                 if (data != null) _Socket.Send(data, 0, data.Length, SocketFlags.None);
+                //_Socket.NoDelay = false;
             }
         }
         /// <summary>
@@ -225,6 +228,7 @@ namespace TuringMachine.Core.Sockets
             }
             if (_Signal != null)
             {
+                try { _Signal.Set(); } catch { }
                 try { _Signal.Dispose(); } catch { }
                 _Signal = null;
             }

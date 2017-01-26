@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Interfaces;
+using TuringMachine.Core.Logs;
 using TuringMachine.Core.Sockets.Enums;
 using TuringMachine.Helpers;
 
@@ -16,6 +18,10 @@ namespace TuringMachine.Core.Sockets.Messages
         /// Data
         /// </summary>
         public byte[] ZipData { get { return _ZipData; } set { _ZipData = value; } }
+        /// <summary>
+        /// Explotation result
+        /// </summary>
+        public EExploitableResult ExplotationResult { get; set; }
         /// <summary>
         /// Result
         /// </summary>
@@ -44,7 +50,7 @@ namespace TuringMachine.Core.Sockets.Messages
 
             if (ZipData != null && ZipData.Length > 0)
             {
-                ZipHelper.AppendOrCreateZip(ref _ZipData, GetLogsEntry(sender));
+                ZipHelper.AppendOrCreateZip(ref _ZipData, GetLogsEntry(sender).Select(u => u.GetZipEntry()));
 
                 // Save
                 if (ZipData != null)
@@ -63,6 +69,7 @@ namespace TuringMachine.Core.Sockets.Messages
                         Input = StringHelper.List2String(sinput, "; "),
                         Config = StringHelper.List2String(sconfig, "; "),
                         Type = Result,
+                        ExplotationResult = ExplotationResult.ToString().Replace("_", " "),
                         Origin = sender.EndPoint.Address,
                         Path = data
                     };
@@ -75,7 +82,7 @@ namespace TuringMachine.Core.Sockets.Messages
         /// Search in socket variables
         /// </summary>
         /// <param name="socket">Socket</param>
-        IEnumerable<ZipHelper.FileEntry> GetLogsEntry(TuringSocket socket)
+        IEnumerable<ILogFile> GetLogsEntry(TuringSocket socket)
         {
             if (socket != null)
                 foreach (string key in socket.Variables.Key)
@@ -101,20 +108,20 @@ namespace TuringMachine.Core.Sockets.Messages
 
                         // Save original input
                         if (cfg.OriginalData != null)
-                            yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1(cfg.OriginalData) + ".dat", cfg.OriginalData);
+                            yield return new MemoryLogFile(dr + "_" + HashHelper.SHA1(cfg.OriginalData) + ".dat", cfg.OriginalData);
 
                         if (!string.IsNullOrEmpty(cfg.Info))
                         {
                             // Save info
                             byte[] data = Encoding.UTF8.GetBytes(cfg.Info);
-                            yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1(data) + ".txt", data);
+                            yield return new MemoryLogFile(dr + "_" + HashHelper.SHA1(data) + ".txt", data);
                         }
 
                         if (cfg.Patch != null)
                         {
                             // Save patch
                             byte[] bjson = Encoding.UTF8.GetBytes(cfg.Patch.ToJson());
-                            yield return new ZipHelper.FileEntry(dr + "_" + HashHelper.SHA1(bjson) + ".fpatch", bjson);
+                            yield return new MemoryLogFile(dr + "_" + HashHelper.SHA1(bjson) + ".fpatch", bjson);
                         }
                     }
                 }

@@ -33,20 +33,21 @@ namespace TuringMachine.Core
             _Socket = socket;
 
             socket.EnqueueMessages = true;
+
             if (stream != null)
             {
                 socket.SendMessage(new OpenStreamMessageRequest()
                 {
-                    RequireStream = true,
-                    CanRead = stream.CanRead,
-                    CanSeek = stream.CanSeek,
-                    CanTimeout = stream.CanTimeout,
-                    CanWrite = stream.CanWrite
+                    UseMemoryStream = true,
+                    //CanRead = stream.CanRead,
+                    //CanSeek = stream.CanSeek,
+                    //CanTimeout = stream.CanTimeout,
+                    //CanWrite = stream.CanWrite
                 });
             }
             else
             {
-                socket.SendMessage(new OpenStreamMessageRequest() { RequireStream = false });
+                socket.SendMessage(new OpenStreamMessageRequest() { UseMemoryStream = false });
             }
 
             OpenStreamMessageResponse ret = socket.ReadMessage<OpenStreamMessageResponse>();
@@ -195,21 +196,26 @@ namespace TuringMachine.Core
         {
             if (count <= 0) return;
 
-            byte[] send;
-            if (offset != 0 || count != buffer.Length)
-            {
-                // Copy buffer
-                send = new byte[count];
-                Array.Copy(buffer, offset, send, 0, count);
-            }
-            else
-            {
-                send = buffer;
-            }
-            _Socket.SendMessage(new StreamWriteMessageRequest(_StreamId) { Data = send });
+            //byte[] send;
+            //if (offset != 0 || count != buffer.Length)
+            //{
+            //    // Copy buffer
+            //    send = new byte[count];
+            //    Array.Copy(buffer, offset, send, 0, count);
+            //}
+            //else
+            //{
+            //    send = buffer;
+            //}
+            //_Socket.SendMessage(new StreamWriteMessageRequest(_StreamId) { Data = send });
 
-            BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
-            if (!ret.Result) throw (new Exception("Error writting stream"));
+            //BoolMessageResponse ret = _Socket.ReadMessage<BoolMessageResponse>();
+            //if (!ret.Result) throw (new Exception("Error writting stream"));
+
+            if (_Base != null)
+            {
+                _Base.Write(buffer, offset, count);
+            }
         }
     }
 }

@@ -221,26 +221,30 @@ namespace TuringMachine.Core
                             OpenStreamMessageRequest msg = (OpenStreamMessageRequest)message;
                             FuzzingStream stream = GetRandomStream(msg, sender, true, id);
 
-                            if (stream == null) throw new Exception("Not found stream");
+                            if (stream == null) 
+                            {
+                                response = new ExceptionMessage("Not found stream");
+                                break;
+                            }
 
                             sender[id.ToString()] = stream;
 
-                            if (msg.RequireStream)
-                                response = new OpenStreamMessageResponse(id)
-                                {
-                                    CanRead = msg.CanRead,
-                                    CanSeek = msg.CanSeek,
-                                    CanTimeout = msg.CanTimeout,
-                                    CanWrite = msg.CanWrite
-                                };
-                            else
-                                response = new OpenStreamMessageResponse(id)
-                                {
-                                    CanRead = stream.CanRead,
-                                    CanSeek = stream.CanSeek,
-                                    CanTimeout = stream.CanTimeout,
-                                    CanWrite = stream.CanWrite
-                                };
+                            //if (msg.UseMemoryStream)
+                            //    response = new OpenStreamMessageResponse(id)
+                            //    {
+                            //        CanRead = msg.CanRead,
+                            //        CanSeek = msg.CanSeek,
+                            //        CanTimeout = msg.CanTimeout,
+                            //        CanWrite = msg.CanWrite
+                            //    };
+                            //else
+                            response = new OpenStreamMessageResponse(id)
+                            {
+                                CanRead = stream.CanRead,
+                                CanSeek = stream.CanSeek,
+                                CanTimeout = stream.CanTimeout,
+                                CanWrite = stream.CanWrite
+                            };
 
                             break;
                         }
@@ -248,7 +252,11 @@ namespace TuringMachine.Core
                         {
                             GetStreamLengthMessageRequest msg = (GetStreamLengthMessageRequest)message;
                             FuzzingStream stream = (FuzzingStream)sender[msg.Id.ToString()];
-                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                            if (stream == null)
+                            {
+                                response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                                break;
+                            }
 
                             response = new LongMessageResponse(stream.Length);
                             break;
@@ -257,7 +265,11 @@ namespace TuringMachine.Core
                         {
                             GetStreamPositionMessageRequest msg = (GetStreamPositionMessageRequest)message;
                             FuzzingStream stream = (FuzzingStream)sender[msg.Id.ToString()];
-                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                            if (stream == null)
+                            {
+                                response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                                break;
+                            }
 
                             response = new LongMessageResponse(stream.Position);
                             break;
@@ -266,7 +278,11 @@ namespace TuringMachine.Core
                         {
                             SetStreamMessageRequest msg = (SetStreamMessageRequest)message;
                             FuzzingStream stream = (FuzzingStream)sender[msg.Id.ToString()];
-                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                            if (stream == null)
+                            {
+                                response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                                break;
+                            }
 
                             switch (msg.ValueType)
                             {
@@ -281,10 +297,14 @@ namespace TuringMachine.Core
                         {
                             FlushStreamMessageRequest msg = (FlushStreamMessageRequest)message;
                             FuzzingStream stream = (FuzzingStream)sender[msg.Id.ToString()];
-                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+
+                            if (stream == null)
+                            {
+                                response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                                break;
+                            }
 
                             stream.Flush();
-
                             response = new BoolMessageResponse(true);
                             break;
                         }
@@ -292,7 +312,11 @@ namespace TuringMachine.Core
                         {
                             CloseStreamMessageRequest msg = (CloseStreamMessageRequest)message;
                             FuzzingStream stream = (FuzzingStream)sender[msg.Id.ToString()];
-                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                            if (stream == null)
+                            {
+                                response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                                break;
+                            }
 
                             // Save patch for dump
                             sender[msg.Id.ToString()] = null;
@@ -308,7 +332,11 @@ namespace TuringMachine.Core
                         {
                             StreamReadMessageRequest msg = (StreamReadMessageRequest)message;
                             FuzzingStream stream = (FuzzingStream)sender[msg.Id.ToString()];
-                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                            if (stream == null)
+                            {
+                                response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                                break;
+                            }
 
                             if (msg.PreAppend != null)
                             {
@@ -327,7 +355,11 @@ namespace TuringMachine.Core
                         {
                             StreamWriteMessageRequest msg = (StreamWriteMessageRequest)message;
                             FuzzingStream stream = (FuzzingStream)sender[msg.Id.ToString()];
-                            if (stream == null) response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                            if (stream == null)
+                            {
+                                response = new ExceptionMessage("No stream openned with id: " + msg.Id.ToString());
+                                break;
+                            }
 
                             stream.Write(msg.Data, 0, msg.Data.Length);
                             response = new BoolMessageResponse(true);
@@ -344,70 +376,86 @@ namespace TuringMachine.Core
         FuzzingStream GetRandomStream(OpenStreamMessageRequest msg, TuringSocket sender, bool fuzzer, Guid id)
         {
             FuzzerStat<IFuzzingInput> sinput = RandomHelper.GetRandom(Inputs);
-            if (sinput != null)
+
+            MemoryStream binput = null;
+
+            if (!msg.UseMemoryStream)
             {
-                MemoryStream binput = null;
+                IFuzzingInput input = sinput == null ? null : sinput.Source;
+                if (input == null) throw (new Exception("Require input"));
 
-                if (!msg.RequireStream)
+                if (sender["INPUT"] == null)
                 {
-                    IFuzzingInput input = sinput.Source;
-                    if (input == null) throw (new Exception("Require input"));
-
-                    if (sender["INPUT"] == null)
-                    {
-                        List<FuzzerStat<IFuzzingInput>> ls = new List<FuzzerStat<IFuzzingInput>>();
-                        ls.Add(sinput);
-                        sender["INPUT"] = ls;
-                    }
-                    else
-                    {
-                        List<FuzzerStat<IFuzzingInput>> ls = (List<FuzzerStat<IFuzzingInput>>)sender["INPUT"];
-                        ls.Add(sinput);
-                    }
-
-                    binput = new MemoryStream(input.GetStream());
+                    List<FuzzerStat<IFuzzingInput>> ls = new List<FuzzerStat<IFuzzingInput>>();
+                    ls.Add(sinput);
+                    sender["INPUT"] = ls;
                 }
                 else
                 {
-                    binput = new MemoryStream();
+                    List<FuzzerStat<IFuzzingInput>> ls = (List<FuzzerStat<IFuzzingInput>>)sender["INPUT"];
+                    ls.Add(sinput);
                 }
 
-                if (fuzzer)
+                binput = new MemoryStream(input.GetStream());
+            }
+            else
+            {
+                binput = new MemoryStream();
+            }
+
+            FuzzingStream ret = null;
+            if (fuzzer)
+            {
+                FuzzerStat<IFuzzingConfig> sconfig = RandomHelper.GetRandom(Configurations);
+
+                if (sconfig != null && sconfig != null)
                 {
-                    FuzzerStat<IFuzzingConfig> sconfig = RandomHelper.GetRandom(Configurations);
+                    IFuzzingConfig config = sconfig.Source;
+                    if (sconfig == null) throw (new Exception("Require fuzzer configuration"));
 
-                    if (sconfig != null && sconfig != null)
+                    if (sender["CONFIG"] == null)
                     {
-                        IFuzzingConfig config = sconfig.Source;
-                        if (sconfig == null) throw (new Exception("Require fuzzer configuration"));
+                        List<FuzzerStat<IFuzzingConfig>> ls = new List<FuzzerStat<IFuzzingConfig>>();
+                        ls.Add(sconfig);
+                        sender["CONFIG"] = ls;
+                    }
+                    else
+                    {
+                        List<FuzzerStat<IFuzzingConfig>> ls = (List<FuzzerStat<IFuzzingConfig>>)sender["CONFIG"];
+                        ls.Add(sconfig);
+                    }
 
-                        if (sender["CONFIG"] == null)
-                        {
-                            List<FuzzerStat<IFuzzingConfig>> ls = new List<FuzzerStat<IFuzzingConfig>>();
-                            ls.Add(sconfig);
-                            sender["CONFIG"] = ls;
-                        }
-                        else
-                        {
-                            List<FuzzerStat<IFuzzingConfig>> ls = (List<FuzzerStat<IFuzzingConfig>>)sender["CONFIG"];
-                            ls.Add(sconfig);
-                        }
-
-                        FuzzingStream ret = new FuzzingStream(binput, config);
-                        if (ret != null)
-                        {
-                            ret.InputName = sinput.ToString();
-                            ret.ConfigName = sconfig.ToString();
-                        }
-                        return ret;
+                    ret = new FuzzingStream(binput, config);
+                    if (ret != null)
+                    {
+                        ret.InputName = sinput == null ? "None" : sinput.ToString();
+                        ret.ConfigName = sconfig.ToString();
                     }
                 }
-
-                // Disable Fuzzing
-                if (binput == null) return new FuzzingStream(new MemoryStream(), null) { InputName = sinput.ToString() };
-                return new FuzzingStream(binput, null) { InputName = sinput.ToString() };
             }
-            return null;
+
+            if (ret == null)
+            {
+                // Disable Fuzzing
+                if (binput == null) ret = new FuzzingStream(new MemoryStream(), null)
+                {
+                    InputName = sinput == null ? "None" : sinput.ToString()
+                };
+                else ret = new FuzzingStream(binput, null)
+                {
+                    InputName = sinput == null ? "None" : sinput.ToString()
+                };
+            }
+
+            //if (!msg.RequireStream)
+            //{
+            //    ret.CanRead = msg.CanRead;
+            //    ret.CanSeek = msg.CanSeek;
+            //    ret.CanTimeout = msg.CanTimeout;
+            //    ret.CanWrite = msg.CanWrite;
+            //}
+
+            return ret;
         }
     }
 }

@@ -3,10 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using TuringMachine.Core.Arguments;
+using TuringMachine.Core.Enums;
+using TuringMachine.Core.Helpers;
 using TuringMachine.Core.Interfaces;
+using TuringMachine.Core.Logs;
 using TuringMachine.Core.Sockets;
 using TuringMachine.Helpers;
 
@@ -32,6 +37,11 @@ namespace TuringMachine.Core.Detectors.Windows
         RegistryView _View;
 
         public event EventHandler OnDispose;
+
+        /// <summary>
+        /// Exit timeout
+        /// </summary>
+        public TimeSpan ExitTimeout { get; set; }
 
         /// <summary>
         /// Load CrashPath
@@ -116,11 +126,19 @@ namespace TuringMachine.Core.Detectors.Windows
         /// <param name="socket">Socket</param>
         /// <param name="zipCrashData">Crash data</param>
         /// <param name="isAlive">IsAlive</param>
-        public override bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, ITuringMachineAgent.delItsAlive isAlive, TuringAgentArgs e)
+        public override bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, out EExploitableResult exploitResult, ITuringMachineAgent.delItsAlive isAlive, TuringAgentArgs e)
         {
             zipCrashData = null;
 
-            if (_Process == null) return false;
+            if (_Process == null)
+            {
+                exploitResult = EExploitableResult.NOT_DUMP_FOUND;
+                return false;
+            }
+
+            // Wait for exit
+            foreach (Process p in _Process)
+                try { p.WaitForExit((int)ExitTimeout.TotalMilliseconds); } catch { }
 
             Thread.Sleep(500);
 
@@ -128,7 +146,7 @@ namespace TuringMachine.Core.Detectors.Windows
             bool isBreak = GetStoreLocation() != _StoreLocation;
 
             // Search file 
-            if (!isBreak)
+            if (!isBreak && _FileNames != null)
                 foreach (string file in _FileNames)
                     if (File.Exists(file)) { isBreak = true; break; }
 
@@ -148,60 +166,32 @@ namespace TuringMachine.Core.Detectors.Windows
                     catch { }
             }
 
-            // Wait for exit
-            foreach (Process p in _Process)
-                try { p.WaitForExit(); } catch { }
+            List<ILogFile> fileAppend = new List<ILogFile>();
+            exploitResult = EExploitableResult.NOT_DUMP_FOUND;
+
+            if (_FileNames != null)
+                foreach (string f in _FileNames)
+                    fileAppend.Add(new LogFile(f, isBreak ? TimeSpan.FromSeconds(2) : TimeSpan.Zero));
+
+            for (int x = 0, m = fileAppend.Count; x < m; x++)
+            {
+                LogFile dump = (LogFile)fileAppend[x];
+
+                if (dump.FileName.ToLowerInvariant().EndsWith(".dmp"))
+                {
+                    string log;
+                    exploitResult = WinDbgHelper.CheckMemoryDump(dump.Path, out log);
+                    if (!string.IsNullOrEmpty(log))
+                        fileAppend.Add(new MemoryLogFile("exploitable.log", Encoding.UTF8.GetBytes(log)));
+                }
+            }
 
             // Compress to zip
             byte[] zip = null;
-            if (ZipHelper.AppendOrCreateZip(ref zip, GetDumpFiles(_FileNames, isBreak)) > 0 && zip != null && zip.Length > 0)
+            if (ZipHelper.AppendOrCreateZip(ref zip, fileAppend.Select(u => u.GetZipEntry())) > 0 && zip != null && zip.Length > 0)
                 zipCrashData = zip;
 
             return zipCrashData != null && zipCrashData.Length > 0;
-        }
-        IEnumerable<ZipHelper.FileEntry> GetDumpFiles(string[] fileNames, bool isBreak)
-        {
-            foreach (string file in fileNames)
-            {
-                Stream fread = WaitOpenRead(file, isBreak);
-                if (fread == null)
-                    continue;
-
-                byte[] data;
-                using (fread)
-                {
-                    data = new byte[fread.Length];
-                    StreamHelper.ReadFull(fread, data, 0, data.Length);
-                }
-
-                yield return new ZipHelper.FileEntry(Path.GetFileName(file), data);
-            }
-        }
-        /// <summary>
-        /// Wait for read
-        /// </summary>
-        /// <param name="fileName">File</param>
-        /// <param name="ensureFile">EnsureFile</param>
-        Stream WaitOpenRead(string fileName, bool ensureFile)
-        {
-            while (true)
-            {
-                if (!File.Exists(fileName))
-                {
-                    if (ensureFile)
-                    {
-                        Thread.Sleep(1000);
-                        if (!File.Exists(fileName)) return null;
-                    }
-                    else return null;
-                }
-
-                try
-                {
-                    return new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.None);
-                }
-                catch { }
-            }
         }
         /// <summary>
         /// Free resources

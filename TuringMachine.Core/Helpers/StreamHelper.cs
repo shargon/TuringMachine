@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace TuringMachine.Core
+namespace TuringMachine.Core.Helpers
 {
     public class StreamHelper
     {

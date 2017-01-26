@@ -31,6 +31,10 @@ namespace TuringMachine.BasicAgents
         /// Connect timeout
         /// </summary>
         public TimeSpan ConnectTimeout { get; set; }
+        /// <summary>
+        /// Exit timeout
+        /// </summary>
+        public TimeSpan ExitTimeout { get; set; }
 
         public StartProcessAndSendTcpData()
         {
@@ -43,8 +47,12 @@ namespace TuringMachine.BasicAgents
             return new WERDetector(new ProcessStartInfo(FileName, Arguments)
             {
                 CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden
-            });
+                WindowStyle = ProcessWindowStyle.Hidden,
+                UseShellExecute = false,
+            })
+            {
+                ExitTimeout = ExitTimeout
+            };
         }
         public override void OnRun(TuringSocket socket, TuringAgentArgs e)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using TuringMachine.Core.Helpers;
 using TuringMachine.Helpers;
 
 namespace TuringMachine.Agent
@@ -19,26 +20,32 @@ namespace TuringMachine.Agent
             object dummy = new BasicAgents.StartProcessAndSendTcpData();
             args = new string[]
             {
-                "NumTasks=6",
+                "NumTasks=10",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
 
                 "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
                 "AgentClassName=StartProcessAndSendTcpData",
-                "AgentArguments={\"FileName\":\"D:/Fuzzing/vulnserver/vulnserver.exe\",\"Arguments\":\"9{Task000}\",\"ConnectTo\":\"127.0.0.1,9{Task000}\"}",
+                "AgentArguments=cfg_vulnserver.json",
             };
 
             args = new string[]
             {
-                "NumTasks=1",
+                "NumTasks=10",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
 
                 "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
-                "AgentClassName=StartProcessAndProxy",
-                "AgentArguments={\"FileName\":\"C:/Program Files/MySQL/MySQL Server 5.7/bin/mysql.exe\",\"Arguments\":\"-u root -h 192.168.1.5 -P 7{Task000} -e 'select 1,SLEEP(1);'\",\"ConnectTo\":\"192.168.1.5,3306\",\"ListenEndPoint\":\"0.0.0.0,7{Task000}\",\"Type\":\"ClientToServer\"}",
-          };
+                "AgentClassName=StartProcessAndInvisibleProxy",
+                "AgentArguments=cfg_mysql.json",
+            };
 #endif
+
+            // Initialize winDbg !exploitable
+            WinDbgHelper.WinDbgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Windows Kits\10\Debuggers\x64\windbg.exe");
+            if (!File.Exists(WinDbgHelper.WinDbgPath)) WinDbgHelper.WinDbgPath = null;
+
+            // Parse arguments
             Config = new AgentConfig();
             try
             {
@@ -68,14 +75,14 @@ namespace TuringMachine.Agent
             Console.WriteLine("Configuration");
             WriteSeparator(true);
 
-            Console.WriteLine("          Server : " + Config.TuringServer.ToString());
-            Console.WriteLine("           Tasks : " + Config.NumTasks.ToString());
+            Console.WriteLine("            Server : " + Config.TuringServer.ToString());
+            Console.WriteLine("             Tasks : " + Config.NumTasks.ToString());
             WriteSeparator();
             Console.WriteLine("Agent");
             WriteSeparator();
 
-            Console.WriteLine("         Library : " + Config.AgentLibrary);
-            Console.WriteLine("           Class : " + agent.ToString());
+            Console.WriteLine("           Library : " + Config.AgentLibrary);
+            Console.WriteLine("             Class : " + agent.ToString());
 
             if (!string.IsNullOrEmpty(Config.AgentArguments))
             {
@@ -86,7 +93,7 @@ namespace TuringMachine.Agent
                 foreach (KeyValuePair<string, object> pi in SerializationHelper.EnumerateFromJson(Config.AgentArguments))
                 {
                     object val = (pi.Value == null ? "<NULL>" : pi.Value.ToString());
-                    Console.WriteLine("   " + pi.Key.PadLeft(13, ' ') + " : " + val.ToString());
+                    Console.WriteLine("   " + pi.Key.PadLeft(15, ' ') + " : " + val.ToString());
                 }
             }
             Console.WriteLine("");
@@ -132,6 +139,8 @@ namespace TuringMachine.Agent
                             return 1;
                         }
 
+                        //try { t.InternalJob(); }
+                        //catch (Exception exx) { }
                         t.Task.Start();
                         continue;
                     }

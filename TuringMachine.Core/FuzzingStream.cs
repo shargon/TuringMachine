@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using TuringMachine.Core.Collections;
 using TuringMachine.Core.FuzzingMethods.Patchs;
+using TuringMachine.Core.Helpers;
 using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core

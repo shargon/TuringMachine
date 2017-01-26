@@ -11,13 +11,13 @@ namespace TuringMachine.Core
         /// </summary>
         public T Source { get { return _Source; } }
         /// <summary>
-        /// Description
-        /// </summary>
-        public string Description { get { return ToString(); } }
-        /// <summary>
         /// Type
         /// </summary>
-        public string Type { get { return _Source.Type; } }
+        public string Type { get { return _Source == null ? null : _Source.Type; } }
+        /// <summary>
+        /// Description
+        /// </summary>
+        public string Description { get { return ToString(false); } }
         /// <summary>
         /// Count
         /// </summary>
@@ -65,8 +65,20 @@ namespace TuringMachine.Core
         /// <summary>
         /// String representation
         /// </summary>
-        public override string ToString()
+        public override string ToString() { return ToString(false); }
+        /// <summary>
+        /// String representation
+        /// </summary>
+        /// <param name="withData">With data</param>
+        public string ToString(bool withData)
         {
+            if (withData)
+            {
+                if (_Source == null) return "Tests: " + Tests.ToString() + " - Crashes: " + Crashes.ToString() + " - Fails: " + Fails.ToString();
+                return _Source.ToString() + " {Tests: " + Tests.ToString() + " - Crashes: " + Crashes.ToString() + " - Fails: " + Fails.ToString() + "}";
+            }
+
+            if (_Source == null) return "";
             return _Source.ToString();
         }
     }

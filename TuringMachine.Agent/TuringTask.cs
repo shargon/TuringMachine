@@ -61,44 +61,51 @@ namespace TuringMachine.Agent
         public void ConnectTo(IPEndPoint remoteEndPoint)
         {
             Socket = TuringSocket.ConnectTo(remoteEndPoint);
+            Socket.EnqueueMessages = true;
 
-            Task = new Task<EFuzzingReturn>(() =>
+            Task = new Task<EFuzzingReturn>(InternalJob);
+        }
+        EFuzzingReturn InternalJob()
+        {
+            TuringAgentArgs e = new TuringAgentArgs();
+
+            ICrashDetector crash = null;
+            try
             {
-                TuringAgentArgs e = new TuringAgentArgs();
+                //Agent.OnLoad(Socket, e);
 
-                ICrashDetector crash = null;
-                try
+                // Create detector
+                crash = Agent.GetCrashDetector(Socket, e);
+                if (crash == null) return EFuzzingReturn.Fail;
+
+                // Run action
+
+                Agent.OnRun(Socket, e);
+
+                byte[] zipData;
+                EExploitableResult res;
+
+                if (crash.IsCrashed(Socket, out zipData, out res, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive), e))
                 {
-                    //Agent.OnLoad(Socket, e);
-
-                    // Create detector
-                    crash = Agent.GetCrashDetector(Socket, e);
-                    if (crash == null) return EFuzzingReturn.Fail;
-
-                    // Run action
-
-                    Agent.OnRun(Socket, e);
-
-                    byte[] zipData;
-
-                    if (crash.IsCrashed(Socket, out zipData, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive), e))
+                    Result = new EndTaskMessage(EFuzzingReturn.Crash)
                     {
-                        Result = new EndTaskMessage(EFuzzingReturn.Crash) { ZipData = zipData, };
-                        return EFuzzingReturn.Crash;
-                    }
+                        ZipData = zipData,
+                        ExplotationResult = res
+                    };
+                    return EFuzzingReturn.Crash;
                 }
-                catch (Exception ex)
-                {
-                    throw (ex);
-                }
-                finally
-                {
-                    // Free and return
-                    if (crash != null && crash is IDisposable) ((IDisposable)crash).Dispose();
-                    //Agent.OnFree(Socket, e);
-                }
-                return EFuzzingReturn.Test;
-            });
+            }
+            catch (Exception ex)
+            {
+                //throw (ex);
+            }
+            finally
+            {
+                // Free and return
+                if (crash != null && crash is IDisposable) ((IDisposable)crash).Dispose();
+                //Agent.OnFree(Socket, e);
+            }
+            return EFuzzingReturn.Test;
         }
         /// <summary>
         /// Set exception
@@ -143,7 +150,11 @@ namespace TuringMachine.Agent
                 }
                 catch { }
 
-                //TuringMessage msg = Socket.ReadMessage<TuringMessage>();
+                try
+                {
+                    TuringMessage msg = Socket.ReadMessage<TuringMessage>();
+                }
+                catch { }
 
                 Socket.Dispose();
                 Socket = null;

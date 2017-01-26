@@ -45,6 +45,17 @@ namespace TuringMachine.Helpers
             return _Rand.Next(from, to + 1);
         }
         /// <summary>
+        /// Return next int
+        /// </summary>
+        /// <param name="from">From byte</param>
+        /// <param name="to">To byte</param>
+        public static double GetRandom(double from, double to)
+        {
+            if (from == to) return to;
+
+            return _Rand.NextDouble() * (to - from) + from;
+        }
+        /// <summary>
         /// Return random percent is checked
         /// </summary>
         /// <param name="percent">Percent</param>
