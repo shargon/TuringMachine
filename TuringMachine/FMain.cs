@@ -12,6 +12,7 @@ using TuringMachine.Core.Enums;
 using TuringMachine.Core.Inputs;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Forms;
+using TuringMachine.Generator;
 
 namespace TuringMachine
 {
@@ -438,6 +439,11 @@ namespace TuringMachine
                 c.Style.SelectionBackColor = Color.Orange;
                 c.Style.SelectionForeColor = Color.Brown;
             }
+        }
+        void generatorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FGenerator f = new FGenerator();
+            f.Show();
         }
     }
 }

@@ -60,6 +60,10 @@
       <Project>{255b9399-ea53-41c5-8272-389b43b48764}</Project>
       <Name>TuringMachine.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TuringMachine.Generator\TuringMachine.Generator.csproj">
+      <Project>{52eed1eb-08fe-40c9-905d-87c166198951}</Project>
+      <Name>TuringMachine.Generator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TuringMachine.Helpers\TuringMachine.Helpers.csproj">
       <Project>{9775daa2-77c6-490b-8603-db3ee9e2ead2}</Project>
       <Name>TuringMachine.Helpers</Name>

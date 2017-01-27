@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -133,6 +136,10 @@
       <Project>{255B9399-EA53-41C5-8272-389B43B48764}</Project>
       <Name>TuringMachine.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TuringMachine.Generator\TuringMachine.Generator.csproj">
+      <Project>{52eed1eb-08fe-40c9-905d-87c166198951}</Project>
+      <Name>TuringMachine.Generator</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\add_execute.png" />
@@ -154,6 +161,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\empty_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\puzzle_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

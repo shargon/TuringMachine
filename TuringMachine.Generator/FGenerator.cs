@@ -8,12 +8,12 @@ using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Generator
 {
-    public partial class FMain : Form
+    public partial class FGenerator : Form
     {
         string _LastFile = "";
         IFuzzingConfig _Cur;
 
-        public FMain()
+        public FGenerator()
         {
             InitializeComponent();
             NewFile();
