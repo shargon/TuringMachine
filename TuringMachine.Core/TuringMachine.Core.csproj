@@ -67,6 +67,7 @@
     <Compile Include="FuzzingLogInfo.cs" />
     <Compile Include="FuzzingMethods\Patchs\PatchConfig.cs" />
     <Compile Include="Helpers\WinDbgHelper.cs" />
+    <Compile Include="Inputs\EmptyFuzzingInput.cs" />
     <Compile Include="Interfaces\IGetPatch.cs" />
     <Compile Include="Interfaces\ILogFile.cs" />
     <Compile Include="Interfaces\ITuringMachineAgent.cs" />

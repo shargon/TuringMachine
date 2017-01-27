@@ -34,21 +34,7 @@ namespace TuringMachine.Core
 
             socket.EnqueueMessages = true;
 
-            if (stream != null)
-            {
-                socket.SendMessage(new OpenStreamMessageRequest()
-                {
-                    UseMemoryStream = true,
-                    //CanRead = stream.CanRead,
-                    //CanSeek = stream.CanSeek,
-                    //CanTimeout = stream.CanTimeout,
-                    //CanWrite = stream.CanWrite
-                });
-            }
-            else
-            {
-                socket.SendMessage(new OpenStreamMessageRequest() { UseMemoryStream = false });
-            }
+            socket.SendMessage(new OpenStreamMessageRequest());
 
             OpenStreamMessageResponse ret = socket.ReadMessage<OpenStreamMessageResponse>();
 

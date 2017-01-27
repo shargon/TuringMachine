@@ -26,7 +26,7 @@ namespace TuringMachine
         /// <summary>
         /// Allow edit when is playing
         /// </summary>
-        const bool AllowHotEdit = false;
+        const bool AllowHotEdit = true;
 
         public FMain()
         {
@@ -146,6 +146,10 @@ namespace TuringMachine
                 if (dialog.ShowDialog() == DialogResult.OK)
                     _Fuzzer.AddInput(new ExecutionFuzzingInput(dialog.FileName, dialog.Arguments));
             }
+        }
+        void manualStreamToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _Fuzzer.AddInput(new EmptyFuzzingInput());
         }
         void randomToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -306,12 +310,15 @@ namespace TuringMachine
         {
             if (!AllowHotEdit && _Fuzzer.State != EFuzzerState.Stopped) return;
 
-            List<object> l = new List<object>();
-            foreach (DataGridViewRow r in grid.SelectedRows)
-                l.Add(r.DataBoundItem);
+            lock (collection)
+            {
+                List<object> l = new List<object>();
+                foreach (DataGridViewRow r in grid.SelectedRows)
+                    l.Add(r.DataBoundItem);
 
-            foreach (object o in l)
-                collection.Remove(o);
+                foreach (object o in l)
+                    collection.Remove(o);
+            }
         }
         void gridInput_SelectionChanged(object sender, EventArgs e)
         {
@@ -431,22 +438,6 @@ namespace TuringMachine
                 c.Style.SelectionBackColor = Color.Orange;
                 c.Style.SelectionForeColor = Color.Brown;
             }
-        }
-        void gridConfig_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (e.ColumnIndex < 0) return;
-
-            DataGridView grid = (DataGridView)sender;
-            DataGridViewColumn dc = grid.Columns[e.ColumnIndex];
-
-            //if (dc.HeaderCell.SortGlyphDirection == SortOrder.Ascending)
-            //    grid.Sort(dc, ListSortDirection.Descending);
-            //else
-            //    grid.Sort(dc, ListSortDirection.Descending);
-        }
-        void gridConfig_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
-        {
-            
         }
     }
 }

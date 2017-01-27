@@ -32,6 +32,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -40,10 +44,6 @@
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gridInput = new System.Windows.Forms.DataGridView();
             this.cInputsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cInputDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,16 +51,16 @@
             this.cInputFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cInputCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gridLog = new System.Windows.Forms.DataGridView();
+            this.cLogDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogOrigin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cExploitable = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cInputConfig = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cLogGoto = new System.Windows.Forms.DataGridViewButtonColumn();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.folderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tcpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.randomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridConfig = new System.Windows.Forms.DataGridView();
             this.cConfigType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cConfigDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,10 +69,6 @@
             this.cConfigCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
@@ -80,23 +76,28 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip4 = new System.Windows.Forms.ToolStrip();
-            this.tbPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.tbPause = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.tbStop = new System.Windows.Forms.ToolStripButton();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveInputWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.originalInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cLogDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cLogOrigin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cLogType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cExploitable = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cLogInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cInputConfig = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cLogGoto = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.folderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tcpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.randomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.manualStreamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.tbPlay = new System.Windows.Forms.ToolStripButton();
+            this.tbPause = new System.Windows.Forms.ToolStripButton();
+            this.tbStop = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.gridInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLog)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -141,9 +142,7 @@
             this.gridInput.Size = new System.Drawing.Size(444, 218);
             this.gridInput.TabIndex = 0;
             this.gridInput.VirtualMode = true;
-            this.gridInput.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridConfig_ColumnHeaderMouseClick);
             this.gridInput.SelectionChanged += new System.EventHandler(this.gridInput_SelectionChanged);
-            this.gridInput.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.gridConfig_SortCompare);
             this.gridInput.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gridInput_MouseClick);
             // 
             // cInputsType
@@ -220,8 +219,71 @@
             this.gridLog.VirtualMode = true;
             this.gridLog.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridLog_CellContentClick);
             this.gridLog.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.gridLog_CellFormatting);
-            this.gridLog.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridConfig_ColumnHeaderMouseClick);
-            this.gridLog.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.gridConfig_SortCompare);
+            // 
+            // cLogDate
+            // 
+            this.cLogDate.DataPropertyName = "Date";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cLogDate.DefaultCellStyle = dataGridViewCellStyle4;
+            this.cLogDate.HeaderText = "Date";
+            this.cLogDate.Name = "cLogDate";
+            this.cLogDate.ReadOnly = true;
+            this.cLogDate.Width = 110;
+            // 
+            // cLogOrigin
+            // 
+            this.cLogOrigin.DataPropertyName = "Origin";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cLogOrigin.DefaultCellStyle = dataGridViewCellStyle5;
+            this.cLogOrigin.HeaderText = "Origin";
+            this.cLogOrigin.Name = "cLogOrigin";
+            this.cLogOrigin.ReadOnly = true;
+            this.cLogOrigin.Width = 90;
+            // 
+            // cLogType
+            // 
+            this.cLogType.DataPropertyName = "Type";
+            this.cLogType.HeaderText = "Type";
+            this.cLogType.Name = "cLogType";
+            this.cLogType.ReadOnly = true;
+            this.cLogType.Width = 45;
+            // 
+            // cExploitable
+            // 
+            this.cExploitable.DataPropertyName = "ExplotationResult";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cExploitable.DefaultCellStyle = dataGridViewCellStyle6;
+            this.cExploitable.HeaderText = "Exploitable";
+            this.cExploitable.Name = "cExploitable";
+            this.cExploitable.ReadOnly = true;
+            this.cExploitable.Width = 120;
+            // 
+            // cLogInput
+            // 
+            this.cLogInput.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cLogInput.DataPropertyName = "Input";
+            this.cLogInput.HeaderText = "Input";
+            this.cLogInput.Name = "cLogInput";
+            this.cLogInput.ReadOnly = true;
+            // 
+            // cInputConfig
+            // 
+            this.cInputConfig.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.cInputConfig.DataPropertyName = "Config";
+            this.cInputConfig.HeaderText = "Config";
+            this.cInputConfig.Name = "cInputConfig";
+            this.cInputConfig.ReadOnly = true;
+            // 
+            // cLogGoto
+            // 
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.NullValue = ">";
+            this.cLogGoto.DefaultCellStyle = dataGridViewCellStyle7;
+            this.cLogGoto.HeaderText = "Open";
+            this.cLogGoto.Name = "cLogGoto";
+            this.cLogGoto.ReadOnly = true;
+            this.cLogGoto.ToolTipText = "Open path";
+            this.cLogGoto.Width = 65;
             // 
             // splitContainer1
             // 
@@ -266,74 +328,6 @@
             this.toolStripLabel1.Size = new System.Drawing.Size(40, 31);
             this.toolStripLabel1.Text = "Inputs";
             // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Enabled = false;
-            this.toolStripButton1.Image = global::TuringMachine.Res.trash;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(36, 31);
-            this.toolStripButton1.Text = "Remove selected";
-            this.toolStripButton1.ToolTipText = "Remove selected";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // toolStripDropDownButton1
-            // 
-            this.toolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.folderToolStripMenuItem,
-            this.tcpToolStripMenuItem,
-            this.executeToolStripMenuItem,
-            this.randomToolStripMenuItem});
-            this.toolStripDropDownButton1.Image = global::TuringMachine.Res.add;
-            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(45, 31);
-            this.toolStripDropDownButton1.ToolTipText = "Add";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.Image = global::TuringMachine.Res.add_file;
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.fileToolStripMenuItem.Text = "File";
-            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
-            // 
-            // folderToolStripMenuItem
-            // 
-            this.folderToolStripMenuItem.Image = global::TuringMachine.Res.add_folder;
-            this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-            this.folderToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.folderToolStripMenuItem.Text = "Folder";
-            this.folderToolStripMenuItem.Click += new System.EventHandler(this.folderToolStripMenuItem_Click);
-            // 
-            // tcpToolStripMenuItem
-            // 
-            this.tcpToolStripMenuItem.Image = global::TuringMachine.Res.add_socket;
-            this.tcpToolStripMenuItem.Name = "tcpToolStripMenuItem";
-            this.tcpToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.tcpToolStripMenuItem.Text = "Tcp Query";
-            this.tcpToolStripMenuItem.Click += new System.EventHandler(this.socketToolStripMenuItem_Click);
-            // 
-            // executeToolStripMenuItem
-            // 
-            this.executeToolStripMenuItem.Image = global::TuringMachine.Res.add_execute;
-            this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
-            this.executeToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.executeToolStripMenuItem.Text = "Execute";
-            this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
-            // 
-            // randomToolStripMenuItem
-            // 
-            this.randomToolStripMenuItem.Image = global::TuringMachine.Res.add_random;
-            this.randomToolStripMenuItem.Name = "randomToolStripMenuItem";
-            this.randomToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.randomToolStripMenuItem.Text = "Random";
-            this.randomToolStripMenuItem.Click += new System.EventHandler(this.randomToolStripMenuItem_Click);
-            // 
             // gridConfig
             // 
             this.gridConfig.AllowUserToAddRows = false;
@@ -358,9 +352,7 @@
             this.gridConfig.Size = new System.Drawing.Size(464, 218);
             this.gridConfig.TabIndex = 2;
             this.gridConfig.VirtualMode = true;
-            this.gridConfig.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gridConfig_ColumnHeaderMouseClick);
             this.gridConfig.SelectionChanged += new System.EventHandler(this.gridConfig_SelectionChanged);
-            this.gridConfig.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.gridConfig_SortCompare);
             // 
             // cConfigType
             // 
@@ -430,47 +422,6 @@
             this.toolStripLabel3.Name = "toolStripLabel3";
             this.toolStripLabel3.Size = new System.Drawing.Size(86, 31);
             this.toolStripLabel3.Text = "Configurations";
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Enabled = false;
-            this.toolStripButton2.Image = global::TuringMachine.Res.trash;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(36, 31);
-            this.toolStripButton2.Text = "Remove selected";
-            this.toolStripButton2.ToolTipText = "Remove selected";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
-            // 
-            // toolStripDropDownButton2
-            // 
-            this.toolStripDropDownButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3});
-            this.toolStripDropDownButton2.Image = global::TuringMachine.Res.add;
-            this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
-            this.toolStripDropDownButton2.Size = new System.Drawing.Size(45, 31);
-            this.toolStripDropDownButton2.ToolTipText = "Add";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Image = global::TuringMachine.Res.add_file;
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(107, 22);
-            this.toolStripMenuItem2.Text = "File";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Image = global::TuringMachine.Res.add_folder;
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(107, 22);
-            this.toolStripMenuItem3.Text = "Folder";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // splitContainer2
             // 
@@ -555,47 +506,15 @@
             this.toolStrip4.Size = new System.Drawing.Size(912, 62);
             this.toolStrip4.TabIndex = 5;
             // 
-            // tbPlay
-            // 
-            this.tbPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbPlay.Image = global::TuringMachine.Res.play;
-            this.tbPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbPlay.Name = "tbPlay";
-            this.tbPlay.Size = new System.Drawing.Size(52, 59);
-            this.tbPlay.Text = "Play";
-            this.tbPlay.Click += new System.EventHandler(this.tbPlay_Click);
-            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 62);
             // 
-            // tbPause
-            // 
-            this.tbPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbPause.Enabled = false;
-            this.tbPause.Image = global::TuringMachine.Res.pause;
-            this.tbPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbPause.Name = "tbPause";
-            this.tbPause.Size = new System.Drawing.Size(52, 59);
-            this.tbPause.Text = "Pause";
-            this.tbPause.Click += new System.EventHandler(this.tbPause_Click);
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 62);
-            // 
-            // tbStop
-            // 
-            this.tbStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbStop.Enabled = false;
-            this.tbStop.Image = global::TuringMachine.Res.stop;
-            this.tbStop.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbStop.Name = "tbStop";
-            this.tbStop.Size = new System.Drawing.Size(52, 59);
-            this.tbStop.Text = "Stop";
-            this.tbStop.Click += new System.EventHandler(this.tbStop_Click);
             // 
             // chart1
             // 
@@ -675,70 +594,155 @@
             this.originalInputToolStripMenuItem.Text = "Original input";
             this.originalInputToolStripMenuItem.Click += new System.EventHandler(this.originalInputToolStripMenuItem_Click);
             // 
-            // cLogDate
+            // toolStripButton1
             // 
-            this.cLogDate.DataPropertyName = "Date";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.cLogDate.DefaultCellStyle = dataGridViewCellStyle4;
-            this.cLogDate.HeaderText = "Date";
-            this.cLogDate.Name = "cLogDate";
-            this.cLogDate.ReadOnly = true;
-            this.cLogDate.Width = 110;
+            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Enabled = false;
+            this.toolStripButton1.Image = global::TuringMachine.Res.trash;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(36, 31);
+            this.toolStripButton1.Text = "Remove selected";
+            this.toolStripButton1.ToolTipText = "Remove selected";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // cLogOrigin
+            // toolStripDropDownButton1
             // 
-            this.cLogOrigin.DataPropertyName = "Origin";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.cLogOrigin.DefaultCellStyle = dataGridViewCellStyle5;
-            this.cLogOrigin.HeaderText = "Origin";
-            this.cLogOrigin.Name = "cLogOrigin";
-            this.cLogOrigin.ReadOnly = true;
-            this.cLogOrigin.Width = 90;
+            this.toolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.folderToolStripMenuItem,
+            this.tcpToolStripMenuItem,
+            this.executeToolStripMenuItem,
+            this.randomToolStripMenuItem,
+            this.manualStreamToolStripMenuItem});
+            this.toolStripDropDownButton1.Image = global::TuringMachine.Res.add;
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(45, 31);
+            this.toolStripDropDownButton1.ToolTipText = "Add";
             // 
-            // cLogType
+            // fileToolStripMenuItem
             // 
-            this.cLogType.DataPropertyName = "Type";
-            this.cLogType.HeaderText = "Type";
-            this.cLogType.Name = "cLogType";
-            this.cLogType.ReadOnly = true;
-            this.cLogType.Width = 45;
+            this.fileToolStripMenuItem.Image = global::TuringMachine.Res.add_file;
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
-            // cExploitable
+            // folderToolStripMenuItem
             // 
-            this.cExploitable.DataPropertyName = "ExplotationResult";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.cExploitable.DefaultCellStyle = dataGridViewCellStyle6;
-            this.cExploitable.HeaderText = "Exploitable";
-            this.cExploitable.Name = "cExploitable";
-            this.cExploitable.ReadOnly = true;
-            this.cExploitable.Width = 120;
+            this.folderToolStripMenuItem.Image = global::TuringMachine.Res.add_folder;
+            this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
+            this.folderToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.folderToolStripMenuItem.Text = "Folder";
+            this.folderToolStripMenuItem.Click += new System.EventHandler(this.folderToolStripMenuItem_Click);
             // 
-            // cLogInput
+            // tcpToolStripMenuItem
             // 
-            this.cLogInput.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cLogInput.DataPropertyName = "Input";
-            this.cLogInput.HeaderText = "Input";
-            this.cLogInput.Name = "cLogInput";
-            this.cLogInput.ReadOnly = true;
+            this.tcpToolStripMenuItem.Image = global::TuringMachine.Res.add_socket;
+            this.tcpToolStripMenuItem.Name = "tcpToolStripMenuItem";
+            this.tcpToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.tcpToolStripMenuItem.Text = "Tcp Query";
+            this.tcpToolStripMenuItem.Click += new System.EventHandler(this.socketToolStripMenuItem_Click);
             // 
-            // cInputConfig
+            // executeToolStripMenuItem
             // 
-            this.cInputConfig.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cInputConfig.DataPropertyName = "Config";
-            this.cInputConfig.HeaderText = "Config";
-            this.cInputConfig.Name = "cInputConfig";
-            this.cInputConfig.ReadOnly = true;
+            this.executeToolStripMenuItem.Image = global::TuringMachine.Res.add_execute;
+            this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
+            this.executeToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.executeToolStripMenuItem.Text = "Execute";
+            this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
             // 
-            // cLogGoto
+            // randomToolStripMenuItem
             // 
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.NullValue = ">";
-            this.cLogGoto.DefaultCellStyle = dataGridViewCellStyle7;
-            this.cLogGoto.HeaderText = "Open";
-            this.cLogGoto.Name = "cLogGoto";
-            this.cLogGoto.ReadOnly = true;
-            this.cLogGoto.ToolTipText = "Open path";
-            this.cLogGoto.Width = 65;
+            this.randomToolStripMenuItem.Image = global::TuringMachine.Res.add_random;
+            this.randomToolStripMenuItem.Name = "randomToolStripMenuItem";
+            this.randomToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.randomToolStripMenuItem.Text = "Random";
+            this.randomToolStripMenuItem.Click += new System.EventHandler(this.randomToolStripMenuItem_Click);
+            // 
+            // manualStreamToolStripMenuItem
+            // 
+            this.manualStreamToolStripMenuItem.Image = global::TuringMachine.Res.empty_icon;
+            this.manualStreamToolStripMenuItem.Name = "manualStreamToolStripMenuItem";
+            this.manualStreamToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
+            this.manualStreamToolStripMenuItem.Text = "Empty";
+            this.manualStreamToolStripMenuItem.Click += new System.EventHandler(this.manualStreamToolStripMenuItem_Click);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Enabled = false;
+            this.toolStripButton2.Image = global::TuringMachine.Res.trash;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(36, 31);
+            this.toolStripButton2.Text = "Remove selected";
+            this.toolStripButton2.ToolTipText = "Remove selected";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
+            // toolStripDropDownButton2
+            // 
+            this.toolStripDropDownButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3});
+            this.toolStripDropDownButton2.Image = global::TuringMachine.Res.add;
+            this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(45, 31);
+            this.toolStripDropDownButton2.ToolTipText = "Add";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Image = global::TuringMachine.Res.add_file;
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(107, 22);
+            this.toolStripMenuItem2.Text = "File";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Image = global::TuringMachine.Res.add_folder;
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(107, 22);
+            this.toolStripMenuItem3.Text = "Folder";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            // 
+            // tbPlay
+            // 
+            this.tbPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbPlay.Image = global::TuringMachine.Res.play;
+            this.tbPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbPlay.Name = "tbPlay";
+            this.tbPlay.Size = new System.Drawing.Size(52, 59);
+            this.tbPlay.Text = "Play";
+            this.tbPlay.Click += new System.EventHandler(this.tbPlay_Click);
+            // 
+            // tbPause
+            // 
+            this.tbPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbPause.Enabled = false;
+            this.tbPause.Image = global::TuringMachine.Res.pause;
+            this.tbPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbPause.Name = "tbPause";
+            this.tbPause.Size = new System.Drawing.Size(52, 59);
+            this.tbPause.Text = "Pause";
+            this.tbPause.Click += new System.EventHandler(this.tbPause_Click);
+            // 
+            // tbStop
+            // 
+            this.tbStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbStop.Enabled = false;
+            this.tbStop.Image = global::TuringMachine.Res.stop;
+            this.tbStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbStop.Name = "tbStop";
+            this.tbStop.Size = new System.Drawing.Size(52, 59);
+            this.tbStop.Text = "Stop";
+            this.tbStop.Click += new System.EventHandler(this.tbStop_Click);
             // 
             // FMain
             // 
@@ -840,6 +844,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cLogInput;
         private System.Windows.Forms.DataGridViewTextBoxColumn cInputConfig;
         private System.Windows.Forms.DataGridViewButtonColumn cLogGoto;
+        private System.Windows.Forms.ToolStripMenuItem manualStreamToolStripMenuItem;
     }
 }
 

@@ -9,6 +9,7 @@ using TuringMachine.Core.Collections;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.FuzzingMethods.Mutational;
 using TuringMachine.Core.FuzzingMethods.Patchs;
+using TuringMachine.Core.Inputs;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Sockets;
 using TuringMachine.Core.Sockets.Enums;
@@ -100,7 +101,7 @@ namespace TuringMachine.Core
                 return;
             }
 
-            Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
+            lock (Inputs) Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
         }
         /// <summary>
         /// Add config
@@ -126,7 +127,7 @@ namespace TuringMachine.Core
                         try { c = MutationConfig.FromJson(File.ReadAllText(file, Encoding.UTF8)); } catch { }
                         if (c != null)
                         {
-                            Configurations.Add(new FuzzerStat<IFuzzingConfig>(c));
+                            lock (Configurations) Configurations.Add(new FuzzerStat<IFuzzingConfig>(c));
                         }
                         break;
                     }
@@ -136,7 +137,7 @@ namespace TuringMachine.Core
                         try { c = PatchConfig.FromJson(File.ReadAllText(file, Encoding.UTF8)); } catch { }
                         if (c != null)
                         {
-                            Configurations.Add(new FuzzerStat<IFuzzingConfig>(c));
+                            lock (Configurations) Configurations.Add(new FuzzerStat<IFuzzingConfig>(c));
                         }
                         break;
                     }
@@ -404,12 +405,10 @@ namespace TuringMachine.Core
             FuzzerStat<IFuzzingInput> sinput = RandomHelper.GetRandom(Inputs);
 
             MemoryStream binput = null;
+            IFuzzingInput input = sinput == null ? null : sinput.Source;
 
-            if (!msg.UseMemoryStream)
+            if (input != null)
             {
-                IFuzzingInput input = sinput == null ? null : sinput.Source;
-                if (input == null) throw (new Exception("Require input"));
-
                 if (sender["INPUT"] == null)
                 {
                     List<FuzzerStat<IFuzzingInput>> ls = new List<FuzzerStat<IFuzzingInput>>();
@@ -421,7 +420,10 @@ namespace TuringMachine.Core
                     List<FuzzerStat<IFuzzingInput>> ls = (List<FuzzerStat<IFuzzingInput>>)sender["INPUT"];
                     ls.Add(sinput);
                 }
+            }
 
+            if (input != null && !(input is EmptyFuzzingInput))
+            {
                 binput = new MemoryStream(input.GetStream());
             }
             else
