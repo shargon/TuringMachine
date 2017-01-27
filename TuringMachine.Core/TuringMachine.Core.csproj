@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments\TuringAgentArgs.cs" />
+    <Compile Include="Collections\SortableBindingList.cs" />
     <Compile Include="Collections\VariableCollection.cs" />
     <Compile Include="Design\IGetValueEditor.cs" />
     <Compile Include="Design\JsonFromToConverter.cs" />

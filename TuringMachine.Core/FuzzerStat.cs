@@ -1,10 +1,16 @@
-﻿using TuringMachine.Core.Enums;
+﻿using System.ComponentModel;
+using TuringMachine.Core.Enums;
 using TuringMachine.Core.Interfaces;
 
 namespace TuringMachine.Core
 {
-    public class FuzzerStat<T> where T : IType
+    public class FuzzerStat<T> : INotifyPropertyChanged
+        where T : IType
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        int _Tests, _Crashes, _Fails;
+
         T _Source;
         /// <summary>
         /// Source
@@ -21,15 +27,45 @@ namespace TuringMachine.Core
         /// <summary>
         /// Count
         /// </summary>
-        public int Tests { get; set; }
+        public int Tests
+        {
+            get { return _Tests; }
+            set
+            {
+                if (_Tests == value) return;
+
+                _Tests = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Tests"));
+            }
+        }
         /// <summary>
         /// Crashes
         /// </summary>
-        public int Crashes { get; set; }
+        public int Crashes
+        {
+            get { return _Crashes; }
+            set
+            {
+                if (_Crashes == value) return;
+
+                _Crashes = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Crashes"));
+            }
+        }
         /// <summary>
         /// Fails
         /// </summary>
-        public int Fails { get; set; }
+        public int Fails
+        {
+            get { return _Fails; }
+            set
+            {
+                if (_Fails == value) return;
+
+                _Fails = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Fails"));
+            }
+        }
 
         /// <summary>
         /// Constructor
@@ -58,9 +94,9 @@ namespace TuringMachine.Core
         /// </summary>
         public void Reset()
         {
-            Tests = 0;
-            Crashes = 0;
-            Fails = 0;
+            _Tests = 0;
+            _Crashes = 0;
+            _Fails = 0;
         }
         /// <summary>
         /// String representation

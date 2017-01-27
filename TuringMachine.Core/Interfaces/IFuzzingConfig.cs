@@ -1,4 +1,6 @@
-﻿namespace TuringMachine.Core.Interfaces
+﻿using System.ComponentModel;
+
+namespace TuringMachine.Core.Interfaces
 {
     public interface IFuzzingConfig : IType, IGetPatch
     {

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using TuringMachine.Core.Collections;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.FuzzingMethods.Mutational;
 using TuringMachine.Core.FuzzingMethods.Patchs;
@@ -26,6 +27,10 @@ namespace TuringMachine.Core
     {
         public delegate void delOnTestEnd(object sender, EFuzzingReturn result, FuzzerStat<IFuzzingInput>[] sinput, FuzzerStat<IFuzzingConfig>[] sconfig);
         public delegate void delOnCrashLog(object sender, FuzzerLog log);
+        public delegate void delAddInput(IFuzzingInput input);
+        public delegate void delAddCOnfig(string file);
+
+        delegate void delOnCrashLogRaw(FuzzerLog log);
 
         public event EventHandler OnListenChange;
 
@@ -33,21 +38,22 @@ namespace TuringMachine.Core
         public event delOnCrashLog OnCrashLog;
 
         bool _Paused;
+        ISynchronizeInvoke _Invoker;
         EFuzzerState _State;
         TuringSocket _Socket;
         IPEndPoint _EndPoint = new IPEndPoint(IPAddress.Any, 7777);
         /// <summary>
         /// Inputs
         /// </summary>
-        public ObservableCollection<FuzzerStat<IFuzzingInput>> Inputs { get; private set; }
+        public SortableBindingList<FuzzerStat<IFuzzingInput>> Inputs { get; private set; }
         /// <summary>
         /// Configurations
         /// </summary>
-        public ObservableCollection<FuzzerStat<IFuzzingConfig>> Configurations { get; private set; }
+        public SortableBindingList<FuzzerStat<IFuzzingConfig>> Configurations { get; private set; }
         /// <summary>
         /// Logs
         /// </summary>
-        public ObservableCollection<FuzzerLog> Logs { get; private set; }
+        public SortableBindingList<FuzzerLog> Logs { get; private set; }
         /// <summary>
         /// Listen address
         /// </summary>
@@ -73,11 +79,12 @@ namespace TuringMachine.Core
         /// <summary>
         /// Constructor
         /// </summary>
-        public TuringServer()
+        public TuringServer(ISynchronizeInvoke invoker)
         {
-            Inputs = new ObservableCollection<FuzzerStat<IFuzzingInput>>();
-            Configurations = new ObservableCollection<FuzzerStat<IFuzzingConfig>>();
-            Logs = new ObservableCollection<FuzzerLog>();
+            _Invoker = invoker;
+            Inputs = new SortableBindingList<FuzzerStat<IFuzzingInput>>();
+            Configurations = new SortableBindingList<FuzzerStat<IFuzzingConfig>>();
+            Logs = new SortableBindingList<FuzzerLog>();
         }
         /// <summary>
         /// Add input
@@ -86,6 +93,12 @@ namespace TuringMachine.Core
         public void AddInput(IFuzzingInput input)
         {
             if (Inputs == null) return;
+
+            if (_Invoker != null && _Invoker.InvokeRequired)
+            {
+                _Invoker.Invoke(new delAddInput(AddInput), new object[] { input });
+                return;
+            }
 
             Inputs.Add(new FuzzerStat<IFuzzingInput>(input));
         }
@@ -96,6 +109,13 @@ namespace TuringMachine.Core
         public void AddConfig(string file)
         {
             if (string.IsNullOrEmpty(file)) return;
+
+            if (_Invoker != null && _Invoker.InvokeRequired)
+            {
+                _Invoker.Invoke(new delAddCOnfig(AddConfig), new object[] { file });
+                return;
+            }
+
             if (!File.Exists(file)) return;
 
             switch (Path.GetExtension(file).ToLowerInvariant())
@@ -130,7 +150,13 @@ namespace TuringMachine.Core
         {
             if (log == null) return;
 
-            Logs.Add(log);
+            if (_Invoker != null && _Invoker.InvokeRequired)
+            {
+                _Invoker.Invoke(new delOnCrashLogRaw(RaiseOnCrashLog), new object[] { log });
+                return;
+            }
+
+            Logs.Insert(0, log);
             OnCrashLog?.Invoke(this, log);
         }
         /// <summary>
@@ -221,7 +247,7 @@ namespace TuringMachine.Core
                             OpenStreamMessageRequest msg = (OpenStreamMessageRequest)message;
                             FuzzingStream stream = GetRandomStream(msg, sender, true, id);
 
-                            if (stream == null) 
+                            if (stream == null)
                             {
                                 response = new ExceptionMessage("Not found stream");
                                 break;

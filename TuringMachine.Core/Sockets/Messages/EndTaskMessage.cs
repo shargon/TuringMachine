@@ -55,7 +55,7 @@ namespace TuringMachine.Core.Sockets.Messages
                 // Save
                 if (ZipData != null)
                 {
-                    string data = Path.Combine(Application.StartupPath, "Dumps", HashHelper.SHA1(ZipData) + ".zip");
+                    string data = Path.Combine(Application.StartupPath, "Dumps", Result.ToString(), ExplotationResult.ToString(), HashHelper.SHA1(ZipData) + ".zip");
 
                     // Create dir
                     if (!Directory.Exists(Path.GetDirectoryName(data)))

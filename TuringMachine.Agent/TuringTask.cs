@@ -26,11 +26,11 @@ namespace TuringMachine.Agent
         /// <summary>
         /// Socket
         /// </summary>
-        private TuringSocket Socket { get; set; }
+        TuringSocket Socket { get; set; }
         /// <summary>
         /// Agent
         /// </summary>
-        private ITuringMachineAgent Agent { get; set; }
+        ITuringMachineAgent Agent { get; set; }
 
         /// <summary>
         /// Result
@@ -67,11 +67,10 @@ namespace TuringMachine.Agent
         }
         EFuzzingReturn InternalJob()
         {
-            TuringAgentArgs e = new TuringAgentArgs();
-
             ICrashDetector crash = null;
             try
             {
+                TuringAgentArgs e = new TuringAgentArgs();
                 //Agent.OnLoad(Socket, e);
 
                 // Create detector
@@ -97,7 +96,7 @@ namespace TuringMachine.Agent
             }
             catch (Exception ex)
             {
-                //throw (ex);
+                throw (ex);
             }
             finally
             {
@@ -118,7 +117,11 @@ namespace TuringMachine.Agent
                 // Error result
                 byte[] zip = null;
                 if (ZipHelper.AppendOrCreateZip(ref zip, new ZipHelper.FileEntry[] { new ZipHelper.FileEntry("exception.txt", Encoding.UTF8.GetBytes(e.ToString())) }) > 0)
-                    Result = new EndTaskMessage(EFuzzingReturn.Fail) { ZipData = zip };
+                    Result = new EndTaskMessage(EFuzzingReturn.Fail)
+                    {
+                        ZipData = zip,
+                        ExplotationResult = EExploitableResult.ERROR_CHECKING
+                    };
             }
         }
         /// <summary>

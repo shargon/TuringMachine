@@ -140,39 +140,33 @@ namespace TuringMachine.Core.Detectors.Windows
             foreach (Process p in _Process)
                 try { p.WaitForExit((int)ExitTimeout.TotalMilliseconds); } catch { }
 
+            // Courtesy wait
             Thread.Sleep(500);
 
-            // Check store location
+            // Check store location for changes
             bool isBreak = GetStoreLocation() != _StoreLocation;
 
-            // Search file 
-            if (!isBreak && _FileNames != null)
-                foreach (string file in _FileNames)
-                    if (File.Exists(file)) { isBreak = true; break; }
+            // Search logs 
+            List<ILogFile> fileAppend = new List<ILogFile>();
 
-            // Wait if break detection
-            if (isBreak) Thread.Sleep(5000);
+            if (_FileNames != null)
+                foreach (string f in _FileNames)
+                {
+                    LogFile l = new LogFile(f);
+
+                    if (l.TryLoadFile(TimeSpan.FromSeconds(isBreak ? 5 : 2)))
+                        fileAppend.Add(l);
+                }
 
             // If its alive kill them
             if (isAlive == null || isAlive.Invoke(socket, e))
             {
                 foreach (Process p in _Process)
-                    try
-                    {
-                        // p.Refresh();
-                        // if (!p.HasExited)
-                        p.Kill();
-                    }
-                    catch { }
+                    try { p.Kill(); } catch { }
             }
 
-            List<ILogFile> fileAppend = new List<ILogFile>();
+            // Check exploitability
             exploitResult = EExploitableResult.NOT_DUMP_FOUND;
-
-            if (_FileNames != null)
-                foreach (string f in _FileNames)
-                    fileAppend.Add(new LogFile(f, isBreak ? TimeSpan.FromSeconds(2) : TimeSpan.Zero));
-
             for (int x = 0, m = fileAppend.Count; x < m; x++)
             {
                 LogFile dump = (LogFile)fileAppend[x];

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using TuringMachine.Core;
@@ -33,9 +33,9 @@ namespace TuringMachine
             InitializeComponent();
 
             // Create fuzzer
-            _Fuzzer = new TuringServer();
-            _Fuzzer.Inputs.CollectionChanged += _Fuzzer_OnInputsChange;
-            _Fuzzer.Configurations.CollectionChanged += _Fuzzer_OnConfigurationsChange;
+            _Fuzzer = new TuringServer(this);
+            _Fuzzer.Inputs.ListChanged += _Fuzzer_OnInputsChange;
+            _Fuzzer.Configurations.ListChanged += _Fuzzer_OnConfigurationsChange;
             _Fuzzer.OnListenChange += _Fuzzer_OnListenChange;
             _Fuzzer.OnTestEnd += _Fuzzer_OnTestEnd;
             _Fuzzer.OnCrashLog += _Fuzzer_OnCrashLog;
@@ -57,6 +57,10 @@ namespace TuringMachine
             }
 
             _Fuzzer_OnListenChange(null, null);
+
+            gridInput.DataSource = new BindingSource() { DataSource = _Fuzzer.Inputs };
+            gridConfig.DataSource = new BindingSource() { DataSource = _Fuzzer.Configurations };
+            gridLog.DataSource = new BindingSource() { DataSource = _Fuzzer.Logs };
         }
         void _Fuzzer_OnPercentFactor(FuzzingStream stream, ref double percentFactor)
         {
@@ -68,7 +72,7 @@ namespace TuringMachine
             toolStripStatusLabel2.Text = _Fuzzer.Listen.ToString();
             toolStripStatusLabel2.ForeColor = Color.Black;
         }
-        #region Add to grids
+        #region Refresh bars
         void _Fuzzer_OnCrashLog(object sender, FuzzerLog log)
         {
             if (InvokeRequired)
@@ -76,8 +80,6 @@ namespace TuringMachine
                 Invoke(new TuringServer.delOnCrashLog(_Fuzzer_OnCrashLog), sender, log);
                 return;
             }
-
-            gridLog.DataSource = _Fuzzer.Logs.ToArray();
             toolStripLabel2.Text = "Crashes" + (_Fuzzer.Logs.Count <= 0 ? "" : " (" + _Fuzzer.Logs.Count.ToString() + ")");
         }
         void _Fuzzer_OnConfigurationsChange(object sender, EventArgs e)
@@ -87,7 +89,6 @@ namespace TuringMachine
                 Invoke(new EventHandler(_Fuzzer_OnConfigurationsChange), sender, e);
                 return;
             }
-            gridConfig.DataSource = _Fuzzer.Configurations.ToArray();
             toolStripLabel3.Text = "Configurations" + (_Fuzzer.Configurations.Count <= 0 ? "" : " (" + _Fuzzer.Configurations.Count.ToString() + ")");
         }
         void _Fuzzer_OnInputsChange(object sender, EventArgs e)
@@ -97,7 +98,6 @@ namespace TuringMachine
                 Invoke(new EventHandler(_Fuzzer_OnInputsChange), sender, e);
                 return;
             }
-            gridInput.DataSource = _Fuzzer.Inputs.ToArray();
             toolStripLabel1.Text = "Inputs" + (_Fuzzer.Inputs.Count <= 0 ? "" : " (" + _Fuzzer.Inputs.Count.ToString() + ")");
         }
         #endregion
@@ -419,12 +419,34 @@ namespace TuringMachine
             {
                 c.Style.ForeColor = Color.Black;
                 c.Style.Font = gridLog.Font;
+                c.Style.SelectionBackColor = row.DefaultCellStyle.SelectionBackColor;
+                c.Style.SelectionForeColor = row.DefaultCellStyle.SelectionForeColor;
             }
             else
             {
+                c.Style.BackColor = Color.Yellow;
                 c.Style.ForeColor = Color.Red;
                 c.Style.Font = GridBoldFont;
+
+                c.Style.SelectionBackColor = Color.Orange;
+                c.Style.SelectionForeColor = Color.Brown;
             }
+        }
+        void gridConfig_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex < 0) return;
+
+            DataGridView grid = (DataGridView)sender;
+            DataGridViewColumn dc = grid.Columns[e.ColumnIndex];
+
+            //if (dc.HeaderCell.SortGlyphDirection == SortOrder.Ascending)
+            //    grid.Sort(dc, ListSortDirection.Descending);
+            //else
+            //    grid.Sort(dc, ListSortDirection.Descending);
+        }
+        void gridConfig_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            
         }
     }
 }

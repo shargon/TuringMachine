@@ -10,62 +10,66 @@ namespace TuringMachine.Core.Logs
     {
         string _Path, _FileName;
         byte[] _Data;
-        TimeSpan _EnsureFileTimeout;
 
-        public override byte[] Data
-        {
-            get
-            {
-                if (_Data != null) return _Data;
-
-                Stream fread = WaitOpenRead(_Path, _EnsureFileTimeout);
-                if (fread == null) return null;
-
-                using (fread)
-                {
-                    _Data = new byte[fread.Length];
-                    StreamHelper.ReadFull(fread, _Data, 0, _Data.Length);
-                    return _Data;
-                }
-            }
-        }
-
+        /// <summary>
+        /// Path
+        /// </summary>
         public string Path { get { return _Path; } }
+        /// <summary>
+        /// Filename
+        /// </summary>
         public override string FileName { get { return _FileName; } }
-        public TimeSpan EnsureFileTimeout { get { return _EnsureFileTimeout; } }
+        /// <summary>
+        /// Data
+        /// </summary>
+        public override byte[] Data { get { return _Data; } }
 
-        public LogFile(string path, TimeSpan ensureFileTimeout)
+        public LogFile(string path)
         {
             _Path = path;
             _FileName = System.IO.Path.GetFileName(path);
-            _EnsureFileTimeout = ensureFileTimeout;
         }
 
-
         /// <summary>
-        /// Wait for read
+        /// Try load the file
         /// </summary>
-        /// <param name="fileName">File</param>
-        /// <param name="ensureFileTimeout">EnsureFile</param>
-        static Stream WaitOpenRead(string fileName, TimeSpan ensureFileTimeout)
+        /// <param name="timeOut">Timeout</param>
+        public bool TryLoadFile(TimeSpan timeOut)
         {
+            _Data = ReadFileWaiting(_Path, timeOut);
+            return _Data != null;
+        }
+        /// <summary>
+        /// Blocks until the file is not locked any more
+        /// </summary>
+        /// <param name="fullPath">Full path</param>
+        /// <param name="ensureFileTimeout">Wait time if the file not exists</param>
+        public static byte[] ReadFileWaiting(string fullPath, TimeSpan ensureFileTimeout)
+        {
+            double sec = ensureFileTimeout.TotalMilliseconds;
+
             while (true)
             {
-                if (!File.Exists(fileName))
-                {
-                    if (ensureFileTimeout != TimeSpan.Zero)
-                    {
-                        Thread.Sleep(ensureFileTimeout);
-                        if (!File.Exists(fileName)) return null;
-                    }
-                    else return null;
-                }
-
                 try
                 {
-                    return new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.None);
+                    // Attempt to open the file exclusively.
+                    using (FileStream fs = new FileStream(fullPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None, 100))
+                    {
+                        byte[] data = new byte[fs.Length];
+                        StreamHelper.ReadFull(fs, data, 0, data.Length);
+                        return data;
+                    }
                 }
-                catch { }
+                catch //(Exception ex)
+                {
+                    if (sec <= 0) return null;
+
+                    // Wait for the lock to be released
+                    Thread.Sleep(250);
+
+                    if (!File.Exists(fullPath))
+                        sec -= 250;
+                }
             }
         }
     }

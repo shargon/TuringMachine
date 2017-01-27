@@ -21,7 +21,7 @@ namespace TuringMachine.Agent
             object dummy = new BasicAgents.StartProcessAndSendTcpData();
             args = new string[]
             {
-                "NumTasks=10",
+                "NumTasks=1",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
 
@@ -32,7 +32,7 @@ namespace TuringMachine.Agent
 
             args = new string[]
             {
-                "NumTasks=10",
+                "NumTasks=1",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
 
