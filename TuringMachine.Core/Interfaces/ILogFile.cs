@@ -20,5 +20,9 @@ namespace TuringMachine.Core.Interfaces
         {
             return new ZipHelper.FileEntry(FileName, Data);
         }
+        /// <summary>
+        /// String representation
+        /// </summary>
+        public override string ToString() { return FileName; }
     }
 }

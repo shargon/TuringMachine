@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -16,13 +15,9 @@ namespace TuringMachine.BasicAgents
     {
         bool ConnectedOk;
         /// <summary>
-        /// Process path
+        /// Process
         /// </summary>
-        public string FileName { get; set; }
-        /// <summary>
-        /// Arguments
-        /// </summary>
-        public string Arguments { get; set; }
+        public ProcessStartInfoEx Process { get; set; }
         /// <summary>
         /// Connect to
         /// </summary>
@@ -31,10 +26,6 @@ namespace TuringMachine.BasicAgents
         /// Connect timeout
         /// </summary>
         public TimeSpan ConnectTimeout { get; set; }
-        /// <summary>
-        /// Exit timeout
-        /// </summary>
-        public TimeSpan ExitTimeout { get; set; }
 
         public StartProcessAndSendTcpData()
         {
@@ -44,15 +35,7 @@ namespace TuringMachine.BasicAgents
         public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
         {
             // Create process
-            return new WERDetector(new ProcessStartInfo(FileName, Arguments)
-            {
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = false,
-            })
-            {
-                ExitTimeout = ExitTimeout
-            };
+            return new WERDetector(Process);
         }
         public override void OnRun(TuringSocket socket, TuringAgentArgs e)
         {

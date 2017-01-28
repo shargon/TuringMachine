@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace TuringMachine.Agent
             object dummy = new BasicAgents.StartProcessAndSendTcpData();
             args = new string[]
             {
-                "NumTasks=1",
+                "NumTasks=8",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
 
@@ -76,14 +77,16 @@ namespace TuringMachine.Agent
             Console.WriteLine("Configuration");
             WriteSeparator(true);
 
-            Console.WriteLine("            Server : " + Config.TuringServer.ToString());
-            Console.WriteLine("             Tasks : " + Config.NumTasks.ToString());
+            const int PaddingLeft = 25;
+
+            Console.WriteLine("Server".PadLeft(PaddingLeft, ' ') + " : " + Config.TuringServer.ToString());
+            Console.WriteLine("Tasks".PadLeft(PaddingLeft, ' ') + " : " + Config.NumTasks.ToString());
             WriteSeparator();
             Console.WriteLine("Agent");
             WriteSeparator();
 
-            Console.WriteLine("           Library : " + Config.AgentLibrary);
-            Console.WriteLine("             Class : " + agent.ToString());
+            Console.WriteLine("Library".PadLeft(PaddingLeft, ' ') + " : " + Config.AgentLibrary);
+            Console.WriteLine("Class".PadLeft(PaddingLeft, ' ') + " : " + agent.ToString());
 
             if (!string.IsNullOrEmpty(Config.AgentArguments))
             {
@@ -93,13 +96,53 @@ namespace TuringMachine.Agent
 
                 foreach (KeyValuePair<string, object> pi in SerializationHelper.EnumerateFromJson(Config.AgentArguments))
                 {
-                    object val = (pi.Value == null ? "<NULL>" : pi.Value.ToString());
-                    Console.WriteLine("   " + pi.Key.PadLeft(15, ' ') + " : " + val.ToString());
+                    if (pi.Value is JObject)
+                    {
+                        foreach (JToken pi2 in ((JObject)pi.Value).Values())
+                        {
+                            if (pi2 is JValue)
+                            {
+                                JValue jval = (JValue)pi2;
+
+                                string val = (jval.Value == null ? "<NULL>" : jval.Value.ToString());
+                                string name = jval.Path;
+                                Console.WriteLine(name.PadLeft(PaddingLeft, ' ') + " : " + val.Replace("\n", "\n                    "));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (pi.Value is JArray)
+                        {
+                            JArray arr = (JArray)pi.Value;
+                            foreach (JObject ojb in arr)
+                            {
+                                foreach (JToken pi2 in (ojb).Values())
+                                {
+                                    if (pi2 is JValue)
+                                    {
+                                        JValue jval = (JValue)pi2;
+
+                                        string val = (jval.Value == null ? "<NULL>" : jval.Value.ToString());
+                                        string name = jval.Path;
+                                        if (arr.Count == 1) name = name.Replace("[0]", "");
+
+                                        Console.WriteLine(name.PadLeft(PaddingLeft, ' ') + " : " + val.Replace("\n", "\n                    "));
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            string val = (pi.Value == null ? "<NULL>" : pi.Value.ToString());
+                            string name = pi.Key;
+                            Console.WriteLine(name.PadLeft(PaddingLeft, ' ') + " : " + val.Replace("\n", "\n                    "));
+                        }
+                    }
                 }
             }
             Console.WriteLine("");
 
-            //Console.WriteLine("");
             //Console.WriteLine("");
             //WriteSeparator(true);
 

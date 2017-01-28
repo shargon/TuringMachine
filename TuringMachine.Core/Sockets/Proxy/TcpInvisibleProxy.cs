@@ -38,6 +38,11 @@ namespace TuringMachine.Core.Sockets.Proxy
         List<TcpClient> _Clients = new List<TcpClient>();
 
         /// <summary>
+        /// Count
+        /// </summary>
+        public int ConnectedClients { get { return _Clients.Count; } }
+
+        /// <summary>
         /// Start the TCP Proxy
         /// </summary>
         public void Start()

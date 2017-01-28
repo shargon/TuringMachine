@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Management;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using TuringMachine.Core.Arguments;
@@ -30,18 +31,91 @@ namespace TuringMachine.Core.Detectors.Windows
     /// </summary>
     public class WERDetector : ICrashDetector, IDisposable
     {
+        class iProcess : IDisposable
+        {
+            public ProcessStartInfoEx StartInfo { get; private set; }
+
+            ServiceController Service;
+            Process Process;
+
+            string StoreLocation32;
+            string StoreLocation64;
+
+            public bool HasExited
+            {
+                get
+                {
+                    if (Process != null) return Process.HasExited;
+                    if (Service != null) return Service.Status != ServiceControllerStatus.Running;
+
+                    return true;
+                }
+            }
+
+            public iProcess(Process p, ProcessStartInfoEx pi)
+            {
+                Process = p;
+                StartInfo = pi;
+
+                StoreLocation64 = GetStoreLocation(RegistryView.Registry64);
+                StoreLocation32 = GetStoreLocation(RegistryView.Registry32);
+            }
+            public iProcess(ServiceController s, ProcessStartInfoEx pi)
+            {
+                Service = s;
+                StartInfo = pi;
+
+                StoreLocation64 = GetStoreLocation(RegistryView.Registry64);
+                StoreLocation32 = GetStoreLocation(RegistryView.Registry32);
+            }
+            public bool ItsChangedStoreLocation()
+            {
+                if (GetStoreLocation(RegistryView.Registry64) != StoreLocation64) return true;
+                if (GetStoreLocation(RegistryView.Registry32) != StoreLocation32) return true;
+                return false;
+            }
+            public void WaitForExit(int totalMilliseconds)
+            {
+                if (Process != null) Process.WaitForExit(totalMilliseconds);
+            }
+            /// <summary>
+            /// Check in Store location (its called first)
+            /// </summary>
+            static string GetStoreLocation(RegistryView v)
+            {
+                try
+                {
+                    // Read path
+                    using (RegistryKey r = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, v).OpenSubKey(@"SOFTWARE\Microsoft\Windows\Windows Error Reporting\Debug", false))
+                        return r.GetValue("StoreLocation", "").ToString();
+                }
+                catch { }
+                return null;
+            }
+            public void Dispose()
+            {
+                if (Process != null)
+                {
+                    Process.Dispose();
+                    Process = null;
+                }
+                if (Service != null)
+                {
+                    Service.Dispose();
+                    Service = null;
+                }
+            }
+            public void KillProcess()
+            {
+                if (Process != null) Process.Kill();
+            }
+        }
+
         string[] _FileNames;
         static string _CrashPath;
-        Process[] _Process;
-        string _StoreLocation;
-        RegistryView _View;
+        iProcess[] _Process;
 
         public event EventHandler OnDispose;
-
-        /// <summary>
-        /// Exit timeout
-        /// </summary>
-        public TimeSpan ExitTimeout { get; set; }
 
         /// <summary>
         /// Load CrashPath
@@ -71,54 +145,81 @@ namespace TuringMachine.Core.Detectors.Windows
         /// Constructor
         /// </summary>
         /// <param name="startInfo">Process startInfo</param>
-        public WERDetector(params ProcessStartInfo[] startInfo)
+        public WERDetector(params ProcessStartInfoEx[] startInfo)
         {
             if (startInfo != null)
             {
-                List<string> ls = new List<string>();
-                List<Process> lp = new List<Process>();
+                List<string> files = new List<string>();
+                List<iProcess> process = new List<iProcess>();
 
-                foreach (ProcessStartInfo pi in startInfo)
+                foreach (ProcessStartInfoEx pi in startInfo)
                 {
-                    string file = Path.GetFileName(pi.FileName);
+                    if (pi == null) continue;
 
-                    Process p = Process.Start(pi);
+                    string file = "";
+                    int pid = 0;
+                    if (!string.IsNullOrEmpty(pi.FileName))
+                    {
+                        file = Path.GetFileName(pi.FileName);
 
-                    if (Is64Bit(p.Handle)) _View = RegistryView.Registry64;
-                    else _View = RegistryView.Registry32;
+                        Process p = Process.Start(pi.GetProcessStartInfo());
+                        pid = p.Id;
+                        process.Add(new iProcess(p, pi));
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(pi.ServiceName))
+                        {
+                            ServiceController controller = new ServiceController(pi.ServiceName);
+                            if (controller.Status == ServiceControllerStatus.Stopped)
+                            {
+                                controller.Start();
+                                controller.WaitForStatus(ServiceControllerStatus.Running, pi.ExitTimeout);
+                            }
 
-                    lp.Add(p);
-                    ls.Add(Path.Combine(_CrashPath, file + "." + p.Id.ToString() + ".dmp"));
+                            try
+                            {
+                                using (ManagementObject service = new ManagementObject(@"Win32_service.Name='" + pi.ServiceName + "'"))
+                                {
+                                    object o = service.GetPropertyValue("ProcessId");
+                                    pid = Convert.ToInt32(o);
+
+                                    file = ((string)service.GetPropertyValue("PathName")).Trim();
+
+                                    if (File.Exists(file))
+                                        file = Path.GetFileName(file);
+                                    else
+                                    {
+                                        if (file.StartsWith("\""))
+                                        {
+                                            file = file.Substring(1);
+                                            int ix = file.IndexOf("\"");
+                                            if (ix < 0) file = null;
+                                            else
+                                            {
+                                                file = file.Substring(0, ix);
+                                                if (File.Exists(file))
+                                                    file = Path.GetFileName(file);
+                                                else file = null;
+                                            }
+                                        }
+                                        else file = null;
+                                    }
+                                }
+
+                                process.Add(new iProcess(controller, pi));
+                            }
+                            catch { }
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(file) && pid != 0 && pi.WaitMemoryDump)
+                        files.Add(Path.Combine(_CrashPath, file + "." + pid.ToString() + ".dmp"));
                 }
 
-                _FileNames = ls.ToArray();
-                _Process = lp.ToArray();
-                _StoreLocation = GetStoreLocation();
+                _FileNames = files.ToArray();
+                _Process = process.ToArray();
             }
-        }
-
-        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IsWow64Process([In] IntPtr hProcess, [Out] out bool lpSystemInfo);
-        static bool Is64Bit(IntPtr handle)
-        {
-            bool retVal;
-            IsWow64Process(handle, out retVal);
-            return retVal;
-        }
-        /// <summary>
-        /// Check in Store location (its called first)
-        /// </summary>
-        string GetStoreLocation()
-        {
-            try
-            {
-                // Read path
-                using (RegistryKey r = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, _View).OpenSubKey(@"SOFTWARE\Microsoft\Windows\Windows Error Reporting\Debug", false))
-                    return r.GetValue("StoreLocation", "").ToString();
-            }
-            catch { }
-            return null;
         }
         /// <summary>
         /// Return if are WER file
@@ -137,14 +238,33 @@ namespace TuringMachine.Core.Detectors.Windows
             }
 
             // Wait for exit
-            foreach (Process p in _Process)
-                try { p.WaitForExit((int)ExitTimeout.TotalMilliseconds); } catch { }
+            bool isBreak = false;
+
+            if (_Process != null)
+            {
+                TimeSpan miniwait = TimeSpan.FromMilliseconds(100);
+                foreach (iProcess p in _Process)
+                {
+                    try
+                    {
+                        TimeSpan ts = TimeSpan.FromMilliseconds(p.StartInfo.ExitTimeout.TotalMilliseconds);
+                        while (ts.TotalMilliseconds > 0 &&
+                            (isAlive == null || isAlive.Invoke(socket, e)) && !p.HasExited)
+                        {
+                            p.WaitForExit((int)miniwait.TotalMilliseconds);
+                            ts = ts.Subtract(miniwait);
+                        }
+                    }
+                    catch { }
+
+                    // Check store location for changes
+                    if (!isBreak && p.ItsChangedStoreLocation())
+                        isBreak = true;
+                }
+            }
 
             // Courtesy wait
             Thread.Sleep(500);
-
-            // Check store location for changes
-            bool isBreak = GetStoreLocation() != _StoreLocation;
 
             // Search logs 
             List<ILogFile> fileAppend = new List<ILogFile>();
@@ -159,11 +279,9 @@ namespace TuringMachine.Core.Detectors.Windows
                 }
 
             // If its alive kill them
-            if (isAlive == null || isAlive.Invoke(socket, e))
-            {
-                foreach (Process p in _Process)
-                    try { p.Kill(); } catch { }
-            }
+            if (_Process != null)
+                foreach (iProcess p in _Process)
+                    try { p.KillProcess(); } catch { }
 
             // Check exploitability
             exploitResult = EExploitableResult.NOT_DUMP_FOUND;
@@ -194,7 +312,7 @@ namespace TuringMachine.Core.Detectors.Windows
         {
             if (_Process != null)
             {
-                foreach (Process p in _Process)
+                foreach (iProcess p in _Process)
                     try { p.Dispose(); } catch { }
 
                 _Process = null;

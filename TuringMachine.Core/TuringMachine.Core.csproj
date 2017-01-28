@@ -39,6 +39,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -56,6 +58,7 @@
     <Compile Include="Design\ListArrayReadOnlyConverter.cs" />
     <Compile Include="Design\ListArrayConverter.cs" />
     <Compile Include="Detectors\ICrashDetector.cs" />
+    <Compile Include="Detectors\ProcessStartInfoEx.cs" />
     <Compile Include="Detectors\Windows\WERDetector.cs" />
     <Compile Include="Enums\EExploitableResult.cs" />
     <Compile Include="Enums\EFuzzerState.cs" />

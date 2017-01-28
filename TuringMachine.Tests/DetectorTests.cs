@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
+using TuringMachine.Core.Detectors;
 using TuringMachine.Core.Detectors.Windows;
 using TuringMachine.Core.Enums;
 
@@ -11,7 +12,7 @@ namespace TuringMachine.Tests
         [TestMethod]
         public void TestWerDetector()
         {
-            WERDetector w = new WERDetector(new ProcessStartInfo(@"D:\CrashDumps\test.exe"));
+            WERDetector w = new WERDetector(new ProcessStartInfoEx(@"D:\CrashDumps\test.exe"));
 
             byte[] data;
             EExploitableResult res;

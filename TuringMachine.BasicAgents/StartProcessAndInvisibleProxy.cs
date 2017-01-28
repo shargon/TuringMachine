@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using TuringMachine.Core;
@@ -23,13 +22,9 @@ namespace TuringMachine.BasicAgents
         }
 
         /// <summary>
-        /// Process path
+        /// Process
         /// </summary>
-        public string FileName { get; set; }
-        /// <summary>
-        /// Arguments
-        /// </summary>
-        public string Arguments { get; set; }
+        public ProcessStartInfoEx[] Process { get; set; }
         /// <summary>
         /// Listen EndPoint
         /// </summary>
@@ -42,10 +37,6 @@ namespace TuringMachine.BasicAgents
         /// Connect timeout
         /// </summary>
         public TimeSpan ConnectTimeout { get; set; }
-        /// <summary>
-        /// Exit timeout
-        /// </summary>
-        public TimeSpan ExitTimeout { get; set; }
         /// <summary>
         /// Type
         /// </summary>
@@ -67,15 +58,7 @@ namespace TuringMachine.BasicAgents
             proxy.Start();
 
             // Create process
-            return new WERDetector(new ProcessStartInfo(FileName, Arguments)
-            {
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = false,
-            })
-            {
-                ExitTimeout = ExitTimeout
-            };
+            return new WERDetector(Process);
         }
 
         Stream Proxy_OnCreateStream(object sender, Stream stream, ESource owner)
@@ -95,7 +78,7 @@ namespace TuringMachine.BasicAgents
         public override bool GetItsAlive(TuringSocket socket, TuringAgentArgs e)
         {
             TcpInvisibleProxy proxy = (TcpInvisibleProxy)socket[ProxyVarName];
-            return proxy != null && proxy.Running;
+            return proxy != null && proxy.Running && proxy.ConnectedClients > 0;
         }
     }
 }
