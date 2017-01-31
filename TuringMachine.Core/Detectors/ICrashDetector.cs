@@ -1,8 +1,8 @@
 ﻿using System;
 using TuringMachine.Core.Arguments;
-using TuringMachine.Core.Enums;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Sockets;
+using TuringMachine.Helpers.Enums;
 
 namespace TuringMachine.Core.Detectors
 {

@@ -8,6 +8,7 @@ using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Logs;
 using TuringMachine.Core.Sockets.Enums;
 using TuringMachine.Helpers;
+using TuringMachine.Helpers.Enums;
 
 namespace TuringMachine.Core.Sockets.Messages
 {

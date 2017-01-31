@@ -48,6 +48,7 @@
     <Compile Include="BitHelper.cs" />
     <Compile Include="Converters\IPAddressConverter.cs" />
     <Compile Include="Converters\IPEndPointConverter.cs" />
+    <Compile Include="Enums\EExploitableResult.cs" />
     <Compile Include="Extensions\IpEndPointExtension.cs" />
     <Compile Include="HashHelper.cs" />
     <Compile Include="Interfaces\IRandomValue.cs" />
@@ -55,7 +56,9 @@
     <Compile Include="RandomHelper.cs" />
     <Compile Include="ReflectionHelper.cs" />
     <Compile Include="SerializationHelper.cs" />
+    <Compile Include="StreamHelper.cs" />
     <Compile Include="StringHelper.cs" />
+    <Compile Include="WinDbgHelper.cs" />
     <Compile Include="ZipHelper.cs" />
   </ItemGroup>
   <ItemGroup>

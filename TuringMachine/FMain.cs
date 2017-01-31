@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using TuringMachine.Core;
@@ -444,6 +445,28 @@ namespace TuringMachine
         {
             FGenerator f = new FGenerator();
             f.Show();
+        }
+        void gridInput_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None;
+        }
+        void gridInput_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                object d = e.Data.GetData(DataFormats.FileDrop);
+                if (d == null) return;
+
+                string file = (d is string[]) ? ((string[])d).FirstOrDefault() : d.ToString();
+                if (File.Exists(file))
+                {
+                    if (sender == gridConfig) _Fuzzer.AddConfig(file);
+                    else if (sender == gridInput) _Fuzzer.AddInput(new FileFuzzingInput(file));
+                }
+            }
         }
     }
 }

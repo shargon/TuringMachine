@@ -9,6 +9,7 @@ using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Sockets;
 using TuringMachine.Core.Sockets.Messages;
 using TuringMachine.Helpers;
+using TuringMachine.Helpers.Enums;
 
 namespace TuringMachine.Agent
 {

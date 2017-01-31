@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using TuringMachine.Core.Enums;
+using TuringMachine.Helpers.Enums;
 
-namespace TuringMachine.Core.Helpers
+namespace TuringMachine.Helpers
 {
     /// <summary>
     /// Config at: 

@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle21 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle22 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle23 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle24 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle25 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle26 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle27 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle28 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle29 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle30 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FMain));
             this.gridInput = new System.Windows.Forms.DataGridView();
             this.cInputsType = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,28 +62,6 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.gridConfig = new System.Windows.Forms.DataGridView();
-            this.cConfigType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cConfigCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStrip3 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStrip4 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.saveInputWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.originalInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,15 +70,37 @@
             this.executeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.randomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manualStreamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridConfig = new System.Windows.Forms.DataGridView();
+            this.cConfigType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigFails = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cConfigCrashes = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStrip3 = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.generatorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStrip4 = new System.Windows.Forms.ToolStrip();
             this.tbPlay = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tbPause = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tbStop = new System.Windows.Forms.ToolStripButton();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveInputWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.originalInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.gridInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLog)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -123,6 +123,7 @@
             // 
             // gridInput
             // 
+            this.gridInput.AllowDrop = true;
             this.gridInput.AllowUserToAddRows = false;
             this.gridInput.AllowUserToDeleteRows = false;
             this.gridInput.AllowUserToOrderColumns = true;
@@ -146,6 +147,8 @@
             this.gridInput.TabIndex = 0;
             this.gridInput.VirtualMode = true;
             this.gridInput.SelectionChanged += new System.EventHandler(this.gridInput_SelectionChanged);
+            this.gridInput.DragDrop += new System.Windows.Forms.DragEventHandler(this.gridInput_DragDrop);
+            this.gridInput.DragEnter += new System.Windows.Forms.DragEventHandler(this.gridInput_DragEnter);
             this.gridInput.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gridInput_MouseClick);
             // 
             // cInputsType
@@ -167,8 +170,8 @@
             // cInputCount
             // 
             this.cInputCount.DataPropertyName = "Tests";
-            dataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputCount.DefaultCellStyle = dataGridViewCellStyle21;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputCount.DefaultCellStyle = dataGridViewCellStyle1;
             this.cInputCount.HeaderText = "Tests";
             this.cInputCount.Name = "cInputCount";
             this.cInputCount.ReadOnly = true;
@@ -177,8 +180,8 @@
             // cInputFails
             // 
             this.cInputFails.DataPropertyName = "Fails";
-            dataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputFails.DefaultCellStyle = dataGridViewCellStyle22;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputFails.DefaultCellStyle = dataGridViewCellStyle2;
             this.cInputFails.HeaderText = "Fails";
             this.cInputFails.Name = "cInputFails";
             this.cInputFails.ReadOnly = true;
@@ -187,8 +190,8 @@
             // cInputCrashes
             // 
             this.cInputCrashes.DataPropertyName = "Crashes";
-            dataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cInputCrashes.DefaultCellStyle = dataGridViewCellStyle23;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cInputCrashes.DefaultCellStyle = dataGridViewCellStyle3;
             this.cInputCrashes.HeaderText = "Crashes";
             this.cInputCrashes.Name = "cInputCrashes";
             this.cInputCrashes.ReadOnly = true;
@@ -226,8 +229,8 @@
             // cLogDate
             // 
             this.cLogDate.DataPropertyName = "Date";
-            dataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.cLogDate.DefaultCellStyle = dataGridViewCellStyle24;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cLogDate.DefaultCellStyle = dataGridViewCellStyle4;
             this.cLogDate.HeaderText = "Date";
             this.cLogDate.Name = "cLogDate";
             this.cLogDate.ReadOnly = true;
@@ -236,8 +239,8 @@
             // cLogOrigin
             // 
             this.cLogOrigin.DataPropertyName = "Origin";
-            dataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.cLogOrigin.DefaultCellStyle = dataGridViewCellStyle25;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cLogOrigin.DefaultCellStyle = dataGridViewCellStyle5;
             this.cLogOrigin.HeaderText = "Origin";
             this.cLogOrigin.Name = "cLogOrigin";
             this.cLogOrigin.ReadOnly = true;
@@ -254,8 +257,8 @@
             // cExploitable
             // 
             this.cExploitable.DataPropertyName = "ExplotationResult";
-            dataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.cExploitable.DefaultCellStyle = dataGridViewCellStyle26;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.cExploitable.DefaultCellStyle = dataGridViewCellStyle6;
             this.cExploitable.HeaderText = "Exploitable";
             this.cExploitable.Name = "cExploitable";
             this.cExploitable.ReadOnly = true;
@@ -279,9 +282,9 @@
             // 
             // cLogGoto
             // 
-            dataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle27.NullValue = ">";
-            this.cLogGoto.DefaultCellStyle = dataGridViewCellStyle27;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.NullValue = ">";
+            this.cLogGoto.DefaultCellStyle = dataGridViewCellStyle7;
             this.cLogGoto.HeaderText = "Open";
             this.cLogGoto.Name = "cLogGoto";
             this.cLogGoto.ReadOnly = true;
@@ -331,8 +334,86 @@
             this.toolStripLabel1.Size = new System.Drawing.Size(40, 31);
             this.toolStripLabel1.Text = "Inputs";
             // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Enabled = false;
+            this.toolStripButton1.Image = global::TuringMachine.Res.trash;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(36, 31);
+            this.toolStripButton1.Text = "Remove selected";
+            this.toolStripButton1.ToolTipText = "Remove selected";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripDropDownButton1
+            // 
+            this.toolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.folderToolStripMenuItem,
+            this.tcpToolStripMenuItem,
+            this.executeToolStripMenuItem,
+            this.randomToolStripMenuItem,
+            this.manualStreamToolStripMenuItem});
+            this.toolStripDropDownButton1.Image = global::TuringMachine.Res.add;
+            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(45, 31);
+            this.toolStripDropDownButton1.ToolTipText = "Add";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.Image = global::TuringMachine.Res.add_file;
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
+            // 
+            // folderToolStripMenuItem
+            // 
+            this.folderToolStripMenuItem.Image = global::TuringMachine.Res.add_folder;
+            this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
+            this.folderToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.folderToolStripMenuItem.Text = "Folder";
+            this.folderToolStripMenuItem.Click += new System.EventHandler(this.folderToolStripMenuItem_Click);
+            // 
+            // tcpToolStripMenuItem
+            // 
+            this.tcpToolStripMenuItem.Image = global::TuringMachine.Res.add_socket;
+            this.tcpToolStripMenuItem.Name = "tcpToolStripMenuItem";
+            this.tcpToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.tcpToolStripMenuItem.Text = "Tcp Query";
+            this.tcpToolStripMenuItem.Click += new System.EventHandler(this.socketToolStripMenuItem_Click);
+            // 
+            // executeToolStripMenuItem
+            // 
+            this.executeToolStripMenuItem.Image = global::TuringMachine.Res.add_execute;
+            this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
+            this.executeToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.executeToolStripMenuItem.Text = "Execute";
+            this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
+            // 
+            // randomToolStripMenuItem
+            // 
+            this.randomToolStripMenuItem.Image = global::TuringMachine.Res.add_random;
+            this.randomToolStripMenuItem.Name = "randomToolStripMenuItem";
+            this.randomToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.randomToolStripMenuItem.Text = "Random";
+            this.randomToolStripMenuItem.Click += new System.EventHandler(this.randomToolStripMenuItem_Click);
+            // 
+            // manualStreamToolStripMenuItem
+            // 
+            this.manualStreamToolStripMenuItem.Image = global::TuringMachine.Res.empty_icon;
+            this.manualStreamToolStripMenuItem.Name = "manualStreamToolStripMenuItem";
+            this.manualStreamToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
+            this.manualStreamToolStripMenuItem.Text = "Empty";
+            this.manualStreamToolStripMenuItem.Click += new System.EventHandler(this.manualStreamToolStripMenuItem_Click);
+            // 
             // gridConfig
             // 
+            this.gridConfig.AllowDrop = true;
             this.gridConfig.AllowUserToAddRows = false;
             this.gridConfig.AllowUserToDeleteRows = false;
             this.gridConfig.AllowUserToOrderColumns = true;
@@ -356,6 +437,8 @@
             this.gridConfig.TabIndex = 2;
             this.gridConfig.VirtualMode = true;
             this.gridConfig.SelectionChanged += new System.EventHandler(this.gridConfig_SelectionChanged);
+            this.gridConfig.DragDrop += new System.Windows.Forms.DragEventHandler(this.gridInput_DragDrop);
+            this.gridConfig.DragEnter += new System.Windows.Forms.DragEventHandler(this.gridInput_DragEnter);
             // 
             // cConfigType
             // 
@@ -376,8 +459,8 @@
             // cConfigCount
             // 
             this.cConfigCount.DataPropertyName = "Tests";
-            dataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigCount.DefaultCellStyle = dataGridViewCellStyle28;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigCount.DefaultCellStyle = dataGridViewCellStyle8;
             this.cConfigCount.HeaderText = "Tests";
             this.cConfigCount.Name = "cConfigCount";
             this.cConfigCount.ReadOnly = true;
@@ -386,8 +469,8 @@
             // cConfigFails
             // 
             this.cConfigFails.DataPropertyName = "Fails";
-            dataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigFails.DefaultCellStyle = dataGridViewCellStyle29;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigFails.DefaultCellStyle = dataGridViewCellStyle9;
             this.cConfigFails.HeaderText = "Fails";
             this.cConfigFails.Name = "cConfigFails";
             this.cConfigFails.ReadOnly = true;
@@ -396,8 +479,8 @@
             // cConfigCrashes
             // 
             this.cConfigCrashes.DataPropertyName = "Crashes";
-            dataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.cConfigCrashes.DefaultCellStyle = dataGridViewCellStyle30;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.cConfigCrashes.DefaultCellStyle = dataGridViewCellStyle10;
             this.cConfigCrashes.HeaderText = "Crashes";
             this.cConfigCrashes.Name = "cConfigCrashes";
             this.cConfigCrashes.ReadOnly = true;
@@ -425,6 +508,62 @@
             this.toolStripLabel3.Name = "toolStripLabel3";
             this.toolStripLabel3.Size = new System.Drawing.Size(86, 31);
             this.toolStripLabel3.Text = "Configurations";
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton2.Enabled = false;
+            this.toolStripButton2.Image = global::TuringMachine.Res.trash;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(36, 31);
+            this.toolStripButton2.Text = "Remove selected";
+            this.toolStripButton2.ToolTipText = "Remove selected";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
+            // toolStripDropDownButton2
+            // 
+            this.toolStripDropDownButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem1,
+            this.generatorToolStripMenuItem});
+            this.toolStripDropDownButton2.Image = global::TuringMachine.Res.add;
+            this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(45, 31);
+            this.toolStripDropDownButton2.ToolTipText = "Add";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Image = global::TuringMachine.Res.add_file;
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(126, 22);
+            this.toolStripMenuItem2.Text = "File";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Image = global::TuringMachine.Res.add_folder;
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(126, 22);
+            this.toolStripMenuItem3.Text = "Folder";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(123, 6);
+            // 
+            // generatorToolStripMenuItem
+            // 
+            this.generatorToolStripMenuItem.Image = global::TuringMachine.Res.puzzle_icon;
+            this.generatorToolStripMenuItem.Name = "generatorToolStripMenuItem";
+            this.generatorToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.generatorToolStripMenuItem.Text = "Generator";
+            this.generatorToolStripMenuItem.Click += new System.EventHandler(this.generatorToolStripMenuItem_Click);
             // 
             // splitContainer2
             // 
@@ -509,62 +648,94 @@
             this.toolStrip4.Size = new System.Drawing.Size(912, 62);
             this.toolStrip4.TabIndex = 5;
             // 
+            // tbPlay
+            // 
+            this.tbPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbPlay.Image = global::TuringMachine.Res.play;
+            this.tbPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbPlay.Name = "tbPlay";
+            this.tbPlay.Size = new System.Drawing.Size(52, 59);
+            this.tbPlay.Text = "Play";
+            this.tbPlay.Click += new System.EventHandler(this.tbPlay_Click);
+            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 62);
+            // 
+            // tbPause
+            // 
+            this.tbPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbPause.Enabled = false;
+            this.tbPause.Image = global::TuringMachine.Res.pause;
+            this.tbPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbPause.Name = "tbPause";
+            this.tbPause.Size = new System.Drawing.Size(52, 59);
+            this.tbPause.Text = "Pause";
+            this.tbPause.Click += new System.EventHandler(this.tbPause_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 62);
             // 
+            // tbStop
+            // 
+            this.tbStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbStop.Enabled = false;
+            this.tbStop.Image = global::TuringMachine.Res.stop;
+            this.tbStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbStop.Name = "tbStop";
+            this.tbStop.Size = new System.Drawing.Size(52, 59);
+            this.tbStop.Text = "Stop";
+            this.tbStop.Click += new System.EventHandler(this.tbStop_Click);
+            // 
             // chart1
             // 
             this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.AlignmentOrientation = System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Horizontal;
-            chartArea3.AlignmentStyle = System.Windows.Forms.DataVisualization.Charting.AreaAlignmentStyles.AxesView;
-            chartArea3.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
-            chartArea3.AxisX.IsMarginVisible = false;
-            chartArea3.AxisY.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
-            chartArea3.AxisY.IsMarginVisible = false;
-            chartArea3.BorderWidth = 0;
-            chartArea3.Name = "ChartArea1";
-            chartArea3.Position.Auto = false;
-            chartArea3.Position.Height = 100F;
-            chartArea3.Position.Width = 88F;
-            this.chart1.ChartAreas.Add(chartArea3);
-            legend3.BackColor = System.Drawing.Color.Transparent;
-            legend3.IsTextAutoFit = false;
-            legend3.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
-            legend3.Name = "Legend1";
-            legend3.Position.Auto = false;
-            legend3.Position.Height = 85.2459F;
-            legend3.Position.Width = 10.85482F;
-            legend3.Position.X = 89F;
-            legend3.Position.Y = 3F;
-            this.chart1.Legends.Add(legend3);
+            chartArea1.AlignmentOrientation = System.Windows.Forms.DataVisualization.Charting.AreaAlignmentOrientations.Horizontal;
+            chartArea1.AlignmentStyle = System.Windows.Forms.DataVisualization.Charting.AreaAlignmentStyles.AxesView;
+            chartArea1.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
+            chartArea1.AxisX.IsMarginVisible = false;
+            chartArea1.AxisY.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
+            chartArea1.AxisY.IsMarginVisible = false;
+            chartArea1.BorderWidth = 0;
+            chartArea1.Name = "ChartArea1";
+            chartArea1.Position.Auto = false;
+            chartArea1.Position.Height = 100F;
+            chartArea1.Position.Width = 88F;
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.BackColor = System.Drawing.Color.Transparent;
+            legend1.IsTextAutoFit = false;
+            legend1.LegendStyle = System.Windows.Forms.DataVisualization.Charting.LegendStyle.Column;
+            legend1.Name = "Legend1";
+            legend1.Position.Auto = false;
+            legend1.Position.Height = 85.2459F;
+            legend1.Position.Width = 10.85482F;
+            legend1.Position.X = 89F;
+            legend1.Position.Y = 3F;
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(173, 0);
             this.chart1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.chart1.Name = "chart1";
-            series7.ChartArea = "ChartArea1";
-            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
-            series7.Legend = "Legend1";
-            series7.Name = "Test";
-            series8.ChartArea = "ChartArea1";
-            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
-            series8.Color = System.Drawing.Color.Red;
-            series8.Legend = "Legend1";
-            series8.Name = "Crash";
-            series9.ChartArea = "ChartArea1";
-            series9.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series9.Color = System.Drawing.Color.Yellow;
-            series9.Legend = "Legend1";
-            series9.Name = "Fails";
-            this.chart1.Series.Add(series7);
-            this.chart1.Series.Add(series8);
-            this.chart1.Series.Add(series9);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
+            series1.Legend = "Legend1";
+            series1.Name = "Test";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Area;
+            series2.Color = System.Drawing.Color.Red;
+            series2.Legend = "Legend1";
+            series2.Name = "Crash";
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Color = System.Drawing.Color.Yellow;
+            series3.Legend = "Legend1";
+            series3.Name = "Fails";
+            this.chart1.Series.Add(series1);
+            this.chart1.Series.Add(series2);
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(738, 62);
             this.chart1.TabIndex = 6;
             // 
@@ -597,173 +768,9 @@
             this.originalInputToolStripMenuItem.Text = "Original input";
             this.originalInputToolStripMenuItem.Click += new System.EventHandler(this.originalInputToolStripMenuItem_Click);
             // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Enabled = false;
-            this.toolStripButton1.Image = global::TuringMachine.Res.trash;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(36, 31);
-            this.toolStripButton1.Text = "Remove selected";
-            this.toolStripButton1.ToolTipText = "Remove selected";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // toolStripDropDownButton1
-            // 
-            this.toolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.folderToolStripMenuItem,
-            this.tcpToolStripMenuItem,
-            this.executeToolStripMenuItem,
-            this.randomToolStripMenuItem,
-            this.manualStreamToolStripMenuItem});
-            this.toolStripDropDownButton1.Image = global::TuringMachine.Res.add;
-            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(45, 31);
-            this.toolStripDropDownButton1.ToolTipText = "Add";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.Image = global::TuringMachine.Res.add_file;
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.fileToolStripMenuItem.Text = "File";
-            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
-            // 
-            // folderToolStripMenuItem
-            // 
-            this.folderToolStripMenuItem.Image = global::TuringMachine.Res.add_folder;
-            this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-            this.folderToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.folderToolStripMenuItem.Text = "Folder";
-            this.folderToolStripMenuItem.Click += new System.EventHandler(this.folderToolStripMenuItem_Click);
-            // 
-            // tcpToolStripMenuItem
-            // 
-            this.tcpToolStripMenuItem.Image = global::TuringMachine.Res.add_socket;
-            this.tcpToolStripMenuItem.Name = "tcpToolStripMenuItem";
-            this.tcpToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.tcpToolStripMenuItem.Text = "Tcp Query";
-            this.tcpToolStripMenuItem.Click += new System.EventHandler(this.socketToolStripMenuItem_Click);
-            // 
-            // executeToolStripMenuItem
-            // 
-            this.executeToolStripMenuItem.Image = global::TuringMachine.Res.add_execute;
-            this.executeToolStripMenuItem.Name = "executeToolStripMenuItem";
-            this.executeToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.executeToolStripMenuItem.Text = "Execute";
-            this.executeToolStripMenuItem.Click += new System.EventHandler(this.executeToolStripMenuItem_Click);
-            // 
-            // randomToolStripMenuItem
-            // 
-            this.randomToolStripMenuItem.Image = global::TuringMachine.Res.add_random;
-            this.randomToolStripMenuItem.Name = "randomToolStripMenuItem";
-            this.randomToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.randomToolStripMenuItem.Text = "Random";
-            this.randomToolStripMenuItem.Click += new System.EventHandler(this.randomToolStripMenuItem_Click);
-            // 
-            // manualStreamToolStripMenuItem
-            // 
-            this.manualStreamToolStripMenuItem.Image = global::TuringMachine.Res.empty_icon;
-            this.manualStreamToolStripMenuItem.Name = "manualStreamToolStripMenuItem";
-            this.manualStreamToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.manualStreamToolStripMenuItem.Text = "Empty";
-            this.manualStreamToolStripMenuItem.Click += new System.EventHandler(this.manualStreamToolStripMenuItem_Click);
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton2.Enabled = false;
-            this.toolStripButton2.Image = global::TuringMachine.Res.trash;
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(36, 31);
-            this.toolStripButton2.Text = "Remove selected";
-            this.toolStripButton2.ToolTipText = "Remove selected";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
-            // 
-            // toolStripDropDownButton2
-            // 
-            this.toolStripDropDownButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem1,
-            this.generatorToolStripMenuItem});
-            this.toolStripDropDownButton2.Image = global::TuringMachine.Res.add;
-            this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
-            this.toolStripDropDownButton2.Size = new System.Drawing.Size(45, 31);
-            this.toolStripDropDownButton2.ToolTipText = "Add";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Image = global::TuringMachine.Res.add_file;
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(168, 38);
-            this.toolStripMenuItem2.Text = "File";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Image = global::TuringMachine.Res.add_folder;
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(168, 38);
-            this.toolStripMenuItem3.Text = "Folder";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(165, 6);
-            // 
-            // generatorToolStripMenuItem
-            // 
-            this.generatorToolStripMenuItem.Image = global::TuringMachine.Res.puzzle_icon;
-            this.generatorToolStripMenuItem.Name = "generatorToolStripMenuItem";
-            this.generatorToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
-            this.generatorToolStripMenuItem.Text = "Generator";
-            this.generatorToolStripMenuItem.Click += new System.EventHandler(this.generatorToolStripMenuItem_Click);
-            // 
-            // tbPlay
-            // 
-            this.tbPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbPlay.Image = global::TuringMachine.Res.play;
-            this.tbPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbPlay.Name = "tbPlay";
-            this.tbPlay.Size = new System.Drawing.Size(52, 59);
-            this.tbPlay.Text = "Play";
-            this.tbPlay.Click += new System.EventHandler(this.tbPlay_Click);
-            // 
-            // tbPause
-            // 
-            this.tbPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbPause.Enabled = false;
-            this.tbPause.Image = global::TuringMachine.Res.pause;
-            this.tbPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbPause.Name = "tbPause";
-            this.tbPause.Size = new System.Drawing.Size(52, 59);
-            this.tbPause.Text = "Pause";
-            this.tbPause.Click += new System.EventHandler(this.tbPause_Click);
-            // 
-            // tbStop
-            // 
-            this.tbStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tbStop.Enabled = false;
-            this.tbStop.Image = global::TuringMachine.Res.stop;
-            this.tbStop.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tbStop.Name = "tbStop";
-            this.tbStop.Size = new System.Drawing.Size(52, 59);
-            this.tbStop.Text = "Stop";
-            this.tbStop.Click += new System.EventHandler(this.tbStop_Click);
-            // 
             // FMain
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(912, 582);

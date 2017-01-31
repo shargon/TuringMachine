@@ -9,12 +9,11 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using TuringMachine.Core.Arguments;
-using TuringMachine.Core.Enums;
-using TuringMachine.Core.Helpers;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Logs;
 using TuringMachine.Core.Sockets;
 using TuringMachine.Helpers;
+using TuringMachine.Helpers.Enums;
 
 namespace TuringMachine.Core.Detectors.Windows
 {

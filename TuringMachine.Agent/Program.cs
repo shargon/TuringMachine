@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using TuringMachine.Core.Helpers;
 using TuringMachine.Helpers;
 
 namespace TuringMachine.Agent
@@ -33,13 +32,14 @@ namespace TuringMachine.Agent
 
             args = new string[]
             {
-                "NumTasks=1",
+                "NumTasks=9",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
 
                 "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
                 "AgentClassName=StartProcessAndInvisibleProxy",
-                "AgentArguments=cfg_mysql.json",
+                //"AgentArguments=cfg_mysql.json",
+                "AgentArguments=cfg_mysqld_federated.json"
             };
 #endif
 

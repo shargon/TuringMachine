@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using TuringMachine.Core.Helpers;
 using TuringMachine.Core.Interfaces;
+using TuringMachine.Helpers;
 
 namespace TuringMachine.Core.Logs
 {

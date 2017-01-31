@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using TuringMachine.Core.Detectors;
 using TuringMachine.Core.Detectors.Windows;
-using TuringMachine.Core.Enums;
+using TuringMachine.Helpers.Enums;
 
 namespace TuringMachine.Tests
 {

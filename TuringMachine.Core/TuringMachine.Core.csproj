@@ -60,7 +60,6 @@
     <Compile Include="Detectors\ICrashDetector.cs" />
     <Compile Include="Detectors\ProcessStartInfoEx.cs" />
     <Compile Include="Detectors\Windows\WERDetector.cs" />
-    <Compile Include="Enums\EExploitableResult.cs" />
     <Compile Include="Enums\EFuzzerState.cs" />
     <Compile Include="Enums\EFuzzingPercentType.cs" />
     <Compile Include="Enums\EFuzzingReturn.cs" />
@@ -69,7 +68,6 @@
     <Compile Include="FuzzerLog.cs" />
     <Compile Include="FuzzingLogInfo.cs" />
     <Compile Include="FuzzingMethods\Patchs\PatchConfig.cs" />
-    <Compile Include="Helpers\WinDbgHelper.cs" />
     <Compile Include="Inputs\EmptyFuzzingInput.cs" />
     <Compile Include="Interfaces\IGetPatch.cs" />
     <Compile Include="Interfaces\ILogFile.cs" />
@@ -116,7 +114,6 @@
     <Compile Include="FuzzingMethods\Mutational\MutationConfig.cs" />
     <Compile Include="FuzzingMethods\Patchs\PatchChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="TuringStream.cs" />
   </ItemGroup>
   <ItemGroup>
