@@ -100,7 +100,9 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveInputWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.originalInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsSaveOriginal = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsCopyOriginal = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.gridInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridLog)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -748,25 +750,42 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveInputWithToolStripMenuItem});
+            this.saveInputWithToolStripMenuItem,
+            this.copyToClipboardToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(130, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(254, 48);
             // 
             // saveInputWithToolStripMenuItem
             // 
             this.saveInputWithToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.originalInputToolStripMenuItem});
+            this.tsSaveOriginal});
             this.saveInputWithToolStripMenuItem.Name = "saveInputWithToolStripMenuItem";
-            this.saveInputWithToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-            this.saveInputWithToolStripMenuItem.Text = "Save input";
+            this.saveInputWithToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.saveInputWithToolStripMenuItem.Text = "Save input to file";
             this.saveInputWithToolStripMenuItem.DropDownOpening += new System.EventHandler(this.saveInputWithToolStripMenuItem_DropDownOpening);
             // 
-            // originalInputToolStripMenuItem
+            // tsSaveOriginal
             // 
-            this.originalInputToolStripMenuItem.Name = "originalInputToolStripMenuItem";
-            this.originalInputToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
-            this.originalInputToolStripMenuItem.Text = "Original input";
-            this.originalInputToolStripMenuItem.Click += new System.EventHandler(this.originalInputToolStripMenuItem_Click);
+            this.tsSaveOriginal.Name = "tsSaveOriginal";
+            this.tsSaveOriginal.Size = new System.Drawing.Size(152, 22);
+            this.tsSaveOriginal.Text = "Original input";
+            this.tsSaveOriginal.Click += new System.EventHandler(this.originalInputToolStripMenuItem_Click);
+            // 
+            // copyToClipboardToolStripMenuItem
+            // 
+            this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsCopyOriginal});
+            this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
+            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(253, 22);
+            this.copyToClipboardToolStripMenuItem.Text = "Copy input to clipboard (C# style)";
+            this.copyToClipboardToolStripMenuItem.DropDownOpening += new System.EventHandler(this.saveInputWithToolStripMenuItem_DropDownOpening);
+            // 
+            // tsCopyOriginal
+            // 
+            this.tsCopyOriginal.Name = "tsCopyOriginal";
+            this.tsCopyOriginal.Size = new System.Drawing.Size(152, 22);
+            this.tsCopyOriginal.Text = "Original input";
+            this.tsCopyOriginal.Click += new System.EventHandler(this.originalInputToolStripMenuItem_Click);
             // 
             // FMain
             // 
@@ -851,7 +870,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem saveInputWithToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem originalInputToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsSaveOriginal;
         private System.Windows.Forms.DataGridViewTextBoxColumn cInputsType;
         private System.Windows.Forms.DataGridViewTextBoxColumn cInputDescription;
         private System.Windows.Forms.DataGridViewTextBoxColumn cInputCount;
@@ -872,6 +891,8 @@
         private System.Windows.Forms.ToolStripMenuItem manualStreamToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem generatorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsCopyOriginal;
     }
 }
 

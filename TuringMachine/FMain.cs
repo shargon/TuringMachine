@@ -6,10 +6,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using TuringMachine.Core;
 using TuringMachine.Core.Enums;
+using TuringMachine.Core.FuzzingMethods.Patchs;
 using TuringMachine.Core.Inputs;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Forms;
@@ -332,16 +334,77 @@ namespace TuringMachine
         }
         void originalInputToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ToolStripItem it = (ToolStripItem)sender;
-            SaveSelectedInputWith(it.Tag == null ? null : ((FuzzerStat<IFuzzingConfig>)it.Tag).Source);
+            ToolStripMenuItem it = (ToolStripMenuItem)sender;
+            SaveSelectedInputWith(it.OwnerItem == copyToClipboardToolStripMenuItem, it.Tag == null ? null : ((FuzzerStat<IFuzzingConfig>)it.Tag).Source);
         }
-        void SaveSelectedInputWith(IFuzzingConfig config)
+        void SaveSelectedInputWith(bool toClipbard, IGetPatch config)
         {
             if (gridInput.SelectedRows.Count != 1) return;
 
             FuzzerStat<IFuzzingInput> inp = (FuzzerStat<IFuzzingInput>)gridInput.SelectedRows[0].DataBoundItem;
             if (inp == null) return;
 
+            byte[] stream = inp.Source.GetStream();
+            if (stream == null) return;
+
+            if (toClipbard)
+            {
+                // Clipboard
+                StringBuilder sb = new StringBuilder();
+
+                sb.AppendLine("byte[] payload = new byte[]");
+                sb.Append("{");
+
+                PatchChange[] logs = null;
+                if (config != null)
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    using (FuzzingStream fzs = new FuzzingStream(stream, config))
+                    {
+                        fzs.CopyTo(ms);
+                        stream = ms.ToArray();
+                        logs = fzs.Log;
+                    }
+                }
+
+                for (int x = 0, off = 0, v = 0, m = stream.Length; x < m; x++, v++, off++)
+                {
+                    byte b = stream[x];
+                    if (x != 0) sb.Append(", ");
+
+                    if (logs != null)
+                    {
+                        foreach (PatchChange ch in logs)
+                            if (off == ch.Offset)
+                            {
+                                off -= ch.Remove;
+                                if (ch.Append != null) off += ch.Append.Length;
+
+                                sb.AppendLine();
+                                sb.AppendLine("\t/* " +
+                                    (string.IsNullOrEmpty(ch.Description) ? "" : ch.Description + " ") +
+                                    (ch.Append == null ? "0" : ch.Append.Length.ToString()) + " bytes */");
+
+                                sb.Append("\t" + "".PadLeft(6 * v, ' '));
+                            }
+                    }
+
+                    if (v == 0 || v % 20 == 0)
+                    {
+                        sb.AppendLine();
+                        sb.Append("\t");
+                        v = 0;
+                    }
+                    sb.Append("0x" + b.ToString("x2"));
+                }
+
+                sb.AppendLine();
+                sb.Append("};");
+                Clipboard.SetText(sb.ToString());
+                return;
+            }
+
+            // File
             using (SaveFileDialog s = new SaveFileDialog()
             {
                 Filter = "Dat file|*.dat",
@@ -357,7 +420,6 @@ namespace TuringMachine
 
                     using (FileStream fs = File.OpenWrite(s.FileName))
                     {
-                        byte[] stream = inp.Source.GetStream();
                         if (config != null)
                         {
                             using (Stream fzs = new FuzzingStream(stream, config))
@@ -377,22 +439,23 @@ namespace TuringMachine
         }
         void saveInputWithToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
+            ToolStripMenuItem mi = (ToolStripMenuItem)sender;
+
             // Clear
-            for (int x = saveInputWithToolStripMenuItem.DropDownItems.Count - 2; x >= 0; x--)
-                saveInputWithToolStripMenuItem.DropDownItems.RemoveAt(x);
+            for (int x = mi.DropDownItems.Count - 2; x >= 0; x--)
+                mi.DropDownItems.RemoveAt(x);
 
             // Add items
             foreach (FuzzerStat<IFuzzingConfig> c in _Fuzzer.Configurations)
             {
-                ToolStripItem it = new ToolStripMenuItem(c.Source.ToString());
-                saveInputWithToolStripMenuItem.DropDownItems.Insert(0, it);
-                it.Tag = c;
+                ToolStripItem it = new ToolStripMenuItem(c.Source.ToString()) { Tag = c };
+                mi.DropDownItems.Insert(0, it);
                 it.Click += originalInputToolStripMenuItem_Click;
             }
 
             // Separator
-            if (saveInputWithToolStripMenuItem.DropDownItems.Count != 1)
-                saveInputWithToolStripMenuItem.DropDownItems.Insert(saveInputWithToolStripMenuItem.DropDownItems.Count - 1, new ToolStripSeparator());
+            if (mi.DropDownItems.Count != 1)
+                mi.DropDownItems.Insert(mi.DropDownItems.Count - 1, new ToolStripSeparator());
         }
         void gridInput_MouseClick(object sender, MouseEventArgs e)
         {
