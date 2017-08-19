@@ -1,0 +1,98 @@
+﻿{
+  "Mutations": [
+    {
+      "Description": "Changes",
+      "ValidOffset": {
+        "Name": "From-To",
+        "To": 18446744073709551615,
+        "From": 0
+      },
+      "Changes": [
+        {
+          "Weight": 1,
+          "Enabled": true,
+          "Description": "Byte change",
+          "AppendByte": {
+            "Name": "From-To",
+            "To": 255,
+            "From": 0
+          },
+          "RemoveLength": {
+            "Name": "From-To",
+            "To": 1,
+            "From": 1
+          },
+          "AppendLength": {
+            "Name": "From-To",
+            "To": 1,
+            "From": 1
+          }
+        },
+        {
+          "Weight": 1,
+          "Enabled": true,
+          "Description": "Buffer overflow test",
+          "AppendByte": {
+            "Name": "From-To",
+            "To": 126,
+            "From": 32
+          },
+          "RemoveLength": {
+            "Name": "From-To",
+            "To": 1,
+            "From": 1
+          },
+          "AppendLength": {
+            "Name": "From-To",
+            "To": 10000,
+            "From": 10
+          }
+        },
+        {
+          "Weight": 1,
+          "Enabled": true,
+          "Description": "Integer overflow",
+          "AppendByte": {
+            "Name": "Fixed",
+            "Allowed": [
+              255
+            ]
+          },
+          "RemoveLength": {
+            "Name": "From-To",
+            "Excludes": [
+              5,
+              6,
+              7
+            ],
+            "To": 8,
+            "From": 4
+          },
+          "AppendLength": {
+            "Name": "From-To",
+            "Excludes": [
+              5,
+              6,
+              7
+            ],
+            "To": 8,
+            "From": 4
+          }
+        }
+      ],
+      "FuzzPercent": {
+        "Name": "From-To",
+        "To": 4.0,
+        "From": 0.0
+      },
+      "FuzzPercentType": "PeerByte",
+      "MaxChanges": {
+        "Name": "From-To",
+        "To": 10,
+        "From": 1
+      }
+    }
+  ],
+  "Type": "Mutational",
+  "Description": "IOF - BOF - SWITCH"
+}

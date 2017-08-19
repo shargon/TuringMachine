@@ -39,7 +39,7 @@ namespace TuringMachine.Agent
                 "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
                 "AgentClassName=StartProcessAndInvisibleProxy",
                 //"AgentArguments=cfg_mysql.json",
-                "AgentArguments=cfg_mysqld_federated.json"
+                "AgentArguments=cfg_mysqld.json"
             };
 #endif
 
