@@ -1,0 +1,149 @@
+﻿{
+  "Mutations": [
+    {
+      "Description": "Changes",
+      "ValidOffset": {
+        "Name": "From-To",
+        "To": 18446744073709551615,
+        "From": 0
+      },
+      "Changes": [
+        {
+          "Weight": 1,
+          "Enabled": true,
+          "Description": "Buffer overflow (by char)",
+          "AppendByte": {
+            "Name": "From-To",
+            "To": 255,
+            "From": 1
+          },
+          "RemoveLength": {
+            "Name": "From-To",
+            "To": 1,
+            "From": 1
+          },
+          "AppendLength": {
+            "Name": "From-To",
+            "To": 10000,
+            "From": 1
+          }
+        },
+        {
+          "Weight": 1,
+          "Enabled": true,
+          "Description": "Integer overflow",
+          "AppendByte": {
+            "Name": "Fixed",
+            "Allowed": [
+              255
+            ]
+          },
+          "RemoveLength": {
+            "Name": "Fixed",
+            "Allowed": [
+              4
+            ]
+          },
+          "AppendLength": {
+            "Name": "Fixed",
+            "Allowed": [
+              4
+            ]
+          }
+        },
+        {
+          "Weight": 1,
+          "Enabled": true,
+          "Description": "Switch byte",
+          "AppendByte": {
+            "Name": "From-To",
+            "To": 255,
+            "From": 0
+          },
+          "RemoveLength": {
+            "Name": "From-To",
+            "To": 1,
+            "From": 1
+          },
+          "AppendLength": {
+            "Name": "From-To",
+            "To": 1,
+            "From": 1
+          }
+        },
+        {
+          "Weight": 1,
+          "Enabled": true,
+          "Description": "Switch byte (specific)",
+          "AppendByte": {
+            "Name": "Fixed",
+            "Allowed": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              17,
+              34,
+              51,
+              65,
+              66,
+              67,
+              238,
+              239,
+              254,
+              255
+            ]
+          },
+          "RemoveLength": {
+            "Name": "Fixed",
+            "Allowed": [
+              1,
+              2,
+              4,
+              8,
+              16,
+              32,
+              64,
+              128,
+              256,
+              512,
+              1024,
+              2048
+            ]
+          },
+          "AppendLength": {
+            "Name": "Fixed",
+            "Allowed": [
+              1,
+              2,
+              4,
+              8,
+              16,
+              32,
+              64,
+              128,
+              256,
+              512,
+              1024,
+              2048
+            ]
+          }
+        }
+      ],
+      "FuzzPercent": {
+        "Name": "Fixed",
+        "Allowed": [
+          5.0
+        ]
+      },
+      "MaxChanges": {
+        "Name": "From-To",
+        "To": 2,
+        "From": 0
+      }
+    }
+  ],
+  "Type": "Mutational",
+  "Description": "Make Changes"
+}
