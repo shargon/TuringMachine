@@ -47,30 +47,36 @@ namespace TuringMachine.Generator
                     LoadFile(dialog.FileName);
             }
         }
-        void LoadFile(string file)
+        public void LoadConfig(IFuzzingConfig cfg)
         {
-            _Cur = null;
-            switch (Path.GetExtension(file).ToLowerInvariant())
-            {
-                case ".fmut":
-                    {
-                        _Cur = MutationConfig.FromJson(File.ReadAllText(file, Encoding.UTF8));
-                        break;
-                    }
-                case ".fpatch":
-                    {
-                        _Cur = PatchConfig.FromJson(File.ReadAllText(file, Encoding.UTF8));
-                        break;
-                    }
-            }
+            _Cur = cfg;
 
             if (_Cur != null)
             {
                 propertyGrid1.SelectedObject = _Cur;
                 propertyGrid1.ExpandAllGridItems();
-                _LastFile = file;
 
                 saveToolStripMenuItem.Enabled = true;
+            }
+        }
+        public void LoadFile(string file)
+        {
+            _LastFile = null;
+            switch (Path.GetExtension(file).ToLowerInvariant())
+            {
+                case ".fmut":
+                    {
+                        LoadConfig(MutationConfig.FromJson(File.ReadAllText(file, Encoding.UTF8)));
+                        _LastFile = file;
+                        break;
+                    }
+                case ".fpatch":
+                    {
+                        LoadConfig(PatchConfig.FromJson(File.ReadAllText(file, Encoding.UTF8)));
+                        _LastFile = file;
+                        break;
+                    }
+                default: LoadConfig(null); break;
             }
         }
         void NewFile()

@@ -438,6 +438,7 @@
             this.gridConfig.Size = new System.Drawing.Size(464, 218);
             this.gridConfig.TabIndex = 2;
             this.gridConfig.VirtualMode = true;
+            this.gridConfig.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridConfig_CellDoubleClick);
             this.gridConfig.SelectionChanged += new System.EventHandler(this.gridConfig_SelectionChanged);
             this.gridConfig.DragDrop += new System.Windows.Forms.DragEventHandler(this.gridInput_DragDrop);
             this.gridConfig.DragEnter += new System.Windows.Forms.DragEventHandler(this.gridInput_DragEnter);
@@ -542,7 +543,7 @@
             // 
             this.toolStripMenuItem2.Image = global::TuringMachine.Res.add_file;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(126, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(168, 38);
             this.toolStripMenuItem2.Text = "File";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
@@ -550,20 +551,20 @@
             // 
             this.toolStripMenuItem3.Image = global::TuringMachine.Res.add_folder;
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(126, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(168, 38);
             this.toolStripMenuItem3.Text = "Folder";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(123, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(165, 6);
             // 
             // generatorToolStripMenuItem
             // 
             this.generatorToolStripMenuItem.Image = global::TuringMachine.Res.puzzle_icon;
             this.generatorToolStripMenuItem.Name = "generatorToolStripMenuItem";
-            this.generatorToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.generatorToolStripMenuItem.Size = new System.Drawing.Size(168, 38);
             this.generatorToolStripMenuItem.Text = "Generator";
             this.generatorToolStripMenuItem.Click += new System.EventHandler(this.generatorToolStripMenuItem_Click);
             // 
@@ -767,7 +768,7 @@
             // tsSaveOriginal
             // 
             this.tsSaveOriginal.Name = "tsSaveOriginal";
-            this.tsSaveOriginal.Size = new System.Drawing.Size(152, 22);
+            this.tsSaveOriginal.Size = new System.Drawing.Size(147, 22);
             this.tsSaveOriginal.Text = "Original input";
             this.tsSaveOriginal.Click += new System.EventHandler(this.originalInputToolStripMenuItem_Click);
             // 
@@ -783,7 +784,7 @@
             // tsCopyOriginal
             // 
             this.tsCopyOriginal.Name = "tsCopyOriginal";
-            this.tsCopyOriginal.Size = new System.Drawing.Size(152, 22);
+            this.tsCopyOriginal.Size = new System.Drawing.Size(147, 22);
             this.tsCopyOriginal.Text = "Original input";
             this.tsCopyOriginal.Click += new System.EventHandler(this.originalInputToolStripMenuItem_Click);
             // 

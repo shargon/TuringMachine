@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -17,10 +18,12 @@ namespace TuringMachine.Agent
         static int Main(string[] args)
         {
 #if DEBUG
-            // Forze copy for test
-            object dummy = new BasicAgents.StartProcessAndSendTcpData();
-            args = new string[]
+            if (Debugger.IsAttached)
             {
+                // Forze copy for test
+                object dummy = new BasicAgents.StartProcessAndSendTcpData();
+                args = new string[]
+                {
                 "NumTasks=8",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
@@ -28,10 +31,10 @@ namespace TuringMachine.Agent
                 "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
                 "AgentClassName=StartProcessAndSendTcpData",
                 "AgentArguments=cfg_vulnserver.json",
-            };
+                };
 
-            args = new string[]
-            {
+                args = new string[]
+                {
                 "NumTasks=9",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
@@ -40,7 +43,8 @@ namespace TuringMachine.Agent
                 "AgentClassName=StartProcessAndInvisibleProxy",
                 //"AgentArguments=cfg_mysql.json",
                 "AgentArguments=cfg_mysqld.json"
-            };
+                };
+            }
 #endif
 
             // Initialize winDbg !exploitable

@@ -531,5 +531,17 @@ namespace TuringMachine
                 }
             }
         }
+        void gridConfig_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewRow r = gridConfig.CurrentRow;
+            if (r == null) return;
+
+            FuzzerStat<IFuzzingConfig> cfg = (FuzzerStat<IFuzzingConfig>)r.DataBoundItem;
+            if (cfg == null) return;
+
+            FGenerator f = new FGenerator();
+            f.LoadConfig(cfg.Source);
+            f.Show();
+        }
     }
 }
