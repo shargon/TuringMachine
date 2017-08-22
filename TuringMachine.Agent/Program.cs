@@ -24,7 +24,7 @@ namespace TuringMachine.Agent
                 object dummy = new BasicAgents.StartProcessAndSendTcpData();
                 args = new string[]
                 {
-                "NumTasks=8",
+                "NumTasks=1",
                 "RetrySeconds=5",
                 "TuringServer=127.0.0.1,7777",
 
@@ -33,23 +33,30 @@ namespace TuringMachine.Agent
                 "AgentArguments=cfg_vulnserver.json",
                 };
 
-                args = new string[]
-                {
-                "NumTasks=9",
-                "RetrySeconds=5",
-                "TuringServer=127.0.0.1,7777",
+                //args = new string[]
+                //{
+                //"NumTasks=9",
+                //"RetrySeconds=5",
+                //"TuringServer=127.0.0.1,7777",
 
-                "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
-                "AgentClassName=StartProcessAndInvisibleProxy",
-                //"AgentArguments=cfg_mysql.json",
-                "AgentArguments=cfg_mysqld.json"
-                };
+                //"AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
+                //"AgentClassName=StartProcessAndInvisibleProxy",
+                ////"AgentArguments=cfg_mysql.json",
+                //"AgentArguments=cfg_mysqld.json"
+                //};
             }
 #endif
 
             // Initialize winDbg !exploitable
-            WinDbgHelper.WinDbgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Windows Kits\10\Debuggers\x64\windbg.exe");
-            if (!File.Exists(WinDbgHelper.WinDbgPath)) WinDbgHelper.WinDbgPath = null;
+            bool isX64 = IntPtr.Size == 8;
+            WinDbgHelper.WinDbgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Windows Kits\10\Debuggers\" + 
+                (isX64 ? "x64" : "x86") + "\\windbg.exe");
+            if (!File.Exists(WinDbgHelper.WinDbgPath))
+            {
+                WinDbgHelper.WinDbgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Windows Kits\8.1\Debuggers\" + 
+                    (isX64 ? "x64" : "x86") + "\\windbg.exe");
+                if (!File.Exists(WinDbgHelper.WinDbgPath)) WinDbgHelper.WinDbgPath = null;
+            }
 
             // Parse arguments
             Config = new AgentConfig();

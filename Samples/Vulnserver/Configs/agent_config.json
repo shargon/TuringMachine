@@ -1,0 +1,8 @@
+{
+    "Process":
+    {
+      "FileName": "D:/Fuzzing/vulnserver/vulnserver.exe",
+      "Arguments": "9{Task000}"
+    },
+    "ConnectTo": "127.0.0.1,9{Task000}"
+}

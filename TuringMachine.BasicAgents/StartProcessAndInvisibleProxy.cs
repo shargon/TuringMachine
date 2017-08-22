@@ -15,6 +15,7 @@ namespace TuringMachine.BasicAgents
     public class StartProcessAndInvisibleProxy : ITuringMachineAgent
     {
         const string ProxyVarName = "PROXY";
+
         public enum EFuzzingType
         {
             Server,
@@ -42,15 +43,21 @@ namespace TuringMachine.BasicAgents
         /// </summary>
         public EFuzzingType Type { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public StartProcessAndInvisibleProxy()
         {
             ConnectTimeout = TimeSpan.FromSeconds(30);
             Type = EFuzzingType.Server;
         }
-
+        /// <summary>
+        /// Create proxy ( auto-dispose whith socket )
+        /// </summary>
+        /// <param name="socket">Socket</param>
+        /// <param name="e">Arguments</param>
         public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
         {
-            // Create proxy ( auto-dispose whith socket )
             TcpInvisibleProxy proxy = new TcpInvisibleProxy(ListenEndPoint, ConnectTo) { Tag = socket };
 
             proxy.OnCreateStream += Proxy_OnCreateStream;

@@ -27,14 +27,21 @@ namespace TuringMachine.BasicAgents
         /// </summary>
         public TimeSpan ConnectTimeout { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public StartProcessAndSendTcpData()
         {
             ConnectTimeout = TimeSpan.FromSeconds(30);
             ConnectedOk = false;
         }
+        /// <summary>
+        /// Create process
+        /// </summary>
+        /// <param name="socket">Socket</param>
+        /// <param name="e">Arguments</param>
         public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
         {
-            // Create process
             return new WERDetector(Process);
         }
         public override void OnRun(TuringSocket socket, TuringAgentArgs e)
