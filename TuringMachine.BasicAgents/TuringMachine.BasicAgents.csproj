@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="StartProcessAndInvisibleProxy.cs" />
+    <Compile Include="StartProcessAndErrorInOutput.cs" />
     <Compile Include="StartProcessAndSendTcpData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

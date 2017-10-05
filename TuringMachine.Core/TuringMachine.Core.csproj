@@ -58,6 +58,7 @@
     <Compile Include="Design\ListArrayReadOnlyConverter.cs" />
     <Compile Include="Design\ListArrayConverter.cs" />
     <Compile Include="Detectors\ICrashDetector.cs" />
+    <Compile Include="Detectors\Multi\OutputErrorProcessDetector.cs" />
     <Compile Include="Detectors\ProcessStartInfoEx.cs" />
     <Compile Include="Detectors\Windows\WERDetector.cs" />
     <Compile Include="Enums\EFuzzerState.cs" />

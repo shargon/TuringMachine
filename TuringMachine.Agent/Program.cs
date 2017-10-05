@@ -11,6 +11,7 @@ namespace TuringMachine.Agent
 {
     class Program
     {
+        const int PaddingLeft = 25;
         static AgentConfig Config;
         static bool Cancel = false;
         static int X = 0, Y = 0;
@@ -24,13 +25,24 @@ namespace TuringMachine.Agent
                 object dummy = new BasicAgents.StartProcessAndSendTcpData();
                 args = new string[]
                 {
-                "NumTasks=1",
-                "RetrySeconds=5",
-                "TuringServer=127.0.0.1,7777",
+                    "NumTasks=1",
+                    "RetrySeconds=5",
+                    "TuringServer=127.0.0.1,7777",
 
-                "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
-                "AgentClassName=StartProcessAndSendTcpData",
-                "AgentArguments=cfg_vulnserver.json",
+                    "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
+                    "AgentClassName=StartProcessAndSendTcpData",
+                    "AgentArguments=cfg_vulnserver.json",
+                };
+
+                args = new string[]
+                {
+                    "NumTasks=1",
+                    "RetrySeconds=5",
+                    "TuringServer=127.0.0.1,7777",
+
+                    "AgentLibrary=" + Path.Combine(Application.StartupPath, "TuringMachine.BasicAgents.dll"),
+                    "AgentClassName=StartProcessAndErrorInOutput",
+                    "AgentArguments=cfg_neo.json",
                 };
 
                 //args = new string[]
@@ -49,12 +61,12 @@ namespace TuringMachine.Agent
 
             // Initialize winDbg !exploitable
             bool isX64 = IntPtr.Size == 8;
-            WinDbgHelper.WinDbgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Windows Kits\10\Debuggers\" + 
-                (isX64 ? "x64" : "x86") + "\\windbg.exe");
+            WinDbgHelper.WinDbgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                @"Windows Kits\10\Debuggers\" + (isX64 ? "x64" : "x86") + "\\windbg.exe");
             if (!File.Exists(WinDbgHelper.WinDbgPath))
             {
-                WinDbgHelper.WinDbgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), @"Windows Kits\8.1\Debuggers\" + 
-                    (isX64 ? "x64" : "x86") + "\\windbg.exe");
+                WinDbgHelper.WinDbgPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                    @"Windows Kits\8.1\Debuggers\" + (isX64 ? "x64" : "x86") + "\\windbg.exe");
                 if (!File.Exists(WinDbgHelper.WinDbgPath)) WinDbgHelper.WinDbgPath = null;
             }
 
@@ -87,8 +99,6 @@ namespace TuringMachine.Agent
             WriteSeparator(true);
             Console.WriteLine("Configuration");
             WriteSeparator(true);
-
-            const int PaddingLeft = 25;
 
             Console.WriteLine("Server".PadLeft(PaddingLeft, ' ') + " : " + Config.TuringServer.ToString());
             Console.WriteLine("Tasks".PadLeft(PaddingLeft, ' ') + " : " + Config.NumTasks.ToString());
