@@ -36,9 +36,8 @@ namespace TuringMachine.Core.Detectors.Windows
 
             ServiceController Service;
             Process Process;
-
-            string StoreLocation32;
-            string StoreLocation64;
+            readonly string StoreLocation32;
+            readonly string StoreLocation64;
 
             public bool HasExited
             {
@@ -85,8 +84,10 @@ namespace TuringMachine.Core.Detectors.Windows
                 try
                 {
                     // Read path
-                    using (RegistryKey r = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, v).OpenSubKey(@"SOFTWARE\Microsoft\Windows\Windows Error Reporting\Debug", false))
+                    using (var r = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, v).OpenSubKey(@"SOFTWARE\Microsoft\Windows\Windows Error Reporting\Debug", false))
+                    {
                         return r.GetValue("StoreLocation", "").ToString();
+                    }
                 }
                 catch { }
                 return null;
@@ -110,8 +111,8 @@ namespace TuringMachine.Core.Detectors.Windows
             }
         }
 
-        string[] _FileNames;
-        static string _CrashPath;
+        readonly string[] _FileNames;
+        readonly static string _CrashPath;
         iProcess[] _Process;
 
         public event EventHandler OnDispose;
@@ -148,20 +149,20 @@ namespace TuringMachine.Core.Detectors.Windows
         {
             if (startInfo != null)
             {
-                List<string> files = new List<string>();
-                List<iProcess> process = new List<iProcess>();
+                var files = new List<string>();
+                var process = new List<iProcess>();
 
-                foreach (ProcessStartInfoEx pi in startInfo)
+                foreach (var pi in startInfo)
                 {
                     if (pi == null) continue;
 
-                    string file = "";
-                    int pid = 0;
+                    var file = "";
+                    var pid = 0;
                     if (!string.IsNullOrEmpty(pi.FileName))
                     {
                         file = Path.GetFileName(pi.FileName);
 
-                        Process p = Process.Start(pi.GetProcessStartInfo());
+                        var p = Process.Start(pi.GetProcessStartInfo());
                         pid = p.Id;
                         process.Add(new iProcess(p, pi));
                     }
@@ -169,7 +170,7 @@ namespace TuringMachine.Core.Detectors.Windows
                     {
                         if (!string.IsNullOrEmpty(pi.ServiceName))
                         {
-                            ServiceController controller = new ServiceController(pi.ServiceName);
+                            var controller = new ServiceController(pi.ServiceName);
                             if (controller.Status == ServiceControllerStatus.Stopped)
                             {
                                 controller.Start();
@@ -178,9 +179,9 @@ namespace TuringMachine.Core.Detectors.Windows
 
                             try
                             {
-                                using (ManagementObject service = new ManagementObject(@"Win32_service.Name='" + pi.ServiceName + "'"))
+                                using (var service = new ManagementObject(@"Win32_service.Name='" + pi.ServiceName + "'"))
                                 {
-                                    object o = service.GetPropertyValue("ProcessId");
+                                    var o = service.GetPropertyValue("ProcessId");
                                     pid = Convert.ToInt32(o);
 
                                     file = ((string)service.GetPropertyValue("PathName")).Trim();
@@ -192,7 +193,8 @@ namespace TuringMachine.Core.Detectors.Windows
                                         if (file.StartsWith("\""))
                                         {
                                             file = file.Substring(1);
-                                            int ix = file.IndexOf("\"");
+
+                                            var ix = file.IndexOf("\"");
                                             if (ix < 0) file = null;
                                             else
                                             {
@@ -237,16 +239,16 @@ namespace TuringMachine.Core.Detectors.Windows
             }
 
             // Wait for exit
-            bool isBreak = false;
+            var isBreak = false;
 
             if (_Process != null)
             {
-                TimeSpan miniwait = TimeSpan.FromMilliseconds(100);
-                foreach (iProcess p in _Process)
+                var miniwait = TimeSpan.FromMilliseconds(100);
+                foreach (var p in _Process)
                 {
                     try
                     {
-                        TimeSpan ts = TimeSpan.FromMilliseconds(p.StartInfo.ExitTimeout.TotalMilliseconds);
+                        var ts = TimeSpan.FromMilliseconds(p.StartInfo.ExitTimeout.TotalMilliseconds);
                         while (ts.TotalMilliseconds > 0 &&
                             (isAlive == null || isAlive.Invoke(socket, e)) && !p.HasExited)
                         {
@@ -266,32 +268,35 @@ namespace TuringMachine.Core.Detectors.Windows
             Thread.Sleep(500);
 
             // Search logs 
-            List<ILogFile> fileAppend = new List<ILogFile>();
+            var fileAppend = new List<ILogFile>();
 
             if (_FileNames != null)
-                foreach (string f in _FileNames)
+            {
+                foreach (var f in _FileNames)
                 {
-                    LogFile l = new LogFile(f);
+                    var l = new LogFile(f);
 
                     if (l.TryLoadFile(TimeSpan.FromSeconds(isBreak ? 5 : 2)))
                         fileAppend.Add(l);
                 }
+            }
 
             // If its alive kill them
             if (_Process != null)
-                foreach (iProcess p in _Process)
+            {
+                foreach (var p in _Process)
                     try { p.KillProcess(); } catch { }
+            }
 
             // Check exploitability
             exploitResult = EExploitableResult.NOT_DUMP_FOUND;
             for (int x = 0, m = fileAppend.Count; x < m; x++)
             {
-                LogFile dump = (LogFile)fileAppend[x];
+                var dump = (LogFile)fileAppend[x];
 
                 if (dump.FileName.ToLowerInvariant().EndsWith(".dmp"))
                 {
-                    string log;
-                    exploitResult = WinDbgHelper.CheckMemoryDump(dump.Path, out log);
+                    exploitResult = WinDbgHelper.CheckMemoryDump(dump.Path, out string log);
                     if (!string.IsNullOrEmpty(log))
                         fileAppend.Add(new MemoryLogFile("exploitable.log", Encoding.UTF8.GetBytes(log)));
                 }
@@ -311,8 +316,10 @@ namespace TuringMachine.Core.Detectors.Windows
         {
             if (_Process != null)
             {
-                foreach (iProcess p in _Process)
+                foreach (var p in _Process)
+                {
                     try { p.Dispose(); } catch { }
+                }
 
                 _Process = null;
             }

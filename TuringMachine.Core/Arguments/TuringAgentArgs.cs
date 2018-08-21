@@ -9,6 +9,7 @@ namespace TuringMachine.Core.Arguments
         /// Task id
         /// </summary>
         public Guid TaskId { get; private set; }
+
         /// <summary>
         /// Variables
         /// </summary>

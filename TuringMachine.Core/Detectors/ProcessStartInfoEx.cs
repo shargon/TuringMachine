@@ -20,23 +20,27 @@ namespace TuringMachine.Core.Detectors
             WaitMemoryDump = true;
         }
 
-
-        #region Base
+        #region Public fields
+        
         /// <summary>
         /// Exit timeout
         /// </summary>
         public TimeSpan ExitTimeout { get; set; }
+        
         /// <summary>
         /// When exit process, wait for memory dump
         /// </summary>
         public bool WaitMemoryDump { get; set; }
+        
         /// <summary>
         /// Service name
         /// </summary>
         public string ServiceName { get; set; }
+
         #endregion
 
         #region Base
+
         public string Arguments { get; set; }
         public bool CreateNoWindow { get; set; }
         public string Domain { get; set; }
@@ -57,6 +61,7 @@ namespace TuringMachine.Core.Detectors
         public string[] Verbs { get; }
         public ProcessWindowStyle WindowStyle { get; set; }
         public string WorkingDirectory { get; set; }
+
         #endregion
 
         public ProcessStartInfo GetProcessStartInfo()

@@ -11,6 +11,7 @@ namespace TuringMachine.Core.Collections
         /// Values
         /// </summary>
         public IEnumerable<TValue> Values { get { return _Internal.Values; } }
+        
         /// <summary>
         /// Keys
         /// </summary>
@@ -24,8 +25,7 @@ namespace TuringMachine.Core.Collections
         {
             get
             {
-                TValue ret;
-                if (_Internal.TryGetValue(key, out ret)) return ret;
+                if (_Internal.TryGetValue(key, out TValue ret)) return ret;
                 return default(TValue);
             }
             set
@@ -36,6 +36,7 @@ namespace TuringMachine.Core.Collections
                 else _Internal[key] = value;
             }
         }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -43,13 +44,16 @@ namespace TuringMachine.Core.Collections
         {
             _Internal = new Dictionary<TKey, TValue>();
         }
+
         /// <summary>
         /// Free resources
         /// </summary>
         public void Dispose()
         {
             foreach (object o in _Internal.Values)
-                if (o is IDisposable) ((IDisposable)o).Dispose();
+            {
+                if (o is IDisposable dsp) dsp.Dispose();
+            }
 
             _Internal.Clear();
         }
