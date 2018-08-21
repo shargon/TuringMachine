@@ -51,6 +51,7 @@ namespace TuringMachine.BasicAgents
             ConnectTimeout = TimeSpan.FromSeconds(30);
             Type = EFuzzingType.Server;
         }
+
         /// <summary>
         /// Create proxy ( auto-dispose whith socket )
         /// </summary>
@@ -81,7 +82,9 @@ namespace TuringMachine.BasicAgents
 
             return stream;
         }
+
         public override void OnRun(TuringSocket socket, TuringAgentArgs e) { }
+
         public override bool GetItsAlive(TuringSocket socket, TuringAgentArgs e)
         {
             var proxy = (TcpInvisibleProxy)socket[ProxyVarName];

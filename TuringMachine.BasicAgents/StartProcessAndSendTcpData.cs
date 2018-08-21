@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using TuringMachine.Core;
@@ -35,6 +34,7 @@ namespace TuringMachine.BasicAgents
             ConnectTimeout = TimeSpan.FromSeconds(30);
             ConnectedOk = false;
         }
+
         /// <summary>
         /// Create process
         /// </summary>
@@ -44,6 +44,7 @@ namespace TuringMachine.BasicAgents
         {
             return new WERDetector(Process);
         }
+
         public override void OnRun(TuringSocket socket, TuringAgentArgs e)
         {
             // Create client
@@ -75,6 +76,7 @@ namespace TuringMachine.BasicAgents
                     }
             }
         }
+
         /// <summary>
         /// Check if can reconnect (¿its alive?)
         /// </summary>

@@ -10,14 +10,10 @@ namespace TuringMachine.Core.Detectors.Multi
 {
     public class OutputErrorProcessDetector : ICrashDetector
     {
-        Process[] _Process;
         /// <summary>
         /// Process
         /// </summary>
-        public Process[] Process
-        {
-            get { return _Process; }
-        }
+        public readonly Process[] Process;
 
         /// <summary>
         /// Constructor
@@ -25,20 +21,20 @@ namespace TuringMachine.Core.Detectors.Multi
         /// <param name="pis">Process start info</param>
         public OutputErrorProcessDetector(params ProcessStartInfo[] pis)
         {
-            List<Process> pr = new List<Process>();
+            var pr = new List<Process>();
 
-            foreach (ProcessStartInfo pi in pis)
+            foreach (var pi in pis)
             {
                 pi.UseShellExecute = false;
                 pi.RedirectStandardInput = true;
                 pi.RedirectStandardError = true;
 
-                Process prr = System.Diagnostics.Process.Start(pi);
-                if (prr != null)
-                    pr.Add(prr);
+                var prr = System.Diagnostics.Process.Start(pi);
+
+                if (prr != null) pr.Add(prr);
             }
 
-            _Process = pr.ToArray();
+            Process = pr.ToArray();
         }
 
         public override bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, out EExploitableResult exploitResult, ITuringMachineAgent.delItsAlive isAlive, TuringAgentArgs e)
@@ -47,9 +43,9 @@ namespace TuringMachine.Core.Detectors.Multi
             zipCrashData = null;
             exploitResult = EExploitableResult.NOT_DUMP_FOUND;
 
-            List<ZipHelper.FileEntry> errors = new List<ZipHelper.FileEntry>();
+            var errors = new List<ZipHelper.FileEntry>();
 
-            foreach (Process pr in _Process)
+            foreach (var pr in Process)
             {
                 if (!pr.HasExited) continue;
 
