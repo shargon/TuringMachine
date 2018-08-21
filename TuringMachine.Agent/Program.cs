@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using TuringMachine.Helpers;
 
 namespace TuringMachine.Agent
@@ -115,17 +114,15 @@ namespace TuringMachine.Agent
                 Console.WriteLine("Agent Properties");
                 WriteSeparator();
 
-                foreach (KeyValuePair<string, object> pi in SerializationHelper.EnumerateFromJson(Config.AgentArguments))
+                foreach (var pi in SerializationHelper.EnumerateFromJson(Config.AgentArguments))
                 {
                     if (pi.Value is JObject)
                     {
-                        foreach (JToken pi2 in ((JObject)pi.Value).Values())
+                        foreach (var pi2 in ((JObject)pi.Value).Values())
                         {
-                            if (pi2 is JValue)
+                            if (pi2 is JValue jval)
                             {
-                                JValue jval = (JValue)pi2;
-
-                                string val = (jval.Value == null ? "<NULL>" : jval.Value.ToString());
+                                string val = jval.Value == null ? "<NULL>" : jval.Value.ToString();
                                 string name = jval.Path;
                                 Console.WriteLine(name.PadLeft(PaddingLeft, ' ') + " : " + val.Replace("\n", "\n                    "));
                             }
@@ -133,18 +130,15 @@ namespace TuringMachine.Agent
                     }
                     else
                     {
-                        if (pi.Value is JArray)
+                        if (pi.Value is JArray arr)
                         {
-                            JArray arr = (JArray)pi.Value;
-                            foreach (JObject ojb in arr)
+                            foreach (var ojb in arr)
                             {
-                                foreach (JToken pi2 in (ojb).Values())
+                                foreach (var pi2 in (ojb).Values())
                                 {
-                                    if (pi2 is JValue)
+                                    if (pi2 is JValue jval)
                                     {
-                                        JValue jval = (JValue)pi2;
-
-                                        string val = (jval.Value == null ? "<NULL>" : jval.Value.ToString());
+                                        string val = jval.Value == null ? "<NULL>" : jval.Value.ToString();
                                         string name = jval.Path;
                                         if (arr.Count == 1) name = name.Replace("[0]", "");
 
@@ -155,7 +149,7 @@ namespace TuringMachine.Agent
                         }
                         else
                         {
-                            string val = (pi.Value == null ? "<NULL>" : pi.Value.ToString());
+                            string val = pi.Value == null ? "<NULL>" : pi.Value.ToString();
                             string name = pi.Key;
                             Console.WriteLine(name.PadLeft(PaddingLeft, ' ') + " : " + val.Replace("\n", "\n                    "));
                         }
@@ -167,13 +161,13 @@ namespace TuringMachine.Agent
             //Console.WriteLine("");
             //WriteSeparator(true);
 
-            TuringTask[] task = new TuringTask[Config.NumTasks];
+            var task = new TuringTask[Config.NumTasks];
 
             while (!Cancel)
             {
                 for (int x = 0; x < Config.NumTasks; x++)
                 {
-                    TuringTask t = task[x];
+                    var t = task[x];
 
                     // No task or compleated
                     if (t == null || t.IsCompleted)
@@ -220,15 +214,19 @@ namespace TuringMachine.Agent
 
             return 1;
         }
+
         static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
             Cancel = true;
         }
+
         #region Log
+
         static void WriteSeparator(bool bold = false)
         {
             Console.WriteLine("".PadLeft(Console.WindowWidth - 1, bold ? '═' : '─'));
         }
+
         static void WriteError(int taskNum, Exception e)
         {
             // Red
@@ -265,6 +263,7 @@ namespace TuringMachine.Agent
             }
             catch { }
         }
+
         #endregion
     }
 }
