@@ -47,11 +47,11 @@ namespace TuringMachine.BasicAgents
         public override void OnRun(TuringSocket socket, TuringAgentArgs e)
         {
             // Create client
-            using (TcpClient ret = new TcpClient())
+            using (var ret = new TcpClient())
             {
                 // Try connect to server
-                IAsyncResult result = ret.BeginConnect(ConnectTo.Address, ConnectTo.Port, null, null);
-                bool success = result.AsyncWaitHandle.WaitOne(ConnectTimeout);
+                var result = ret.BeginConnect(ConnectTo.Address, ConnectTo.Port, null, null);
+                var success = result.AsyncWaitHandle.WaitOne(ConnectTimeout);
                 ret.EndConnect(result);
 
                 if (!success) return;
@@ -60,11 +60,11 @@ namespace TuringMachine.BasicAgents
                 ConnectedOk = true;
 
                 // Fuzzer stream
-                using (TuringStream stream = new TuringStream(socket))
+                using (var stream = new TuringStream(socket))
                     try
                     {
                         //Try send all we can
-                        using (Stream sr = ret.GetStream())
+                        using (var sr = ret.GetStream())
                         {
                             stream.CopyTo(sr);
                             sr.Flush();
@@ -83,7 +83,7 @@ namespace TuringMachine.BasicAgents
         {
             try
             {
-                using (TcpClient ret = new TcpClient())
+                using (var ret = new TcpClient())
                 {
                     ret.Connect(ConnectTo);
                     //IAsyncResult result = ret.BeginConnect(ConnectTo.Address, ConnectTo.Port, null, null);

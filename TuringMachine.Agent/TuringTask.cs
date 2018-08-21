@@ -71,7 +71,7 @@ namespace TuringMachine.Agent
             ICrashDetector crash = null;
             try
             {
-                TuringAgentArgs e = new TuringAgentArgs();
+                var e = new TuringAgentArgs();
                 //Agent.OnLoad(Socket, e);
 
                 // Create detector
@@ -82,10 +82,7 @@ namespace TuringMachine.Agent
 
                 Agent.OnRun(Socket, e);
 
-                byte[] zipData;
-                EExploitableResult res;
-
-                if (crash.IsCrashed(Socket, out zipData, out res, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive), e))
+                if (crash.IsCrashed(Socket, out byte[] zipData, out EExploitableResult res, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive), e))
                 {
                     Result = new EndTaskMessage(EFuzzingReturn.Crash)
                     {
@@ -97,7 +94,7 @@ namespace TuringMachine.Agent
             }
             catch (Exception ex)
             {
-                throw (ex);
+                throw ex;
             }
             finally
             {
@@ -156,16 +153,17 @@ namespace TuringMachine.Agent
 
                 try
                 {
-                    TuringMessage msg = Socket.ReadMessage<TuringMessage>();
+                    var msg = Socket.ReadMessage<TuringMessage>();
                 }
                 catch { }
 
                 Socket.Dispose();
                 Socket = null;
             }
-            if (Agent != null && Agent is IDisposable)
+
+            if (Agent != null && Agent is IDisposable dsp)
             {
-                ((IDisposable)Agent).Dispose();
+                dsp.Dispose();
                 Agent = null;
             }
         }

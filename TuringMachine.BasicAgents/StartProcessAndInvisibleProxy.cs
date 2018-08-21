@@ -58,7 +58,7 @@ namespace TuringMachine.BasicAgents
         /// <param name="e">Arguments</param>
         public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
         {
-            TcpInvisibleProxy proxy = new TcpInvisibleProxy(ListenEndPoint, ConnectTo) { Tag = socket };
+            var proxy = new TcpInvisibleProxy(ListenEndPoint, ConnectTo) { Tag = socket };
 
             proxy.OnCreateStream += Proxy_OnCreateStream;
             socket[ProxyVarName] = proxy;
@@ -70,8 +70,8 @@ namespace TuringMachine.BasicAgents
 
         Stream Proxy_OnCreateStream(object sender, Stream stream, ESource owner)
         {
-            TcpInvisibleProxy proxy = (TcpInvisibleProxy)sender;
-            TuringSocket socket = (TuringSocket)proxy.Tag;
+            var proxy = (TcpInvisibleProxy)sender;
+            var socket = (TuringSocket)proxy.Tag;
 
             switch (Type)
             {
@@ -84,7 +84,7 @@ namespace TuringMachine.BasicAgents
         public override void OnRun(TuringSocket socket, TuringAgentArgs e) { }
         public override bool GetItsAlive(TuringSocket socket, TuringAgentArgs e)
         {
-            TcpInvisibleProxy proxy = (TcpInvisibleProxy)socket[ProxyVarName];
+            var proxy = (TcpInvisibleProxy)socket[ProxyVarName];
             return proxy != null && proxy.Running && proxy.ConnectedClients > 0;
         }
     }

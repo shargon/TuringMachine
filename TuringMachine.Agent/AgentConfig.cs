@@ -76,7 +76,7 @@ namespace TuringMachine.Agent
         }
         string GetWord(string word, string[] args)
         {
-            foreach (string s in args)
+            foreach (var s in args)
             {
                 if (s.StartsWith(word + "=", StringComparison.OrdinalIgnoreCase))
                     return s.Substring(word.Length + 1);
@@ -90,10 +90,10 @@ namespace TuringMachine.Agent
         {
             if (string.IsNullOrEmpty(AgentLibrary)) return null;
 
-            Assembly asm = Assembly.LoadFrom(AgentLibrary);
+            var asm = Assembly.LoadFrom(AgentLibrary);
             if (asm == null) return null;
 
-            foreach (Type t in ReflectionHelper.GetTypesAssignableFrom(typeof(ITuringMachineAgent), asm))
+            foreach (var t in ReflectionHelper.GetTypesAssignableFrom(typeof(ITuringMachineAgent), asm))
             {
                 if (!ReflectionHelper.HavePublicConstructor(t)) continue;
 
