@@ -8,11 +8,13 @@ namespace TuringMachine.Core.Design
 {
     public class ListArrayConverter : CollectionConverter
     {
-        bool _OnlyCount = false;
-        bool _ReadOnly = false;
+        readonly bool _OnlyCount = false;
+        readonly bool _ReadOnly = false;
 
         public ListArrayConverter() { }
+
         public ListArrayConverter(bool readOnly, bool onlyCount) { _ReadOnly = readOnly; _OnlyCount = onlyCount; }
+
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destType)
         {
             if (destType == typeof(string))
@@ -31,19 +33,21 @@ namespace TuringMachine.Core.Design
 
             return "None";
         }
+
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             if (sourceType == typeof(string)) return !_ReadOnly;
             return base.CanConvertFrom(context, sourceType);
         }
+
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            IList list = (IList)Activator.CreateInstance(context.PropertyDescriptor.PropertyType);
+            var list = (IList)Activator.CreateInstance(context.PropertyDescriptor.PropertyType);
 
             if (value != null)
             {
-                TypeConverter conv = TypeDescriptor.GetConverter(context.PropertyDescriptor.PropertyType.GenericTypeArguments[0]);
-                foreach (string s in value.ToString().Split(new char[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                var conv = TypeDescriptor.GetConverter(context.PropertyDescriptor.PropertyType.GenericTypeArguments[0]);
+                foreach (var s in value.ToString().Split(new char[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (s.Length == 1 && !char.IsNumber(s[0]))
                     {

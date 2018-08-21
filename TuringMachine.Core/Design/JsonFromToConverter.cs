@@ -10,9 +10,9 @@ namespace TuringMachine.Core.Design
         public override bool CanConvert(Type objectType) { return true; }
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            JObject jObject = JObject.Load(reader);
-            Type tar = objectType.GenericTypeArguments[0];
-            TypeConverter conv = TypeDescriptor.GetConverter(tar);
+            var jObject = JObject.Load(reader);
+            var tar = objectType.GenericTypeArguments[0];
+            var conv = TypeDescriptor.GetConverter(tar);
 
             dynamic d = existingValue;
 
@@ -55,7 +55,7 @@ namespace TuringMachine.Core.Design
         {
             dynamic d = value;
 
-            string name = d.Name.ToString();
+            var name = d.Name.ToString();
             switch (name)
             {
                 case "From-To":
@@ -67,7 +67,7 @@ namespace TuringMachine.Core.Design
                         {
                             writer.WritePropertyName("Excludes");
                             writer.WriteStartArray();
-                            foreach (object o in d.Excludes)
+                            foreach (var o in d.Excludes)
                                 writer.WriteValue(o);
                             writer.WriteEndArray();
                         }
@@ -87,7 +87,7 @@ namespace TuringMachine.Core.Design
                         {
                             writer.WritePropertyName("Allowed");
                             writer.WriteStartArray();
-                            foreach (object o in d.Allowed)
+                            foreach (var o in d.Allowed)
                                 writer.WriteValue(o);
                             writer.WriteEndArray();
                         }

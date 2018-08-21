@@ -22,12 +22,15 @@ namespace TuringMachine.Core.Design
             _editorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
 
             // use a list box
-            ListBox lb = new ListBox();
-            lb.SelectionMode = SelectionMode.One;
-            lb.SelectedValueChanged += OnListBoxSelectedValueChanged;
+            var lb = new ListBox
+            {
+                SelectionMode = SelectionMode.One,
 
-            // use the IBenchmark.Name property for list box display
-            lb.DisplayMember = "Name";
+                // use the IBenchmark.Name property for list box display
+                DisplayMember = "Name"
+            };
+
+            lb.SelectedValueChanged += OnListBoxSelectedValueChanged;
 
             foreach (Type tp in GetValues(value.GetType().GetTypeInfo().GenericTypeArguments[0]))
             {

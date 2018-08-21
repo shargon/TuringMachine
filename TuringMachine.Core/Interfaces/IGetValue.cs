@@ -16,6 +16,7 @@ namespace TuringMachine.Core.Interfaces
         /// </summary>
         /// <param name="value">Value</param>
         bool ItsValid(T value);
+
         /// <summary>
         /// Class name
         /// </summary>
