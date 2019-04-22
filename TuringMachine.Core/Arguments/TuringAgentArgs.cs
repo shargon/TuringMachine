@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 
 namespace TuringMachine.Core.Arguments
@@ -13,7 +14,7 @@ namespace TuringMachine.Core.Arguments
         /// <summary>
         /// Variables
         /// </summary>
-        public ExpandoObject Vars { get; set; }
+        public IDictionary<string, object> Vars { get; set; }
 
         /// <summary>
         /// Constructor

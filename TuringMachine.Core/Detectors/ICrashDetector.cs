@@ -1,15 +1,12 @@
-﻿using System;
-using TuringMachine.Core.Arguments;
-using TuringMachine.Core.Interfaces;
+﻿using TuringMachine.Core.Arguments;
+using TuringMachine.Core.Delegates;
 using TuringMachine.Core.Sockets;
 using TuringMachine.Helpers.Enums;
 
 namespace TuringMachine.Core.Detectors
 {
-    public class ICrashDetector
+    public interface ICrashDetector
     {
-        protected ICrashDetector() { }
-
         /// <summary>
         /// Return crashed data
         /// </summary>
@@ -18,9 +15,6 @@ namespace TuringMachine.Core.Detectors
         /// <param name="exploitResult">Explotation result</param>
         /// <param name="isAlive">Its alive</param>
         /// <param name="e">Arguments</param>
-        public virtual bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, out EExploitableResult exploitResult, ITuringMachineAgent.delItsAlive isAlive, TuringAgentArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, out EExploitableResult exploitResult, delItsAlive isAlive, TuringAgentArgs e);
     }
 }

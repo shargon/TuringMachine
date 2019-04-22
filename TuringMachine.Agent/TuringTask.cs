@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using TuringMachine.Core.Arguments;
+using TuringMachine.Core.Delegates;
 using TuringMachine.Core.Detectors;
 using TuringMachine.Core.Enums;
 using TuringMachine.Core.Interfaces;
@@ -82,7 +83,7 @@ namespace TuringMachine.Agent
 
                 Agent.OnRun(Socket, e);
 
-                if (crash.IsCrashed(Socket, out byte[] zipData, out EExploitableResult res, new ITuringMachineAgent.delItsAlive(Agent.GetItsAlive), e))
+                if (crash.IsCrashed(Socket, out byte[] zipData, out EExploitableResult res, new delItsAlive(Agent.GetItsAlive), e))
                 {
                     Result = new EndTaskMessage(EFuzzingReturn.Crash)
                     {

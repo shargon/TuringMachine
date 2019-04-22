@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using TuringMachine.Core.Arguments;
-using TuringMachine.Core.Interfaces;
+using TuringMachine.Core.Delegates;
 using TuringMachine.Core.Sockets;
 using TuringMachine.Helpers;
 using TuringMachine.Helpers.Enums;
@@ -37,7 +37,7 @@ namespace TuringMachine.Core.Detectors.Multi
             Process = pr.ToArray();
         }
 
-        public override bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, out EExploitableResult exploitResult, ITuringMachineAgent.delItsAlive isAlive, TuringAgentArgs e)
+        public bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, out EExploitableResult exploitResult, delItsAlive isAlive, TuringAgentArgs e)
         {
             byte[] zip = null;
             zipCrashData = null;

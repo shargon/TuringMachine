@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +7,9 @@ using System.Management;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
+using Microsoft.Win32;
 using TuringMachine.Core.Arguments;
+using TuringMachine.Core.Delegates;
 using TuringMachine.Core.Interfaces;
 using TuringMachine.Core.Logs;
 using TuringMachine.Core.Sockets;
@@ -228,7 +229,7 @@ namespace TuringMachine.Core.Detectors.Windows
         /// <param name="socket">Socket</param>
         /// <param name="zipCrashData">Crash data</param>
         /// <param name="isAlive">IsAlive</param>
-        public override bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, out EExploitableResult exploitResult, ITuringMachineAgent.delItsAlive isAlive, TuringAgentArgs e)
+        public bool IsCrashed(TuringSocket socket, out byte[] zipCrashData, out EExploitableResult exploitResult, delItsAlive isAlive, TuringAgentArgs e)
         {
             zipCrashData = null;
 

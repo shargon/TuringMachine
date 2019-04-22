@@ -16,12 +16,14 @@ namespace TuringMachine.BasicAgents
         /// </summary>
         public ProcessStartInfoEx[] Process { get; set; }
 
+        public bool GetItsAlive(TuringSocket socket, TuringAgentArgs e) => false;
+
         /// <summary>
         /// Create process
         /// </summary>
         /// <param name="socket">Socket</param>
         /// <param name="e">Arguments</param>
-        public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
+        public ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
         {
             var ret = new Core.Detectors.Multi.OutputErrorProcessDetector(Process.Select(u => u.GetProcessStartInfo()).ToArray());
 
@@ -29,7 +31,7 @@ namespace TuringMachine.BasicAgents
             return ret;
         }
 
-        public override void OnRun(TuringSocket socket, TuringAgentArgs e)
+        public void OnRun(TuringSocket socket, TuringAgentArgs e)
         {
             var ret = (Core.Detectors.Multi.OutputErrorProcessDetector)socket[ProcessPid];
 

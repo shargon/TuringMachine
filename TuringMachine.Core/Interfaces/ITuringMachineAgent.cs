@@ -1,46 +1,32 @@
-﻿using System;
-using TuringMachine.Core.Arguments;
+﻿using TuringMachine.Core.Arguments;
 using TuringMachine.Core.Detectors;
 using TuringMachine.Core.Sockets;
 
 namespace TuringMachine.Core.Interfaces
 {
-    public class ITuringMachineAgent
+    public interface ITuringMachineAgent
     {
-        public delegate bool delItsAlive(TuringSocket socket, TuringAgentArgs e);
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected ITuringMachineAgent() { }
-
         /// <summary>
         /// Create detector (First action)
         /// </summary>
         /// <param name="socket">Socket</param>
         /// <param name="e">Arguments</param>
-        public virtual ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
-        {
-            return null;
-        }
+        ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e);
+
         /// <summary>
         /// Get Task of agent
         /// </summary>
         /// <param name="socket">Socket</param>
         /// <param name="e">Arguments</param>
-        public virtual void OnRun(TuringSocket socket, TuringAgentArgs e)
-        {
-            throw (new NotImplementedException());
-        }
+        void OnRun(TuringSocket socket, TuringAgentArgs e);
+
         /// <summary>
         /// Return if its alive
         /// </summary>
         /// <param name="socket">Socket</param>
         /// <param name="e">Arguments</param>
-        public virtual bool GetItsAlive(TuringSocket socket, TuringAgentArgs e)
-        {
-            return false;
-        }
+        bool GetItsAlive(TuringSocket socket, TuringAgentArgs e);
+
         ///// <summary>
         ///// Free Task
         ///// </summary>

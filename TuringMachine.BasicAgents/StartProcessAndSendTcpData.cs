@@ -40,12 +40,12 @@ namespace TuringMachine.BasicAgents
         /// </summary>
         /// <param name="socket">Socket</param>
         /// <param name="e">Arguments</param>
-        public override ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
+        public ICrashDetector GetCrashDetector(TuringSocket socket, TuringAgentArgs e)
         {
             return new WERDetector(Process);
         }
 
-        public override void OnRun(TuringSocket socket, TuringAgentArgs e)
+        public void OnRun(TuringSocket socket, TuringAgentArgs e)
         {
             // Create client
             using (var ret = new TcpClient())
@@ -81,7 +81,7 @@ namespace TuringMachine.BasicAgents
         /// Check if can reconnect (¿its alive?)
         /// </summary>
         /// <param name="socket">Socket</param>
-        public override bool GetItsAlive(TuringSocket socket, TuringAgentArgs e)
+        public bool GetItsAlive(TuringSocket socket, TuringAgentArgs e)
         {
             try
             {
